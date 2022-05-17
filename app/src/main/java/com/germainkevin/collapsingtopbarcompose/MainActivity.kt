@@ -51,8 +51,8 @@ fun CollapsingTopBarExample(context: Context) {
     val scrollBehavior = remember {
         CollapsingTopBarDefaults
             .collapsingTopBarScrollBehavior(
-//                isInitiallyCollapsed = false,
-                expandedTopBarHeight = 256.dp
+                isAlwaysCollapsed = false,
+                expandedTopBarMaxHeight = 256.dp
             )
     }
     Scaffold(

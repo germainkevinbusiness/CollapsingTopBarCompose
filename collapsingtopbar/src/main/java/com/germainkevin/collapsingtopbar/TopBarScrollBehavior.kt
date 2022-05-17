@@ -17,6 +17,10 @@ import androidx.compose.ui.unit.Dp
 interface TopBarScrollBehavior {
 
     /**
+     * This will make this [CollapsingTopBar] never expand */
+    var isAlwaysCollapsed: Boolean
+
+    /**
      * The height of the TopBar when it's collapsed in [Dp]
      * */
     var collapsedTopBarHeight: Dp
@@ -47,15 +51,6 @@ interface TopBarScrollBehavior {
     var trackOffSetIsZero: Int
 
     /**
-     * The current content offset that is updated when the nested scroll connection consumes scroll
-     * events.
-     *
-     * A common behavior implementation would update this value to be the sum of all
-     * [NestedScrollConnection.onPostScroll] `consumed.y` values.
-     */
-    var contentOffset: Float
-
-    /**
      * When offsetting the [currentTopBarHeight], it subtracts its [expandedTopBarMaxHeight]
      * to the [topBarOffset] so it can decrease the height of the [CollapsingTopBar], but
      * to avoid the [currentTopBarHeight] decreasing below the height of [collapsedTopBarHeight]
@@ -81,33 +76,31 @@ interface TopBarScrollBehavior {
 }
 
 /**
+ * @param isAlwaysCollapsed This will make this [CollapsingTopBar] never expand, it's false by default.
  * @param isInitiallyCollapsed Specifies whether the [CollapsingTopBar] should be displayed in a
  * collapsed state when first displayed on the UI. Set to true by default when set in
  * [CollapsingTopBarDefaults.collapsingTopBarScrollBehavior]
  * @see [CollapsingTopBarDefaults.collapsingTopBarScrollBehavior] where it's set to false by default
- * @param collapsedHeight The height of the [CollapsingTopBar] when it's collapsed, the
+ * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it's collapsed, the
  * default value is [defaultMinimumTopBarHeight]
- * @param expandedHeight The height of the [CollapsingTopBar] when it's expended, the default
- * value is [defaultMaximumTopBarHeight]
+ * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
+ * default value is [defaultMaximumTopBarHeight]
  * */
 class CollapsingTopBarScrollBehavior(
+    override var isAlwaysCollapsed: Boolean,
     override var isInitiallyCollapsed: Boolean,
-    collapsedHeight: Dp,
-    expandedHeight: Dp
+    override var collapsedTopBarHeight: Dp,
+    override var expandedTopBarMaxHeight: Dp,
 ) : TopBarScrollBehavior {
-    override var collapsedTopBarHeight: Dp = collapsedHeight
-
-    override var expandedTopBarMaxHeight: Dp = expandedHeight
 
     override var topBarOffset: Float by mutableStateOf(0f)
 
     override var trackOffSetIsZero: Int by mutableStateOf(0)
 
     override var currentTopBarHeight: Dp by mutableStateOf(
-        if (isInitiallyCollapsed) collapsedTopBarHeight else expandedTopBarMaxHeight
+        if (isInitiallyCollapsed || isAlwaysCollapsed) collapsedTopBarHeight
+        else expandedTopBarMaxHeight
     )
-
-    override var contentOffset: Float by mutableStateOf(0f)
 
     override var offsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value
 

@@ -14,24 +14,26 @@ object CollapsingTopBarDefaults {
         PaddingValues(start = appBarHorizontalPadding, end = appBarHorizontalPadding)
 
     /**
+     *  @param isAlwaysCollapsed This will make this [CollapsingTopBar] never expand and stay with
+     *  the [collapsedTopBarHeight] height, it's false by default
      * @param isInitiallyCollapsed Specifies whether the [CollapsingTopBar] should be displayed in a
      * collapsed state when first displayed on the UI.
      * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it's collapsed, the
      * default value is [defaultMinimumTopBarHeight]
-     * @param expandedTopBarHeight The height of the [CollapsingTopBar] when it's expended,
+     * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended,
      * the default value is [defaultMaximumTopBarHeight]
      * */
     fun collapsingTopBarScrollBehavior(
+        isAlwaysCollapsed: Boolean = false,
         isInitiallyCollapsed: Boolean = true,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
-        expandedTopBarHeight: Dp = defaultMaximumTopBarHeight
-    ): TopBarScrollBehavior {
-        return CollapsingTopBarScrollBehavior(
-            isInitiallyCollapsed = isInitiallyCollapsed,
-            collapsedHeight = collapsedTopBarHeight,
-            expandedHeight = expandedTopBarHeight
-        )
-    }
+        expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight
+    ): TopBarScrollBehavior = CollapsingTopBarScrollBehavior(
+        isAlwaysCollapsed = isAlwaysCollapsed,
+        isInitiallyCollapsed = isInitiallyCollapsed,
+        collapsedTopBarHeight = collapsedTopBarHeight,
+        expandedTopBarMaxHeight = expandedTopBarMaxHeight
+    )
 
     @Composable
     fun collapsingTopBarColors(

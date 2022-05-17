@@ -53,7 +53,7 @@ fun CollapsingTopBar(
     scrollBehavior: TopBarScrollBehavior
 ) = with(scrollBehavior) {
 
-    if (isInitiallyCollapsed && trackOffSetIsZero >= 3) {
+    if (!isAlwaysCollapsed && isInitiallyCollapsed && trackOffSetIsZero >= 3) {
         // Make sure the trackOffSetIsZero variable does not exceed the number 10
         if (trackOffSetIsZero > 10) trackOffSetIsZero = 3
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
