@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/germainkevinbusiness/CollapsingTopBarCompose.svg)](https://jitpack.io/#germainkevinbusiness/CollapsingTopBarCompose)
 # CollapsingTopBarCompose
 
 # How to get this library in your android app
