@@ -1,5 +1,6 @@
 [![](https://jitpack.io/v/germainkevinbusiness/CollapsingTopBarCompose.svg)](https://jitpack.io/#germainkevinbusiness/CollapsingTopBarCompose)
 # CollapsingTopBarCompose
+A top bar that expands or collapses based on the scrolling of a content
 
 # How to get this library in your android app
 
