@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 
 /**
  * [CollapsingTopBar]s display information and actions at the top of a screen.
@@ -102,6 +103,8 @@ fun CollapsingTopBar(
         columnWithTitleSubtitleAlpha = columnWithTitleSubtitleAlpha,
         title = title,
         subtitle = subtitle,
+        expandedTitleTextStyle = expandedTitleTextStyle,
+        expandedSubtitleTextStyle = expandedSubtitleTextStyle,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         contentPadding = contentPadding,
         navigationIcon = navigationIcon,
@@ -132,6 +135,8 @@ fun CollapsingTopBarLayout(
     subtitle: @Composable (() -> Unit)?,
     navigationIcon: @Composable (() -> Unit)?,
     actions: @Composable RowScope.() -> Unit,
+    expandedTitleTextStyle: TextStyle,
+    expandedSubtitleTextStyle: TextStyle,
     centeredTitleAndSubtitle: Boolean,
     contentPadding: PaddingValues,
     colors: CollapsingTopBarColors,
@@ -172,8 +177,10 @@ fun CollapsingTopBarLayout(
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                topAppBarText(title, MaterialTheme.typography.h6)
-                subtitle?.let { topAppBarText(it, MaterialTheme.typography.subtitle1) }
+                expandedText(title, expandedTitleTextStyle)
+                subtitle?.let { expandedText(it, expandedSubtitleTextStyle) }
+                Timber.d("expandedTitleTextStyle: $expandedTitleTextStyle")
+                Timber.d("expandedSubtitleTextStyle: $expandedSubtitleTextStyle")
             }
             /**
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
@@ -226,7 +233,10 @@ fun CollapsingTopBarLayout(
                         enter = enterAnimation,
                         exit = exitAnimation
                     ) {
-                        topAppBarText(title, MaterialTheme.typography.h6)
+                        CompositionLocalProvider(
+                            LocalContentAlpha provides ContentAlpha.high,
+                            content = title
+                        )
                     }
                 }
                 /**
@@ -238,14 +248,11 @@ fun CollapsingTopBarLayout(
     }
 }
 
-val topAppBarText: @Composable (@Composable () -> Unit, TextStyle) -> Unit =
-    { composable, textStyle ->
-        ProvideTextStyle(value = textStyle) {
-            CompositionLocalProvider(
-                LocalContentAlpha provides ContentAlpha.high,
-                content = composable
-            )
-        }
+val expandedText: @Composable (@Composable () -> Unit, TextStyle) -> Unit =
+    { content, textStyle ->
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high, content = {
+            ProvideTextStyle(value = textStyle, content = content)
+        })
     }
 
 val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {

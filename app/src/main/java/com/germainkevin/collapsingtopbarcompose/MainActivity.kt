@@ -17,14 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarDefaults
+import com.germainkevin.collapsingtopbar.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +53,12 @@ fun CollapsingTopBarExample(context: Context) {
         CollapsingTopBarDefaults
             .collapsingTopBarScrollBehavior(
                 isAlwaysCollapsed = false,
-                expandedTopBarMaxHeight = 256.dp
+                expandedTopBarMaxHeight = 256.dp,
+                expandedTitleTextStyle = DefaultExpandedTitleTextStyle.copy(
+                    fontSize = 48.sp,
+                    color = Color.Red
+                ),
+                expandedSubtitleTextStyle = DefaultExpandedSubtitleTextStyle.copy(color = Color.Green)
             )
     }
     Scaffold(
@@ -64,17 +70,19 @@ fun CollapsingTopBarExample(context: Context) {
                 title = {
                     Text(
                         "All contacts",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.primary
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     )
                 },
-//                subtitle = {
-//                    Text(
-//                        "${contactNames.size} contacts",
-//                        color = MaterialTheme.colors.primaryVariant
-//                    )
-//                },
+                subtitle = {
+                    Text(
+                        "${contactNames.size} contacts",
+                        color = Color.DarkGray
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { }) {
                         Icon(

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 
 
@@ -34,6 +35,13 @@ interface TopBarScrollBehavior {
      * The live height of the [CollapsingTopBar]
      * */
     var currentTopBarHeight: Dp
+
+    /**
+     * The [TextStyle] to be applied to the expanded Title text*/
+    var expandedTitleTextStyle: TextStyle
+
+    /**The [TextStyle] to be applied to the expanded Subtitle text*/
+    var expandedSubtitleTextStyle: TextStyle
 
     /**
      * The offset that changes the height of the [CollapsingTopBar]
@@ -85,12 +93,16 @@ interface TopBarScrollBehavior {
  * default value is [defaultMinimumTopBarHeight]
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
  * default value is [defaultMaximumTopBarHeight]
+ * @param expandedTitleTextStyle The [TextStyle] to be applied to the expanded Title text
+ * @param expandedSubtitleTextStyle The [TextStyle] to be applied to the expanded Subtitle text
  * */
 class CollapsingTopBarScrollBehavior(
     override var isAlwaysCollapsed: Boolean,
     override var isInitiallyCollapsed: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,
+    override var expandedTitleTextStyle: TextStyle,
+    override var expandedSubtitleTextStyle: TextStyle
 ) : TopBarScrollBehavior {
 
     override var topBarOffset: Float by mutableStateOf(0f)
