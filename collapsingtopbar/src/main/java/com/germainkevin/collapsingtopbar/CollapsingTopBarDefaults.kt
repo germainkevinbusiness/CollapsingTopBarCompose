@@ -25,25 +25,22 @@ object CollapsingTopBarDefaults {
      * default value is [defaultMinimumTopBarHeight]
      * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended,
      * the default value is [defaultMaximumTopBarHeight]
-     * @param expandedTitleTextStyle The [TextStyle] to be applied to the expanded Title text
-     * @param expandedSubtitleTextStyle The [TextStyle] to be applied to the expanded Subtitle text
      * */
     fun collapsingTopBarScrollBehavior(
         isAlwaysCollapsed: Boolean = false,
         isInitiallyCollapsed: Boolean = true,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
         expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-        expandedTitleTextStyle: TextStyle = DefaultExpandedTitleTextStyle,
-        expandedSubtitleTextStyle: TextStyle = DefaultExpandedSubtitleTextStyle
     ): TopBarScrollBehavior = CollapsingTopBarScrollBehavior(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isInitiallyCollapsed = isInitiallyCollapsed,
         collapsedTopBarHeight = collapsedTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-        expandedTitleTextStyle = expandedTitleTextStyle,
-        expandedSubtitleTextStyle = expandedSubtitleTextStyle
     )
 
+    /**
+     * Default colors used in the [CollapsingTopBar]
+     * */
     @Composable
     fun collapsingTopBarColors(
         backgroundColor: Color = MaterialTheme.colors.background,

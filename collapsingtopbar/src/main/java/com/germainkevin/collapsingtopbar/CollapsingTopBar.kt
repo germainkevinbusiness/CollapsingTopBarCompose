@@ -11,10 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
 
 /**
  * [CollapsingTopBar]s display information and actions at the top of a screen.
@@ -103,8 +101,6 @@ fun CollapsingTopBar(
         columnWithTitleSubtitleAlpha = columnWithTitleSubtitleAlpha,
         title = title,
         subtitle = subtitle,
-        expandedTitleTextStyle = expandedTitleTextStyle,
-        expandedSubtitleTextStyle = expandedSubtitleTextStyle,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         contentPadding = contentPadding,
         navigationIcon = navigationIcon,
@@ -135,8 +131,6 @@ fun CollapsingTopBarLayout(
     subtitle: @Composable (() -> Unit)?,
     navigationIcon: @Composable (() -> Unit)?,
     actions: @Composable RowScope.() -> Unit,
-    expandedTitleTextStyle: TextStyle,
-    expandedSubtitleTextStyle: TextStyle,
     centeredTitleAndSubtitle: Boolean,
     contentPadding: PaddingValues,
     colors: CollapsingTopBarColors,
@@ -144,13 +138,13 @@ fun CollapsingTopBarLayout(
     collapsedTitleAlpha: Float,
     currentTopBarHeight: Dp,
     elevation: Dp,
-) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
     Surface(
         color = colors.backgroundColor,
         contentColor = colors.contentColor,
         shape = RectangleShape,
         elevation = elevation,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(
             modifier = Modifier
@@ -175,13 +169,10 @@ fun CollapsingTopBarLayout(
                     .alpha(columnWithTitleSubtitleAlpha),
                 horizontalAlignment =
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
-                verticalArrangement = Arrangement.Center
-            ) {
-                expandedText(title, expandedTitleTextStyle)
-                subtitle?.let { expandedText(it, expandedSubtitleTextStyle) }
-                Timber.d("expandedTitleTextStyle: $expandedTitleTextStyle")
-                Timber.d("expandedSubtitleTextStyle: $expandedSubtitleTextStyle")
-            }
+                verticalArrangement = Arrangement.Center, content = {
+                    title()
+                    subtitle?.let { it() }
+                })
             /**
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
              * */
@@ -192,68 +183,53 @@ fun CollapsingTopBarLayout(
                     .padding(contentPadding)
                     .align(Alignment.BottomStart),
                 horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                /**
-                 * Navigation Bar Row
-                 * */
-                if (navigationIcon == null) {
-                    Spacer(modifier = noNavIconSpacerModifier)
-                } else {
+                verticalAlignment = Alignment.Bottom,
+                content = {
+                    /**
+                     * Navigation Bar Row
+                     * */
+                    if (navigationIcon == null) {
+                        Spacer(modifier = noNavIconSpacerModifier)
+                    } else {
+                        Row(
+                            modifier = navigationIconModifier,
+                            verticalAlignment = Alignment.Bottom,
+                            content = { navigationIcon() }
+                        )
+                    }
+                    /**
+                     * Title section, shown when the [CollapsingTopBar] is collapsed
+                     * */
                     Row(
-                        modifier = navigationIconModifier,
-                        verticalAlignment = Alignment.Bottom
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.high,
-                            content = navigationIcon
-                        )
-                    }
-                }
-                /**
-                 * Title section, shown when the [CollapsingTopBar] is collapsed
-                 * */
-                Row(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val enterAnimation = if (centeredTitleAndSubtitle)
-                        expandVertically(
-                            // Expands from bottom to top.
-                            expandFrom = Alignment.Top
-                        ) + fadeIn(initialAlpha = collapsedTitleAlpha)
-                    else fadeIn(initialAlpha = collapsedTitleAlpha)
+                        val enterAnimation = if (centeredTitleAndSubtitle)
+                            expandVertically(
+                                // Expands from bottom to top.
+                                expandFrom = Alignment.Top
+                            ) + fadeIn(initialAlpha = collapsedTitleAlpha)
+                        else fadeIn(initialAlpha = collapsedTitleAlpha)
 
-                    val exitAnimation = if (centeredTitleAndSubtitle)
-                        slideOutVertically() + fadeOut() else fadeOut()
-                    AnimatedVisibility(
-                        visible = collapsedTitleAlpha in 0f..1f,
-                        enter = enterAnimation,
-                        exit = exitAnimation
-                    ) {
-                        CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.high,
-                            content = title
-                        )
+                        val exitAnimation = if (centeredTitleAndSubtitle)
+                            slideOutVertically() + fadeOut() else fadeOut()
+                        AnimatedVisibility(
+                            visible = collapsedTitleAlpha in 0f..1f,
+                            enter = enterAnimation,
+                            exit = exitAnimation
+                        ) { title() }
                     }
-                }
-                /**
-                 * More menu section where Options Menu icons are laid out
-                 * */
-                actionsRow(actions)
-            }
+                    /**
+                     * More menu section where Options Menu icons are laid out
+                     * */
+                    actionsRow(actions)
+                })
         }
     }
 }
 
-val expandedText: @Composable (@Composable () -> Unit, TextStyle) -> Unit =
-    { content, textStyle ->
-        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high, content = {
-            ProvideTextStyle(value = textStyle, content = content)
-        })
-    }
 
 val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
     Row(
