@@ -90,17 +90,17 @@ val scrollBehavior = remember {
         subtitle = { Text(text = "17 contacts") },
         )
    },
- ){
-   LazyColumn(
-    contentPadding = innerPadding,
-    verticalArrangement = Arrangement.spacedBy(8.dp)
-   ) {
+ ) {
+    LazyColumn(
+      contentPadding = innerPadding,
+      verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         val context = LocalContext.current
         val contactNames = context.resources.getStringArray(R.array.contactNames)
         items(count = contactNames.size) {
           ContactListNames(context, contactNames[it])
         }
-     }
+    }
  }
 ```
 
