@@ -60,7 +60,7 @@ Scaffold(
   topBar = {
         CollapsingTopBar(
         scrollBehavior = scrollBehavior,
-        centeredTitleAndSubtitle = true,
+        centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
         title = { Text(text = "All contacts") },
         subtitle = { Text(text = "17 contacts") },
     )
