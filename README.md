@@ -88,6 +88,7 @@ Scaffold(
 So when we put it all together we got:
 
 ```kotlin
+
  val scrollBehavior = remember { 
     CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
         isAlwaysCollapsed = false,
@@ -96,6 +97,7 @@ So when we put it all together we got:
         expandedTopBarMaxHeight = 156.dp,
     ) 
  }
+ 
 Scaffold(
   modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
   topBar = {
@@ -116,7 +118,19 @@ Scaffold(
         actions = { MoreMenuIcons() },
     )
    },
-   content = { }
+   content = { innerPadding ->
+      LazyColumn(
+      contentPadding = innerPadding,
+      verticalArrangement = Arrangement.spacedBy(8.dp)
+      ) {
+          val context = LocalContext.current
+          val contactNames = context.resources.getStringArray(R.array.contactNames)
+          items(count = contactNames.size) {
+            ContactListNames(context, contactNames[it])
+          }
+     }
+   }
+  )
  )
 ```
 
