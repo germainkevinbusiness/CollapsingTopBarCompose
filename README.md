@@ -53,7 +53,7 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
     ) 
  }
 ```
-To know when scrolling occurs inside your Layout so it can collapse or expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's  ```Modifier.nestedScroll``` :
+To know when scrolling occurs inside your Layout so the ```CollapsingTopBar``` can collapse or expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's  ```Modifier.nestedScroll``` :
 ```kotlin
 Scaffold(
   modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
