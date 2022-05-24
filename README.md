@@ -95,12 +95,12 @@ val scrollBehavior = remember {
     contentPadding = innerPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp)
    ) {
-       val context = LocalContext.current
-       val contactNames = context.resources.getStringArray(R.array.contactNames)
-       items(count = contactNames.size) {
-         ContactListNames(context, contactNames[it])
-       }
-   }
+        val context = LocalContext.current
+        val contactNames = context.resources.getStringArray(R.array.contactNames)
+        items(count = contactNames.size) {
+          ContactListNames(context, contactNames[it])
+        }
+     }
  }
 ```
 
