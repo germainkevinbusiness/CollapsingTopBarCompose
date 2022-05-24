@@ -53,7 +53,13 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
     ) 
  }
 ```
-A ```TopBarScrollBehavior``` is where you specify the height of the ```CollapsingTopBar``` when collapsed or expanded, whether the ```CollapsingTopBar``` should initially be collapsed or always be collapsed no matter if there is a nested scroll inside your Layout or not, and lastly it is also the key factor to tracking the nested scroll events inside your layout through the ```TopBarScrollBehavior.nestedScrollConnection```, which is why the second thing we need to do in order to track the nested scroll inside a Layout, is passing that TopBarScrollBehavior ```nestedScrollConnection``` callback into your Layout's Modifier.nestedScroll(), so that the ```CollapsingTopBar``` can know when scrolling occurs inside your Layout so it can collapse or expand :
+A ```TopBarScrollBehavior``` is where you specify: 
+- The height of the ```CollapsingTopBar``` when collapsed or expanded
+- Whether the CollapsingTopBar should initially be collapsed 
+- Whether the CollapsingTopBar should always be collapsed no matter if there is a nested scroll inside your Layout or not, 
+- Most importantly, it is the key factor to tracking the nested scroll events inside your layout through the ```TopBarScrollBehavior.nestedScrollConnection```.
+
+Which is why, in order to track the nested scroll events inside your Layout, you need to add the TopBarScrollBehavior ```nestedScrollConnection``` callback into your Layout's Modifier.nestedScroll(), so that the ```CollapsingTopBar``` can know when scrolling occurs inside your Layout so it can collapse or expand :
 ```kotlin
 Scaffold(
   modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -80,6 +86,7 @@ Scaffold(
 ```
 
 So when we put it all together we got:
+
 ```kotlin
  val scrollBehavior = remember { 
     CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
