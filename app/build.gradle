@@ -64,11 +64,11 @@ dependencies {
 
     // Accompanist
     //Jetpack Navigation Compose Material
-    implementation 'com.google.accompanist:accompanist-navigation-material:0.24.3-alpha'
+    implementation 'com.google.accompanist:accompanist-navigation-material:0.24.9-beta'
     //Insets for Jetpack Compose
-    implementation "com.google.accompanist:accompanist-insets:0.24.3-alpha"
+    implementation 'com.google.accompanist:accompanist-insets:0.24.9-beta'
     //System UI Controller
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.3-alpha"
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.9-beta'
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'

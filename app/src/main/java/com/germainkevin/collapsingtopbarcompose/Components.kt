@@ -45,7 +45,7 @@ fun CollapsingTopBarExample(scrollBehavior: TopBarScrollBehavior, contactNames: 
                 ),
                 style = LocalTextStyle.current.copy(
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         },
@@ -74,6 +74,7 @@ fun ContactListNames(context: Context, contactName: String) {
         Text(
             text = contactName,
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
