@@ -5,7 +5,7 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
 <table>
   <tr>
     <td>Centered expanded title and subtitle</td>
-     <td>Centered expanded titl without subtitle</td>
+     <td>Centered expanded title without subtitle</td>
     <td>Left expanded title without subtitle</td>
   </tr>
   <tr>
