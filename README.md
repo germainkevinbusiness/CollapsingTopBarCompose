@@ -72,39 +72,36 @@ So when we put it all together we got:
 
 ```kotlin
 
-                    val scrollBehavior = remember {
-                      CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
-                           isAlwaysCollapsed = false,
-                           isInitiallyCollapsed = true,
-                           collapsedTopBarHeight = 56.dp,
-                           expandedTopBarMaxHeight = 156.dp,
-                      )
-                    }
-
-                    Scaffold(
-                        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            CollapsingTopBar(
-                                scrollBehavior = scrollBehavior,
-                                centeredTitleAndSubtitle = true,
-                                title = { Text(text = "All contacts") },
-                                subtitle = { Text(text = "17 contacts") },
-                            )
-                        },
-                        content = { innerPadding ->
-                            LazyColumn(
-                                contentPadding = innerPadding,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                val context = LocalContext.current
-                                val contactNames =
-                                    context.resources.getStringArray(R.array.contactNames)
-                                items(count = contactNames.size) {
-                                    ContactListNames(context, contactNames[it])
-                                }
-                            }
-                        }
-                    )
+val scrollBehavior = remember { 
+    CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
+        isAlwaysCollapsed = false,
+        isInitiallyCollapsed = true,
+        collapsedTopBarHeight = 56.dp,
+        expandedTopBarMaxHeight = 156.dp,
+    ) 
+ }
+ Scaffold(
+  modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+  topBar = {
+        CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
+        title = { Text(text = "All contacts") },
+        subtitle = { Text(text = "17 contacts") },
+        )
+   },
+ ){
+   LazyColumn(
+    contentPadding = innerPadding,
+    verticalArrangement = Arrangement.spacedBy(8.dp)
+   ) {
+       val context = LocalContext.current
+       val contactNames = context.resources.getStringArray(R.array.contactNames)
+       items(count = contactNames.size) {
+         ContactListNames(context, contactNames[it])
+       }
+   }
+ }
 ```
 
 **That's it!**
