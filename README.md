@@ -38,7 +38,40 @@ dependencies {
 ```
 
 # Usage
+Basic usage is shown below, there's a more elaborate example in
+the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt).
 
+In order to set how a ```CollapsingTopBar``` should behave, whether to collapse or expand, the height of the ```CollapsingTopBar``` when collapsed or expanded, you need to first create a ```TopBarScrollBehavior```:
+
+```kotlin
+// A scrollBehavior determines the behavior of the CollapsingTopBar when it is being scrolled and also to track the nestedScroll events
+ val scrollBehavior = remember { CollapsingTopBarDefaults.collapsingTopBarScrollBehavior() }
+```
+then, in order to track the nested scroll inside a Layout, so the CollapsingTopBar can collapse or expand:
+```kotlin
+Scaffold(
+  modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+  topBar = {
+        CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        centeredTitleAndSubtitle = true,
+        title = { Text(text = "All contacts") },
+        subtitle = { Text(text = "17 contacts") },
+        navigationIcon = {
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = stringResource(id = R.string.hamburger_menu),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        },
+        actions = { MoreMenuIcons() },
+    )
+   },
+   content = { }
+ )
+```
 
 **That's it!**
 
