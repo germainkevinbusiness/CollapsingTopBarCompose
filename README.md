@@ -1,6 +1,6 @@
 [![](https://jitpack.io/v/germainkevinbusiness/CollapsingTopBarCompose.svg)](https://jitpack.io/#germainkevinbusiness/CollapsingTopBarCompose)
 # CollapsingTopBarCompose
-A top bar that expands or collapses based on the scrolling of a content
+A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scrolling of a content
 <!-- <img src="https://user-images.githubusercontent.com/83923717/170029697-b6f0c0b2-bb1d-4fce-ba96-677620227753.gif" alt="Demonstration 1" width="40%" height="auto"/>
 <img src="https://user-images.githubusercontent.com/83923717/170036886-f340d845-b5f8-475d-93ea-709652aa6ad6.gif" alt="Demonstration 2" width="40%" height="auto"/> -->
 
