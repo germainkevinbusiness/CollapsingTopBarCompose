@@ -74,10 +74,10 @@ So when we put it all together we got:
 
                     val scrollBehavior = remember {
                       CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
-                        isAlwaysCollapsed = false,
-                        isInitiallyCollapsed = true,
-                        collapsedTopBarHeight = 56.dp,
-                        expandedTopBarMaxHeight = 156.dp,
+                           isAlwaysCollapsed = false,
+                           isInitiallyCollapsed = true,
+                           collapsedTopBarHeight = 56.dp,
+                           expandedTopBarMaxHeight = 156.dp,
                       )
                     }
 
