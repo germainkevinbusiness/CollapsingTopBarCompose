@@ -46,10 +46,10 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
 ```kotlin
  val scrollBehavior = remember { 
     CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
-        isAlwaysCollapsed: Boolean = false,
-        isInitiallyCollapsed: Boolean = true,
-        collapsedTopBarHeight: Dp = 56.dp,
-        expandedTopBarMaxHeight: Dp = 156.dp,
+        isAlwaysCollapsed = false,
+        isInitiallyCollapsed = true,
+        collapsedTopBarHeight = 56.dp,
+        expandedTopBarMaxHeight = 156.dp,
     ) 
  }
 ```
@@ -83,10 +83,10 @@ So when we put it all together we got:
 ```kotlin
  val scrollBehavior = remember { 
     CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
-        isAlwaysCollapsed: Boolean = false,
-        isInitiallyCollapsed: Boolean = true,
-        collapsedTopBarHeight: Dp = 56.dp,
-        expandedTopBarMaxHeight: Dp = 156.dp,
+        isAlwaysCollapsed = false,
+        isInitiallyCollapsed = true,
+        collapsedTopBarHeight = 56.dp,
+        expandedTopBarMaxHeight = 156.dp,
     ) 
  }
 Scaffold(
