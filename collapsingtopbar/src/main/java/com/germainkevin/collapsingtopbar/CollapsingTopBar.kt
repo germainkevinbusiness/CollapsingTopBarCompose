@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
  * @param centeredTitleAndSubtitle Whether the [title] and [subtitle] section should be centered or
  * at the start of the [CollapsingTopBar]
  * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
- * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.collapsingTopBarColors].
+ * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
  * @param scrollBehavior  [TopBarScrollBehavior] which holds certain values that will be applied by
@@ -56,7 +56,7 @@ fun CollapsingTopBar(
         // Make sure the trackOffSetIsZero variable does not exceed the number 10
         if (trackOffSetIsZero > 10) trackOffSetIsZero = 3
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
-    } else if (isExpandedWhenFirstDisplayed) {
+    } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
     }
 
@@ -118,7 +118,7 @@ fun CollapsingTopBar(
  * @param actions the actions displayed at the end of the [CollapsingTopBar]. This should typically
  * be [IconButton]s. The default layout here is a [Row], so icons inside will be placed horizontally.
  * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
- * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.collapsingTopBarColors].
+ * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
  * @param currentTopBarHeight The current height of the [CollapsingTopBar]

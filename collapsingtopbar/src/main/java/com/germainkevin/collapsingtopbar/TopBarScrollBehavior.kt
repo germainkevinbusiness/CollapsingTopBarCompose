@@ -91,8 +91,9 @@ class DefaultBehaviorOnScroll(
     override var trackOffSetIsZero: Int by mutableStateOf(0)
 
     override var currentTopBarHeight: Dp by mutableStateOf(
-        if (isAlwaysCollapsed) collapsedTopBarHeight
-        else if (!isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+        if (isAlwaysCollapsed && isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+        else if (isAlwaysCollapsed && !isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+        else if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed) collapsedTopBarHeight
         else if (!isAlwaysCollapsed && isExpandedWhenFirstDisplayed) expandedTopBarMaxHeight
         else expandedTopBarMaxHeight
     )

@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     val scrollBehavior = remember {
                         CollapsingTopBarDefaults.scrollBehavior(
                             isAlwaysCollapsed = false,
-                            isExpandedWhenFirstDisplayed = false,
+                            isExpandedWhenFirstDisplayed = true,
                             expandedTopBarMaxHeight = 256.dp,
                         )
                     }
