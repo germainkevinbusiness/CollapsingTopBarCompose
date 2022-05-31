@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * [CollapsingTopBar]s display information and actions at the top of a screen.
+ * [CollapsingTopBar]s display is like a [TopAppBar] that can collapse and/or expand.
  *
  * This [CollapsingTopBar] has slots for a title, subtitle, navigation icon, and actions.
  *
@@ -52,11 +52,11 @@ fun CollapsingTopBar(
     scrollBehavior: TopBarScrollBehavior
 ) = with(scrollBehavior) {
 
-    if (!isAlwaysCollapsed && isInitiallyCollapsed && trackOffSetIsZero >= 3) {
+    if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
         // Make sure the trackOffSetIsZero variable does not exceed the number 10
         if (trackOffSetIsZero > 10) trackOffSetIsZero = 3
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
-    } else if (!isInitiallyCollapsed) {
+    } else if (isExpandedWhenFirstDisplayed) {
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
     }
 

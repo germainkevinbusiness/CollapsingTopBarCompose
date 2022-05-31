@@ -10,7 +10,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 val appBarHorizontalPadding = 4.dp
 
 val defaultMinimumTopBarHeight = 56.dp
@@ -23,19 +22,3 @@ val noNavIconSpacerModifier = Modifier.width(16.dp - appBarHorizontalPadding)
 val navigationIconModifier = Modifier
     .fillMaxHeight()
     .width(56.dp - appBarHorizontalPadding)
-
-// MaterialTheme H6
-@Composable
-fun defaultExpandedTitleTextStyle(): TextStyle = LocalTextStyle.current.copy(
-    fontWeight = FontWeight.Medium,
-    fontSize = 20.sp,
-    letterSpacing = 0.15.sp
-)
-
-// MaterialTheme Subtitle1
-@Composable
-fun defaultExpandedSubtitleTextStyle(): TextStyle = LocalTextStyle.current.copy(
-    fontWeight = FontWeight.Normal,
-    fontSize = 16.sp,
-    letterSpacing = 0.15.sp
-)

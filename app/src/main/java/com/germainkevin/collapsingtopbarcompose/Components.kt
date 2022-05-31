@@ -23,46 +23,6 @@ import com.germainkevin.collapsingtopbar.CollapsingTopBar
 import com.germainkevin.collapsingtopbar.TopBarScrollBehavior
 
 @Composable
-fun CollapsingTopBarExample(scrollBehavior: TopBarScrollBehavior, contactNames: Array<String>) {
-    CollapsingTopBar(
-        scrollBehavior = scrollBehavior,
-        centeredTitleAndSubtitle = true,
-        title = {
-            Text(
-                stringResource(id = R.string.all_contacts),
-                style = LocalTextStyle.current.copy(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-        },
-        subtitle = {
-            Text(
-                stringResource(
-                    id = R.string.contactNamesCount,
-                    contactNames.size.toString()
-                ),
-                style = LocalTextStyle.current.copy(
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = stringResource(id = R.string.hamburger_menu),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
-        actions = { MoreMenuIcons() },
-    )
-}
-
-@Composable
 fun ContactListNames(context: Context, contactName: String) {
     Row(
         modifier = Modifier

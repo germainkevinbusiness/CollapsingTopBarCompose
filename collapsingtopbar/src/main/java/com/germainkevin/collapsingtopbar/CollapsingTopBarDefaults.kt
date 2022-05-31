@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 
 /** Contains default values used for the [CollapsingTopBar] implementation. */
@@ -17,25 +17,26 @@ object CollapsingTopBarDefaults {
     /**
      * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll] is detected.
      *
-     *  @param isAlwaysCollapsed This will make this [CollapsingTopBar] never expand and stay with
-     *  the [collapsedTopBarHeight] height, it's false by default
-     * @param isInitiallyCollapsed Specifies whether the [CollapsingTopBar] should be displayed in a
-     * collapsed state when first displayed on the UI.
+     *  @param isAlwaysCollapsed This will make this [CollapsingTopBar] stay collapsed and stay with
+     *  the [collapsedTopBarHeight] height. It's false by default
+     * @param isExpandedWhenFirstDisplayed When true, Sets the [CollapsingTopBar] to an expanded
+     * state when first displayed on the UI by setting the [CollapsingTopBar]'s height to
+     * [expandedTopBarMaxHeight]
      * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it's collapsed, the
      * default value is [defaultMinimumTopBarHeight]
      * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended,
      * the default value is [defaultMaximumTopBarHeight]
      * */
-    fun collapsingTopBarScrollBehavior(
+    fun behaviorOnScroll(
         isAlwaysCollapsed: Boolean = false,
-        isInitiallyCollapsed: Boolean = true,
+        isExpandedWhenFirstDisplayed: Boolean = true,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
         expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-    ): TopBarScrollBehavior = CollapsingTopBarScrollBehavior(
-        isAlwaysCollapsed = isAlwaysCollapsed,
-        isInitiallyCollapsed = isInitiallyCollapsed,
-        collapsedTopBarHeight = collapsedTopBarHeight,
-        expandedTopBarMaxHeight = expandedTopBarMaxHeight,
+    ): TopBarScrollBehavior = DefaultBehaviorOnScroll(
+        isAlwaysCollapsed,
+        isExpandedWhenFirstDisplayed,
+        collapsedTopBarHeight,
+        expandedTopBarMaxHeight
     )
 
     /**

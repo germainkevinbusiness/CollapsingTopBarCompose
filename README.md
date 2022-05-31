@@ -1,5 +1,7 @@
 [![](https://jitpack.io/v/germainkevinbusiness/CollapsingTopBarCompose.svg)](https://jitpack.io/#germainkevinbusiness/CollapsingTopBarCompose)
+
 # CollapsingTopBarCompose
+
 A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scrolling of a content
 
 <table>
@@ -33,75 +35,81 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-alpha05'
+    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-alpha06'
 }
 ```
 
 # Usage
-Basic usage is shown below, there's a more elaborate example in
-the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt).
 
+Basic usage is shown below, there's a more elaborate example in
+the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
+.
 
 In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarScrollBehavior```.
+
 ```kotlin
- val scrollBehavior = remember { 
-    CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
+ val scrollBehavior = remember {
+    CollapsingTopBarDefaults.behaviorOnScroll(
         isAlwaysCollapsed = false,
         isInitiallyCollapsed = true,
         collapsedTopBarHeight = 56.dp,
         expandedTopBarMaxHeight = 156.dp,
-    ) 
- }
+    )
+}
 ```
-To know when scrolling occurs inside your Layout so the ```CollapsingTopBar``` can collapse or expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's  ```Modifier.nestedScroll``` :
+
+To know when scrolling occurs inside your Layout so the ```CollapsingTopBar``` can collapse or
+expand, add the ```scrollBehavior.nestedScrollConnection``` inside your
+Layout's  ```Modifier.nestedScroll``` :
+
 ```kotlin
 Scaffold(
-  modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-  topBar = {
+    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
         CollapsingTopBar(
-        scrollBehavior = scrollBehavior,
-        centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
-        title = { Text(text = "All contacts") },
-        subtitle = { Text(text = "17 contacts") },
+            scrollBehavior = scrollBehavior,
+            centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
+            title = { Text(text = "All contacts") },
+            subtitle = { Text(text = "17 contacts") },
         )
-   },
- ){}
+    },
+) {}
 ```
 
 So when we put it all together we got:
 
 ```kotlin
 
-val scrollBehavior = remember { 
-    CollapsingTopBarDefaults.collapsingTopBarScrollBehavior(
+val scrollBehavior = remember {
+    CollapsingTopBarDefaults.behaviorOnScroll(
         isAlwaysCollapsed = false,
         isInitiallyCollapsed = true,
         collapsedTopBarHeight = 56.dp,
         expandedTopBarMaxHeight = 156.dp,
-    ) 
- }
- Scaffold(
-  modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-  topBar = {
+    )
+}
+Scaffold(
+    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
         CollapsingTopBar(
-        scrollBehavior = scrollBehavior,
-        centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
-        title = { Text(text = "All contacts") },
-        subtitle = { Text(text = "17 contacts") },
+            scrollBehavior = scrollBehavior,
+            centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
+            title = { Text(text = "All contacts") },
+            subtitle = { Text(text = "17 contacts") },
         )
-   },
- ) {
+    },
+) {
     LazyColumn(
-      contentPadding = innerPadding,
-      verticalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = innerPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         val context = LocalContext.current
         val contactNames = context.resources.getStringArray(R.array.contactNames)
         items(count = contactNames.size) {
-          ContactListNames(context, contactNames[it])
+            ContactListNames(context, contactNames[it])
         }
     }
- }
+}
 ```
 
 **That's it!**
