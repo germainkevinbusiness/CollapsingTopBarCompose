@@ -51,7 +51,7 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
  val scrollBehavior = remember {
     CollapsingTopBarDefaults.scrollBehavior(
         isAlwaysCollapsed = false,
-        isInitiallyCollapsed = true,
+        isExpandedWhenFirstDisplayed = true,
         collapsedTopBarHeight = 56.dp,
         expandedTopBarMaxHeight = 156.dp,
     )
@@ -83,7 +83,7 @@ So when we put it all together we got:
 val scrollBehavior = remember {
     CollapsingTopBarDefaults.scrollBehavior(
         isAlwaysCollapsed = false,
-        isInitiallyCollapsed = true,
+        isExpandedWhenFirstDisplayed = true,
         collapsedTopBarHeight = 56.dp,
         expandedTopBarMaxHeight = 156.dp,
     )
