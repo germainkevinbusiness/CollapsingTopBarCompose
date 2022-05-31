@@ -1,8 +1,8 @@
 package com.germainkevin.collapsingtopbar
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.contentColorFor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,7 +15,8 @@ object CollapsingTopBarDefaults {
         PaddingValues(start = appBarHorizontalPadding, end = appBarHorizontalPadding)
 
     /**
-     * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll] is detected.
+     * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll]
+     * is detected.
      *
      *  @param isAlwaysCollapsed This will make this [CollapsingTopBar] stay collapsed and stay with
      *  the [collapsedTopBarHeight] height. It's false by default
@@ -27,7 +28,7 @@ object CollapsingTopBarDefaults {
      * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended,
      * the default value is [defaultMaximumTopBarHeight]
      * */
-    fun behaviorOnScroll(
+    fun scrollBehavior(
         isAlwaysCollapsed: Boolean = false,
         isExpandedWhenFirstDisplayed: Boolean = true,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
@@ -41,10 +42,12 @@ object CollapsingTopBarDefaults {
 
     /**
      * Default colors used in the [CollapsingTopBar]
+     * @param backgroundColor The background color of the [CollapsingTopBar]
+     * @param contentColor The content color inside of the [CollapsingTopBar]
      * */
     @Composable
-    fun collapsingTopBarColors(
-        backgroundColor: Color = MaterialTheme.colors.background,
+    fun colors(
+        backgroundColor: Color = MaterialTheme.colorScheme.primary,
         contentColor: Color = contentColorFor(backgroundColor)
-    ): CollapsingTopBarColors = CollapsingTopBarColorsImpl(backgroundColor, contentColor)
+    ): CollapsingTopBarColors = DefaultCollapsingTopBarColors(backgroundColor, contentColor)
 }

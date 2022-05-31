@@ -11,13 +11,12 @@ import androidx.compose.ui.unit.Dp
 
 
 /**
- * A TopBarScrollBehavior defines how a [CollapsingTopBar] should behave when the content under
- * it is scrolled.
+ * Defines how a [CollapsingTopBar] should behave during a [Modifier.nestedScroll] event.
  * */
 interface TopBarScrollBehavior {
 
     /**
-     * This will make this [CollapsingTopBar] never expand */
+     * When set to true, it will make this [CollapsingTopBar] never expand and stay collapsed */
     var isAlwaysCollapsed: Boolean
 
     /**
@@ -36,17 +35,24 @@ interface TopBarScrollBehavior {
     var currentTopBarHeight: Dp
 
     /**
-     * The offset that changes the height of the [CollapsingTopBar]
+     * The offset that is added to the height of the [CollapsingTopBar] based on scroll events
      * */
     var topBarOffset: Float
 
     /**
-     * Tracks how many times [topBarOffset]'s value is 0.0f. Useful when [isInitiallyCollapsed] is
-     * set to true, because we want the [CollapsingTopBar] to start changing size only after the
-     * first scrolling up event is detected through our [nestedScrollConnection], and because
-     * the first scrolling up event tend to be the third time [topBarOffset] is equal to 0.0f,
-     * all we gotta do is check when [topBarOffset] is equal to 0.0f 3 times, then let
-     * [currentTopBarHeight] be equal to [expandedTopBarMaxHeight] + [topBarOffset]
+     * When true, Sets the [CollapsingTopBar] to an expanded state when first displayed on the UI
+     * by setting the [CollapsingTopBar]'s height to [expandedTopBarMaxHeight]
+     * */
+    var isExpandedWhenFirstDisplayed: Boolean
+
+    /**
+     * Tracks how many times [topBarOffset]'s value is 0.0f. Useful when
+     * [isExpandedWhenFirstDisplayed] is set to false, because we want the [CollapsingTopBar] to
+     * start changing size only after the first scrolling up event is detected through our
+     * [nestedScrollConnection], and because the first scrolling up event tend to be the third time
+     * [topBarOffset] is equal to 0.0f, all we gotta do is check when [topBarOffset] is equal to
+     * 0.0f 3 times, then let [currentTopBarHeight] be equal to
+     * [expandedTopBarMaxHeight] + [topBarOffset]
      * */
     var trackOffSetIsZero: Int
 
@@ -59,12 +65,6 @@ interface TopBarScrollBehavior {
      * height cannot go below [collapsedTopBarHeight]
      * */
     var offsetLimit: Float
-
-    /**
-     * When true, Sets the [CollapsingTopBar] to an expanded state when first displayed on the UI
-     * by setting the [CollapsingTopBar]'s height to [expandedTopBarMaxHeight]
-     * */
-    var isExpandedWhenFirstDisplayed: Boolean
 
     /**
      * A [NestedScrollConnection] that should be attached to a [Modifier.nestedScroll] in order to
@@ -91,7 +91,9 @@ class DefaultBehaviorOnScroll(
     override var trackOffSetIsZero: Int by mutableStateOf(0)
 
     override var currentTopBarHeight: Dp by mutableStateOf(
-        if (isAlwaysCollapsed || !isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+        if (isAlwaysCollapsed) collapsedTopBarHeight
+        else if (!isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+        else if (!isAlwaysCollapsed && isExpandedWhenFirstDisplayed) expandedTopBarMaxHeight
         else expandedTopBarMaxHeight
     )
 

@@ -18,7 +18,7 @@ interface CollapsingTopBarColors {
     var contentColor: Color
 }
 
-class CollapsingTopBarColorsImpl(
+class DefaultCollapsingTopBarColors(
     override var backgroundColor: Color,
     override var contentColor: Color
 ) : CollapsingTopBarColors

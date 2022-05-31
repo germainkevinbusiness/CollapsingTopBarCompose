@@ -3,13 +3,22 @@ package com.germainkevin.collapsingtopbarcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -19,9 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
 import com.germainkevin.collapsingtopbar.CollapsingTopBarDefaults
+import com.germainkevin.collapsingtopbarcompose.ui.ContactListNames
+import com.germainkevin.collapsingtopbarcompose.ui.LeftDrawer
+import com.germainkevin.collapsingtopbarcompose.ui.MoreMenuIcons
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,18 +44,46 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val coroutineScope = rememberCoroutineScope()
+                    val scaffoldState = rememberScaffoldState()
+
+                    val openLeftDrawer: () -> Unit = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                    val closeLeftDrawer: () -> Unit = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.close()
+                        }
+                    }
+
+                    // icons to mimic drawer destinations
+                    val items =
+                        listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
+
                     val context = LocalContext.current
                     val contactNames = context.resources.getStringArray(R.array.contactNames)
-                    // A scrollBehavior determines the behavior of the CollapsingTopBar
-                    // when it is being scrolled and also to track the nestedScroll events
+
+                    /**
+                     * A scrollBehavior determines the behavior of the CollapsingTopBar when it is
+                     * being scrolled and also to track the nestedScroll events*/
                     val scrollBehavior = remember {
-                        CollapsingTopBarDefaults.behaviorOnScroll(
+                        CollapsingTopBarDefaults.scrollBehavior(
                             isAlwaysCollapsed = false,
+                            isExpandedWhenFirstDisplayed = false,
                             expandedTopBarMaxHeight = 256.dp,
                         )
                     }
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                        scaffoldState = scaffoldState,
+                        drawerContent = {
+                            LeftDrawer(
+                                closeLeftDrawer = closeLeftDrawer,
+                                drawerItems = items
+                            )
+                        },
                         topBar = {
                             CollapsingTopBar(
                                 scrollBehavior = scrollBehavior,
@@ -54,7 +94,7 @@ class MainActivity : ComponentActivity() {
                                         style = LocalTextStyle.current.copy(
                                             fontSize = 24.sp,
                                             fontWeight = FontWeight.Normal,
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = MaterialTheme.colorScheme.onPrimary
                                         )
                                     )
                                 },
@@ -66,16 +106,16 @@ class MainActivity : ComponentActivity() {
                                         ),
                                         style = LocalTextStyle.current.copy(
                                             fontWeight = FontWeight.Normal,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                            color = MaterialTheme.colorScheme.onPrimary
                                         )
                                     )
                                 },
                                 navigationIcon = {
-                                    IconButton(onClick = { }) {
+                                    IconButton(onClick = openLeftDrawer) {
                                         Icon(
                                             imageVector = Icons.Filled.Menu,
                                             contentDescription = stringResource(id = R.string.hamburger_menu),
-                                            tint = MaterialTheme.colorScheme.primary
+                                            tint = MaterialTheme.colorScheme.onPrimary
                                         )
                                     }
                                 },
@@ -84,9 +124,13 @@ class MainActivity : ComponentActivity() {
                         },
                         content = { innerPadding ->
                             LazyColumn(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
                                 contentPadding = innerPadding,
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
+                                item {
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                }
                                 items(count = contactNames.size) {
                                     ContactListNames(context, contactNames[it])
                                 }

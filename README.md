@@ -35,7 +35,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-alpha06'
+    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-alpha07'
 }
 ```
 
@@ -49,7 +49,7 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
 
 ```kotlin
  val scrollBehavior = remember {
-    CollapsingTopBarDefaults.behaviorOnScroll(
+    CollapsingTopBarDefaults.scrollBehavior(
         isAlwaysCollapsed = false,
         isInitiallyCollapsed = true,
         collapsedTopBarHeight = 56.dp,
@@ -81,7 +81,7 @@ So when we put it all together we got:
 ```kotlin
 
 val scrollBehavior = remember {
-    CollapsingTopBarDefaults.behaviorOnScroll(
+    CollapsingTopBarDefaults.scrollBehavior(
         isAlwaysCollapsed = false,
         isInitiallyCollapsed = true,
         collapsedTopBarHeight = 56.dp,

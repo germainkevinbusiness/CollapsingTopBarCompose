@@ -46,7 +46,7 @@ fun CollapsingTopBar(
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     centeredTitleAndSubtitle: Boolean = true,
-    colors: CollapsingTopBarColors = CollapsingTopBarDefaults.collapsingTopBarColors(),
+    colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
     contentPadding: PaddingValues = CollapsingTopBarDefaults.ContentPadding,
     elevation: Dp = 0.dp,
     scrollBehavior: TopBarScrollBehavior
