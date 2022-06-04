@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,12 +59,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    // icons to mimic drawer destinations
-                    val items =
-                        listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
-
-                    val context = LocalContext.current
-                    val contactNames = context.resources.getStringArray(R.array.contactNames)
+                    val contactNames = stringArrayResource(id = R.array.contactNames)
 
                     /**
                      * A scrollBehavior determines the behavior of the CollapsingTopBar when it is
@@ -78,16 +74,11 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                         scaffoldState = scaffoldState,
-                        drawerContent = {
-                            LeftDrawer(
-                                closeLeftDrawer = closeLeftDrawer,
-                                drawerItems = items
-                            )
-                        },
+                        drawerContent = { LeftDrawer(closeLeftDrawer = closeLeftDrawer) },
                         topBar = {
                             CollapsingTopBar(
                                 scrollBehavior = scrollBehavior,
-                                centeredTitleAndSubtitle = true,
+                                centeredTitleAndSubtitle = false,
                                 title = {
                                     Text(
                                         stringResource(id = R.string.all_contacts),
@@ -132,7 +123,10 @@ class MainActivity : ComponentActivity() {
                                     Spacer(modifier = Modifier.height(6.dp))
                                 }
                                 items(count = contactNames.size) {
-                                    ContactListNames(context, contactNames[it])
+                                    ContactListNames(
+                                        context = LocalContext.current,
+                                        contactName = contactNames[it]
+                                    )
                                 }
                             }
                         }

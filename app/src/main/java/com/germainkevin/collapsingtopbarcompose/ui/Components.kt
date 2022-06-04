@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
@@ -62,9 +63,10 @@ fun MoreMenuIcons() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeftDrawer(
-    drawerItems: List<ImageVector>,
     closeLeftDrawer: () -> Unit
 ) {
+    // icons to mimic drawer destinations
+    val drawerItems = listOf(Icons.Default.Contacts, Icons.Default.Settings, Icons.Default.Email)
     val selectedItem = remember { mutableStateOf(drawerItems[0]) }
     Column(
         modifier = Modifier
