@@ -11,13 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarDefaults
+import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.ContactListNames
 import com.germainkevin.collapsingtopbarcompose.ui.LeftDrawer
 import com.germainkevin.collapsingtopbarcompose.ui.MoreMenuIcons
@@ -64,13 +60,12 @@ class MainActivity : ComponentActivity() {
                     /**
                      * A scrollBehavior determines the behavior of the CollapsingTopBar when it is
                      * being scrolled and also to track the nestedScroll events*/
-                    val scrollBehavior = remember {
-                        CollapsingTopBarDefaults.scrollBehavior(
-                            isAlwaysCollapsed = false,
-                            isExpandedWhenFirstDisplayed = true,
-                            expandedTopBarMaxHeight = 256.dp,
-                        )
-                    }
+                    val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+                        isAlwaysCollapsed = false,
+                        isExpandedWhenFirstDisplayed = true,
+                        centeredTitleAndSubtitle = false,
+                        expandedTopBarMaxHeight = 256.dp,
+                    )
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                         scaffoldState = scaffoldState,
@@ -78,7 +73,6 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             CollapsingTopBar(
                                 scrollBehavior = scrollBehavior,
-                                centeredTitleAndSubtitle = false,
                                 title = {
                                     Text(
                                         stringResource(id = R.string.all_contacts),

@@ -35,7 +35,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-beta01'
+    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-beta02'
 }
 ```
 
@@ -48,14 +48,13 @@ the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose
 In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarScrollBehavior```.
 
 ```kotlin
- val scrollBehavior = remember {
-    CollapsingTopBarDefaults.scrollBehavior(
-        isAlwaysCollapsed = false,
-        isExpandedWhenFirstDisplayed = true,
-        collapsedTopBarHeight = 56.dp,
-        expandedTopBarMaxHeight = 156.dp,
-    )
-}
+ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+    isAlwaysCollapsed = false,
+    isExpandedWhenFirstDisplayed = true,
+    centeredTitleAndSubtitle = false,
+    collapsedTopBarHeight = 56.dp,
+    expandedTopBarMaxHeight = 256.dp,
+)
 ```
 
 To know when scrolling occurs inside your Layout so the ```CollapsingTopBar``` can collapse or
@@ -80,20 +79,18 @@ So when we put it all together we got:
 
 ```kotlin
 
-val scrollBehavior = remember {
-    CollapsingTopBarDefaults.scrollBehavior(
-        isAlwaysCollapsed = false,
-        isExpandedWhenFirstDisplayed = true,
-        collapsedTopBarHeight = 56.dp,
-        expandedTopBarMaxHeight = 156.dp,
-    )
-}
+val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+    isAlwaysCollapsed = false,
+    isExpandedWhenFirstDisplayed = true,
+    centeredTitleAndSubtitle = false,
+    collapsedTopBarHeight = 56.dp,
+    expandedTopBarMaxHeight = 256.dp,
+)
 Scaffold(
     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
         CollapsingTopBar(
             scrollBehavior = scrollBehavior,
-            centeredTitleAndSubtitle = true, // set to false if you want the expanded title and subtitle to be at the left instead
             title = { Text(text = "All contacts") },
             subtitle = { Text(text = "17 contacts") },
         )

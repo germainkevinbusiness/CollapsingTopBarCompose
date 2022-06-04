@@ -1,14 +1,11 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Dp
-
 
 /**
  * Defines how a [CollapsingTopBar] should behave during a [Modifier.nestedScroll] event.
@@ -46,6 +43,11 @@ interface TopBarScrollBehavior {
     var isExpandedWhenFirstDisplayed: Boolean
 
     /**
+     * Whether the title and subtitle should be centered when Expanded
+     * */
+    var centeredTitleAndSubtitle: Boolean
+
+    /**
      * Tracks how many times [topBarOffset]'s value is 0.0f. Useful when
      * [isExpandedWhenFirstDisplayed] is set to false, because we want the [CollapsingTopBar] to
      * start changing size only after the first scrolling up event is detected through our
@@ -76,6 +78,7 @@ interface TopBarScrollBehavior {
 class DefaultBehaviorOnScroll(
     override var isAlwaysCollapsed: Boolean,
     override var isExpandedWhenFirstDisplayed: Boolean,
+    override var centeredTitleAndSubtitle: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,
 ) : TopBarScrollBehavior {

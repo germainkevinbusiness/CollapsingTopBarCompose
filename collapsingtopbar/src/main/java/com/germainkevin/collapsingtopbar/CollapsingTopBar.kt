@@ -26,8 +26,6 @@ import androidx.compose.ui.unit.dp
  * This should typically be an [IconButton] or [IconToggleButton].
  * @param actions the actions displayed at the end of the [CollapsingTopBar]. This should typically
  * be [IconButton]s. The default layout here is a [Row], so icons inside will be placed horizontally.
- * @param centeredTitleAndSubtitle Whether the [title] and [subtitle] section should be centered or
- * at the start of the [CollapsingTopBar]
  * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
  * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
@@ -45,7 +43,6 @@ fun CollapsingTopBar(
     subtitle: @Composable (() -> Unit)? = null,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    centeredTitleAndSubtitle: Boolean = true,
     colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
     contentPadding: PaddingValues = CollapsingTopBarDefaults.ContentPadding,
     elevation: Dp = 0.dp,
