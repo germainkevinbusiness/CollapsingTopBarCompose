@@ -94,15 +94,20 @@ Scaffold(
             subtitle = { Text(text = "17 contacts") },
         )
     },
-) {
+) { innerPadding ->
     LazyColumn(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val context = LocalContext.current
-        val contactNames = context.resources.getStringArray(R.array.contactNames)
+        item {
+            Spacer(modifier = Modifier.height(6.dp))
+        }
         items(count = contactNames.size) {
-            ContactListNames(context, contactNames[it])
+            ContactListNames(
+                context = LocalContext.current,
+                contactName = contactNames[it]
+            )
         }
     }
 }
