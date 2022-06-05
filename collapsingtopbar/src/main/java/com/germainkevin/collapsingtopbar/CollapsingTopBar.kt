@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,45 +51,28 @@ fun CollapsingTopBar(
 ) = with(scrollBehavior) {
 
     if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-        // Make sure the trackOffSetIsZero variable does not exceed the number 10
-        if (trackOffSetIsZero > 10) trackOffSetIsZero = 3
+        // Makes sure the trackOffSetIsZero stays below the number 6, just a random number above 3
+        // cause I don't need to store super high numbers for that variable
+        if (trackOffSetIsZero > 6) {
+            trackOffSetIsZero = 3
+        }
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
     } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
         currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
     }
 
-    /**
-     * We'll reference [TopBarScrollBehavior.collapsedTopBarHeight] as 56 and
-     * [TopBarScrollBehavior.expandedTopBarMaxHeight] as 200
-     *
-     * We'll add a margin to make the Title Subtitle column disappear before the CollapsingTopBar
-     * reaches the height of 56.dp which is a margin of 20.dp
-     *
-     * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle section is fully invisible)
-     * 200 --------> 1f (alpha value meaning when the title subtitle section is fully visible)
-     *
-     * The distance between 56+20  and 200 is 124. This distance represents the 100% distance from the
-     * collapsed state and expanded state of the [CollapsingTopBar]
-     *
-     * So what we do is:
-     * 124                                ----------> 100%
-     * currentTopBarHeight's actual value -------------> x
-     *
-     * Whatever value x is, is considered a alpha value for the titleSubtitleAlphaRange
-     */
-    val titleSubtitleAlpha =
-        (currentTopBarHeight - (collapsedTopBarHeight + 20.dp)) /
-                (expandedTopBarMaxHeight - (collapsedTopBarHeight + 20.dp))
+    val columnWithTitleSubtitleAlpha by getTitleAndSubtitleColumnAlpha(
+        currentTopBarHeight = currentTopBarHeight,
+        collapsedTopBarHeight = collapsedTopBarHeight,
+        expandedTopBarMaxHeight = expandedTopBarMaxHeight,
+        margin = 20.dp
+    )
 
-    val columnWithTitleSubtitleAlpha by animateFloatAsState(titleSubtitleAlpha)
-
-    val visibleValue = collapsedTopBarHeight
-    val invisibleValue = collapsedTopBarHeight + 6.dp
-
-    val collapsedTitleAlphaRange: Float = if (currentTopBarHeight == visibleValue) 1f
-    else (visibleValue - currentTopBarHeight) / (invisibleValue - visibleValue)
-
-    val collapsedTitleAlpha by animateFloatAsState(collapsedTitleAlphaRange)
+    val collapsedTitleAlpha by getCollapsedTitleAlpha(
+        currentTopBarHeight = currentTopBarHeight,
+        visibleValue = collapsedTopBarHeight,
+        invisibleValue = collapsedTopBarHeight + 6.dp
+    )
 
     CollapsingTopBarLayout(
         modifier = modifier,
@@ -228,11 +212,70 @@ fun CollapsingTopBarLayout(
 }
 
 
+/**
+ * The Section where all the options menu items will be laid out on
+ * */
 val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
     Row(
         modifier = Modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.Bottom,
         content = it
+    )
+}
+
+/**
+ * We'll reference [collapsedTopBarHeight] as 56 and [expandedTopBarMaxHeight] as 200
+ *
+ * We'll add a margin to make the Title Subtitle Column disappear before the CollapsingTopBar
+ * reaches the height of 56.dp which is a margin of 20.dp
+ *
+ * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle section is fully invisible)
+ * 200 --------> 1f (alpha value meaning when the title subtitle section is fully visible)
+ *
+ * The distance between 56+20  and 200 is 124. This distance represents the 100% distance from the
+ * collapsed state and expanded state of the [CollapsingTopBar]
+ *
+ * So what we do is:
+ * 124                                ----------> 100%
+ * currentTopBarHeight's actual value -------------> x
+ *
+ * Whatever value x is, is considered the level of visibility the Title Subtitle Column should have
+ *
+ * @param currentTopBarHeight The current height of the [CollapsingTopBar] in [Dp]
+ * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it is collapsed
+ * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it is expanded
+ * @param margin A distance added to start making the TitleAndSubtitleColumn's visible only when
+ * [currentTopBarHeight] reaches [collapsedTopBarHeight] + margin
+ */
+@Composable
+fun getTitleAndSubtitleColumnAlpha(
+    currentTopBarHeight: Dp,
+    collapsedTopBarHeight: Dp,
+    expandedTopBarMaxHeight: Dp,
+    margin: Dp
+): State<Float> {
+    return animateFloatAsState(
+        (currentTopBarHeight - (collapsedTopBarHeight + margin)) /
+                (expandedTopBarMaxHeight - (collapsedTopBarHeight + margin))
+    )
+}
+
+/**
+ * @param currentTopBarHeight The current height of the [CollapsingTopBar] in [Dp]
+ * @param visibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
+ * Collapsed Title should become visible
+ * @param invisibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
+ * Collapsed Title section should become invisible
+ * */
+@Composable
+fun getCollapsedTitleAlpha(
+    currentTopBarHeight: Dp,
+    visibleValue: Dp,
+    invisibleValue: Dp
+): State<Float> {
+    return animateFloatAsState(
+        if (currentTopBarHeight == visibleValue) 1f
+        else (visibleValue - currentTopBarHeight) / (invisibleValue - visibleValue)
     )
 }

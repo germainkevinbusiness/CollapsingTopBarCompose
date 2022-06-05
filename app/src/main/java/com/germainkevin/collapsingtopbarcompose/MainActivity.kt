@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         isAlwaysCollapsed = false,
                         isExpandedWhenFirstDisplayed = true,
                         centeredTitleAndSubtitle = false,
-                        expandedTopBarMaxHeight = 256.dp,
+                        expandedTopBarMaxHeight = 156.dp,
                     )
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

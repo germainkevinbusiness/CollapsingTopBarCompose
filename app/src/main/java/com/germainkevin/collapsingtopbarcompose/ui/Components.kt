@@ -6,7 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
@@ -15,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.germainkevin.collapsingtopbarcompose.R
@@ -76,14 +77,14 @@ fun LeftDrawer(
         drawerItems.forEach { item ->
             NavigationDrawerItem(
                 icon = { Icon(item, contentDescription = null) },
-                label = { Text(item.name) },
+                label = { Text(item.name.replace("Filled.", "")) },
                 selected = item == selectedItem.value,
                 onClick = {
                     selectedItem.value = item
                     closeLeftDrawer()
                 },
                 shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp),
-                badge = { Text(text = " 20") },
+                badge = { Text(text = "20") },
                 modifier = Modifier.padding(end = 16.dp, top = 12.dp, bottom = 12.dp)
             )
         }
