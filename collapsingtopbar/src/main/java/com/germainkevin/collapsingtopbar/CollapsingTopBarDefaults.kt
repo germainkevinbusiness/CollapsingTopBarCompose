@@ -53,7 +53,7 @@ object CollapsingTopBarDefaults {
     fun colors(
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
         contentColor: Color = contentColorFor(backgroundColor)
-    ): CollapsingTopBarColors = DefaultCollapsingTopBarColors(backgroundColor, contentColor)
+    ): CollapsingTopBarColors = CollapsingTopBarColors(backgroundColor, contentColor)
 }
 
 

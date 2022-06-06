@@ -6,6 +6,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 /**
  * Defines how a [CollapsingTopBar] should behave during a [Modifier.nestedScroll] event.
@@ -106,6 +107,16 @@ class DefaultBehaviorOnScroll(
     override var nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+
+            if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                // Just making sure trackOffSetIsZero doesn't store high numbers, it's unnecessary
+                if (trackOffSetIsZero > 6) {
+                    trackOffSetIsZero = 3
+                }
+                currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
+            } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
+                currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
+            }
 
             val newOffset = (topBarOffset + available.y)
             val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)

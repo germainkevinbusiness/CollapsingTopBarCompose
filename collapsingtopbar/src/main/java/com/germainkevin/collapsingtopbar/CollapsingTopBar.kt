@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -50,17 +49,6 @@ fun CollapsingTopBar(
     scrollBehavior: TopBarScrollBehavior
 ) = with(scrollBehavior) {
 
-    if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-        // Makes sure the trackOffSetIsZero stays below the number 6, just a random number above 3
-        // cause I don't need to store super high numbers for that variable
-        if (trackOffSetIsZero > 6) {
-            trackOffSetIsZero = 3
-        }
-        currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
-    } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
-        currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
-    }
-
     val columnWithTitleSubtitleAlpha by getTitleAndSubtitleColumnAlpha(
         currentTopBarHeight = currentTopBarHeight,
         collapsedTopBarHeight = collapsedTopBarHeight,
@@ -76,17 +64,17 @@ fun CollapsingTopBar(
 
     CollapsingTopBarLayout(
         modifier = modifier,
-        colors = colors,
-        elevation = elevation,
-        currentTopBarHeight = currentTopBarHeight,
-        columnWithTitleSubtitleAlpha = columnWithTitleSubtitleAlpha,
         title = title,
         subtitle = subtitle,
-        centeredTitleAndSubtitle = centeredTitleAndSubtitle,
-        contentPadding = contentPadding,
         navigationIcon = navigationIcon,
         actions = actions,
+        centeredTitleAndSubtitle = centeredTitleAndSubtitle,
+        contentPadding = contentPadding,
+        colors = colors,
+        columnWithTitleSubtitleAlpha = columnWithTitleSubtitleAlpha,
         collapsedTitleAlpha = collapsedTitleAlpha,
+        currentTopBarHeight = currentTopBarHeight,
+        elevation = elevation
     )
 }
 
@@ -121,11 +109,10 @@ fun CollapsingTopBarLayout(
     elevation: Dp,
 ) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
     Surface(
+        modifier = modifier,
         color = colors.backgroundColor,
         contentColor = colors.contentColor,
-        shape = RectangleShape,
         elevation = elevation,
-        modifier = modifier,
     ) {
         Box(
             modifier = Modifier

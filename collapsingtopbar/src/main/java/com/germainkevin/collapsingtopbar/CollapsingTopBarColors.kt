@@ -4,21 +4,10 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Default colors used in the [CollapsingTopBar]
+ * @param backgroundColor The background color of the [CollapsingTopBar]
+ * @param contentColor The color for the content inside [CollapsingTopBar]
  * */
-interface CollapsingTopBarColors {
-
-    /**
-     * The background color of the [CollapsingTopBar]
-     * */
-    var backgroundColor: Color
-
-    /**
-     * The default color for the content inside [CollapsingTopBar]
-     * */
+class CollapsingTopBarColors(
+    var backgroundColor: Color,
     var contentColor: Color
-}
-
-class DefaultCollapsingTopBarColors(
-    override var backgroundColor: Color,
-    override var contentColor: Color
-) : CollapsingTopBarColors
+)
