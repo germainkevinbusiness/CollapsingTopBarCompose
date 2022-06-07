@@ -30,17 +30,6 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
-or
-```groovy
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
 
 **Step 2.** Add the dependency in your ``` module build.gradle ``` file, like so:
 
