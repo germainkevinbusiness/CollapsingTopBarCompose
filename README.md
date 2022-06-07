@@ -20,7 +20,7 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
 # How to get this library in your android app
 
 **Step 1.** Add the jitpack repository to the ``repositories { }``  function, inside
-your ``project build.gradle`` or your ``settings.gradle`` like so:
+your ``project build.gradle`` or inside your ``settings.gradle`` like so:
 
 ```groovy
 repositories {
@@ -30,12 +30,23 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
+or
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
 
 **Step 2.** Add the dependency in your ``` module build.gradle ``` file, like so:
 
 ```groovy
 dependencies {
-    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-beta04'
+    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-beta05'
 }
 ```
 
@@ -94,10 +105,10 @@ Scaffold(
             subtitle = { Text(text = "17 contacts") },
         )
     },
-) { innerPadding ->
+) { contentPadding ->
     LazyColumn(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
-        contentPadding = innerPadding,
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {

@@ -36,7 +36,7 @@ object CollapsingTopBarDefaults {
         centeredTitleAndSubtitle: Boolean = true,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
         expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-    ): TopBarScrollBehavior = DefaultBehaviorOnScroll(
+    ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
@@ -56,6 +56,15 @@ object CollapsingTopBarDefaults {
     ): CollapsingTopBarColors = CollapsingTopBarColors(backgroundColor, contentColor)
 }
 
+/**
+ * Default colors used in the [CollapsingTopBar]
+ * @param backgroundColor The background color of the [CollapsingTopBar]
+ * @param contentColor The color for the content inside [CollapsingTopBar]
+ * */
+class CollapsingTopBarColors(
+    var backgroundColor: Color,
+    var contentColor: Color
+)
 
 /**
  * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll]
@@ -79,7 +88,7 @@ fun rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-): TopBarScrollBehavior = remember {
+): CollapsingTopBarScrollBehavior = remember {
     CollapsingTopBarDefaults.scrollBehavior(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,

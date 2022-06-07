@@ -30,23 +30,23 @@ import androidx.compose.ui.unit.dp
  * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
- * @param scrollBehavior  [TopBarScrollBehavior] which holds certain values that will be applied by
+ * @param scrollBehavior  [CollapsingTopBarScrollBehavior] which holds certain values that will be applied by
  * this [CollapsingTopBar] to set up its height. A scroll behavior is designed to work in
  * conjunction with a scrolled content to change the [CollapsingTopBar] appearance as the content
- * scrolls. See [TopBarScrollBehavior.nestedScrollConnection].
+ * scrolls. See [CollapsingTopBarScrollBehavior.nestedScrollConnection].
  * @author Germain Kevin
  * */
 @Composable
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
     title: @Composable () -> Unit,
-    subtitle: @Composable (() -> Unit)? = null,
+    subtitle: @Composable () -> Unit = {},
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
     contentPadding: PaddingValues = CollapsingTopBarDefaults.ContentPadding,
+    scrollBehavior: CollapsingTopBarScrollBehavior,
     elevation: Dp = 0.dp,
-    scrollBehavior: TopBarScrollBehavior
 ) = with(scrollBehavior) {
 
     val columnWithTitleSubtitleAlpha by getTitleAndSubtitleColumnAlpha(
@@ -94,10 +94,10 @@ fun CollapsingTopBar(
  * @param elevation The size of the shadow below the [Surface]
  * */
 @Composable
-fun CollapsingTopBarLayout(
+internal fun CollapsingTopBarLayout(
     modifier: Modifier,
     title: @Composable () -> Unit,
-    subtitle: @Composable (() -> Unit)?,
+    subtitle: @Composable () -> Unit,
     navigationIcon: @Composable (() -> Unit)?,
     actions: @Composable RowScope.() -> Unit,
     centeredTitleAndSubtitle: Boolean,
@@ -137,10 +137,12 @@ fun CollapsingTopBarLayout(
                     .alpha(columnWithTitleSubtitleAlpha),
                 horizontalAlignment =
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
-                verticalArrangement = Arrangement.Center, content = {
+                verticalArrangement = Arrangement.Center,
+                content = {
                     title()
-                    subtitle?.let { it() }
-                })
+                    subtitle()
+                }
+            )
             /**
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
              * */
@@ -153,18 +155,8 @@ fun CollapsingTopBarLayout(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Bottom,
                 content = {
-                    /**
-                     * Navigation Bar Row
-                     * */
-                    if (navigationIcon == null) {
-                        Spacer(modifier = noNavIconSpacerModifier)
-                    } else {
-                        Row(
-                            modifier = navigationIconModifier,
-                            verticalAlignment = Alignment.Bottom,
-                            content = { navigationIcon() }
-                        )
-                    }
+                    navigationIconRow(navigationIcon)
+
                     /**
                      * Title section, shown when the [CollapsingTopBar] is collapsed
                      * */
@@ -172,37 +164,59 @@ fun CollapsingTopBarLayout(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val enterAnimation = if (centeredTitleAndSubtitle)
-                            expandVertically(
-                                // Expands from bottom to top.
-                                expandFrom = Alignment.Top
-                            ) + fadeIn(initialAlpha = collapsedTitleAlpha)
-                        else fadeIn(initialAlpha = collapsedTitleAlpha)
-
-                        val exitAnimation = if (centeredTitleAndSubtitle)
-                            slideOutVertically() + fadeOut() else fadeOut()
-                        AnimatedVisibility(
-                            visible = collapsedTitleAlpha in 0f..1f,
-                            enter = enterAnimation,
-                            exit = exitAnimation
-                        ) { title() }
-                    }
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = {
+                            collapsedTitle(
+                                centeredTitleAndSubtitle,
+                                collapsedTitleAlpha,
+                                title
+                            )
+                        }
+                    )
                     /**
                      * More menu section where Options Menu icons are laid out
                      * */
                     actionsRow(actions)
-                })
+                }
+            )
         }
     }
 }
 
+internal val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =
+    { navigationIcon ->
+        if (navigationIcon == null) Spacer(modifier = noNavIconSpacerModifier)
+        else {
+            Row(
+                modifier = navigationIconModifier,
+                verticalAlignment = Alignment.Bottom,
+                content = { navigationIcon() }
+            )
+        }
+    }
+
+internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
+    { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
+        val enterAnimation = if (centeredTitleAndSubtitle)
+            expandVertically(
+                // Expands from bottom to top.
+                expandFrom = Alignment.Top
+            ) + fadeIn(initialAlpha = collapsedTitleAlpha)
+        else fadeIn(initialAlpha = collapsedTitleAlpha)
+
+        val exitAnimation = if (centeredTitleAndSubtitle)
+            slideOutVertically() + fadeOut() else fadeOut()
+        AnimatedVisibility(
+            visible = collapsedTitleAlpha in 0f..1f,
+            enter = enterAnimation,
+            exit = exitAnimation
+        ) { title() }
+    }
 
 /**
  * The Section where all the options menu items will be laid out on
  * */
-val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
+internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
     Row(
         modifier = Modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.End,
@@ -236,7 +250,7 @@ val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
  * [currentTopBarHeight] reaches [collapsedTopBarHeight] + margin
  */
 @Composable
-fun getTitleAndSubtitleColumnAlpha(
+internal fun getTitleAndSubtitleColumnAlpha(
     currentTopBarHeight: Dp,
     collapsedTopBarHeight: Dp,
     expandedTopBarMaxHeight: Dp,
@@ -256,7 +270,7 @@ fun getTitleAndSubtitleColumnAlpha(
  * Collapsed Title section should become invisible
  * */
 @Composable
-fun getCollapsedTitleAlpha(
+internal fun getCollapsedTitleAlpha(
     currentTopBarHeight: Dp,
     visibleValue: Dp,
     invisibleValue: Dp

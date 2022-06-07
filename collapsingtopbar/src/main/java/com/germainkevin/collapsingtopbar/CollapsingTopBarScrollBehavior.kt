@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 /**
  * Defines how a [CollapsingTopBar] should behave during a [Modifier.nestedScroll] event.
  * */
-interface TopBarScrollBehavior {
+interface CollapsingTopBarScrollBehavior {
 
     /**
      * When set to true, it will make this [CollapsingTopBar] never expand and stay collapsed */
@@ -82,7 +82,7 @@ class DefaultBehaviorOnScroll(
     override var centeredTitleAndSubtitle: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,
-) : TopBarScrollBehavior {
+) : CollapsingTopBarScrollBehavior {
 
     init {
         require(expandedTopBarMaxHeight > collapsedTopBarHeight) {
