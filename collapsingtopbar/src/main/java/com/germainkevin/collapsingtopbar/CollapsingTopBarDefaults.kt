@@ -3,8 +3,8 @@ package com.germainkevin.collapsingtopbar
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.contentColorFor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
@@ -15,7 +15,8 @@ object CollapsingTopBarDefaults {
         PaddingValues(start = appBarHorizontalPadding, end = appBarHorizontalPadding)
 
     /**
-     * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll]
+     * Specifies how the [CollapsingTopBar] should behave when a
+     * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll]
      * is detected.
      *
      *  @param isAlwaysCollapsed This will make this [CollapsingTopBar] stay collapsed and stay with
@@ -67,8 +68,8 @@ class CollapsingTopBarColors(
 )
 
 /**
- * Specifies how the [CollapsingTopBar] should behave when a [Modifier.nestedScroll]
- * is detected.
+ * Specifies how the [CollapsingTopBar] should behave when a
+ * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] is detected.
  *
  * @param isAlwaysCollapsed This will make this [CollapsingTopBar] stay collapsed and stay with
  * the [collapsedTopBarHeight] height.

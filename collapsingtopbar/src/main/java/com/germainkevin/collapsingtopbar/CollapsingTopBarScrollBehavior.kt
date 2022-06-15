@@ -1,7 +1,8 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -9,7 +10,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Defines how a [CollapsingTopBar] should behave during a [Modifier.nestedScroll] event.
+ * Defines how a [CollapsingTopBar] should behave during a
+ * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
  * */
 interface CollapsingTopBarScrollBehavior {
 
@@ -70,10 +72,11 @@ interface CollapsingTopBarScrollBehavior {
     var offsetLimit: Float
 
     /**
-     * A [NestedScrollConnection] that should be attached to a [Modifier.nestedScroll] in order to
+     * A [NestedScrollConnection] that should be attached to a
+     * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] in order to
      * keep track of the scroll events.
      */
-    var nestedScrollConnection: NestedScrollConnection
+    val nestedScrollConnection: NestedScrollConnection
 }
 
 class DefaultBehaviorOnScroll(
@@ -104,7 +107,7 @@ class DefaultBehaviorOnScroll(
 
     override var offsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value
 
-    override var nestedScrollConnection = object : NestedScrollConnection {
+    override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
