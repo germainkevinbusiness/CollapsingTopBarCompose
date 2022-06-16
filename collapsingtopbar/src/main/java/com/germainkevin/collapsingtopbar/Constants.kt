@@ -10,6 +10,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 val appBarHorizontalPadding = 4.dp
 
 val defaultMinimumTopBarHeight = 56.dp

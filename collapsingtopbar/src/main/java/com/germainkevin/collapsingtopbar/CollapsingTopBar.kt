@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * [CollapsingTopBar]s display is like a [TopAppBar] that can collapse and/or expand.
+ * [CollapsingTopBar] is like a [TopAppBar] that can collapse and/or expand.
  *
  * This [CollapsingTopBar] has slots for a title, subtitle, navigation icon, and actions.
  *
@@ -46,7 +46,7 @@ fun CollapsingTopBar(
     colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
     contentPadding: PaddingValues = CollapsingTopBarDefaults.ContentPadding,
     scrollBehavior: CollapsingTopBarScrollBehavior,
-    elevation: Dp = 0.dp,
+    elevation: Dp = CollapsingTopBarDefaults.DefaultCollapsingTopBarElevation,
 ) = with(scrollBehavior) {
 
     val columnWithTitleSubtitleAlpha by getTitleAndSubtitleColumnAlpha(
@@ -226,28 +226,44 @@ internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit =
 }
 
 /**
- * We'll reference [collapsedTopBarHeight] as 56 and [expandedTopBarMaxHeight] as 200
+ * In order to know when the "title subtitle column" should have a 1f alpha visibility or 0f alpha
+ * visibility or a alpha value between 0f and 1f, we need to base that alpha value on the
+ * [currentTopBarHeight] of the [CollapsingTopBar].
  *
- * We'll add a margin to make the Title Subtitle Column disappear before the CollapsingTopBar
- * reaches the height of 56.dp which is a margin of 20.dp
+ * So in this sense when the [currentTopBarHeight] of the [CollapsingTopBar]
+ * is [collapsedTopBarHeight] + [margin] then  the "title subtitle column" should be invisible
+ * or alpha = 0f, and when the [CollapsingTopBar]'s [currentTopBarHeight] is
+ * [expandedTopBarMaxHeight] then the "title subtitle column" should be visible or alpha = 1f.
  *
- * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle section is fully invisible)
- * 200 --------> 1f (alpha value meaning when the title subtitle section is fully visible)
+ * But we also want the "title subtitle column"'s alpha value to be between 0f and 1f when the
+ * [CollapsingTopBar]'s [currentTopBarHeight] is between
+ * [collapsedTopBarHeight] + [margin] and [expandedTopBarMaxHeight]
  *
- * The distance between 56+20  and 200 is 124. This distance represents the 100% distance from the
- * collapsed state and expanded state of the [CollapsingTopBar]
+ * We'll reference [collapsedTopBarHeight] as 56 (Dp) and [expandedTopBarMaxHeight] as 200 (Dp), and
+ * the [margin] as 20 (Dp)
+ *
+ * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle column is fully invisible)
+ *
+ * 200      --------> 1f (alpha value meaning when the title subtitle column is fully visible)
+ *
+ * The distance between [expandedTopBarMaxHeight] - ([collapsedTopBarHeight] + [margin])
+ * << A distance which we will label as 124 (Dp) because (200 - (56+20) = 124) >>,
+ * is going to be the 100% distance from making the "title subtitle column" fully visible (100%) or
+ * alpha =1f and fully invisible (0%) or alpha = 0f, or in between (0%..100%) 0.0f to 1.0f.
  *
  * So what we do is:
  * 124                                ----------> 100%
- * currentTopBarHeight's actual value -------------> x
  *
- * Whatever value x is, is considered the level of visibility the Title Subtitle Column should have
+ * currentTopBarHeight's actual value -------------> alphaValue
+ *
+ * Whatever value alphaValue is, is considered the level of visibility the "title subtitle column"
+ * should have
  *
  * @param currentTopBarHeight The current height of the [CollapsingTopBar] in [Dp]
  * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it is collapsed
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it is expanded
- * @param margin A distance added to start making the TitleAndSubtitleColumn's visible only when
- * [currentTopBarHeight] reaches [collapsedTopBarHeight] + margin
+ * @param margin Making sure that the 'title subtitle column" become visible once the
+ * [currentTopBarHeight] reaches past [collapsedTopBarHeight] + [margin]
  */
 @Composable
 internal fun getTitleAndSubtitleColumnAlpha(
@@ -263,6 +279,7 @@ internal fun getTitleAndSubtitleColumnAlpha(
 }
 
 /**
+ * Sets the alpha value of the collapsed title section
  * @param currentTopBarHeight The current height of the [CollapsingTopBar] in [Dp]
  * @param visibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
  * Collapsed Title should become visible

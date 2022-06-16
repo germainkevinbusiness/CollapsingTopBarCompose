@@ -20,17 +20,17 @@ interface CollapsingTopBarScrollBehavior {
     var isAlwaysCollapsed: Boolean
 
     /**
-     * The height of the TopBar when it's collapsed in [Dp]
+     * The height of the CollapsingTopBar when it's collapsed in [Dp]
      * */
     var collapsedTopBarHeight: Dp
 
     /**
-     * The height of the CollapsingTopBar when it's fully expanded
+     * The height of the CollapsingTopBar when it's fully expanded in [Dp]
      * */
     var expandedTopBarMaxHeight: Dp
 
     /**
-     * The live height of the [CollapsingTopBar]
+     * The live height of the [CollapsingTopBar] in [Dp]
      * */
     var currentTopBarHeight: Dp
 
@@ -79,6 +79,9 @@ interface CollapsingTopBarScrollBehavior {
     val nestedScrollConnection: NestedScrollConnection
 }
 
+/**
+ * Here lies the logic on how the [CollapsingTopBar] behaves at all times
+ * */
 class DefaultBehaviorOnScroll(
     override var isAlwaysCollapsed: Boolean,
     override var isExpandedWhenFirstDisplayed: Boolean,
@@ -112,7 +115,7 @@ class DefaultBehaviorOnScroll(
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
             if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                // Just making sure trackOffSetIsZero doesn't store high numbers, it's unnecessary
+                // Just making sure trackOffSetIsZero doesn't store high numbers, koz it's unnecessary
                 if (trackOffSetIsZero > 6) {
                     trackOffSetIsZero = 3
                 }
