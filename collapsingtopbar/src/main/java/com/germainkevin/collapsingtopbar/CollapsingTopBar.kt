@@ -94,7 +94,7 @@ fun CollapsingTopBar(
  * @param elevation The size of the shadow below the [Surface]
  * */
 @Composable
-internal fun CollapsingTopBarLayout(
+private fun CollapsingTopBarLayout(
     modifier: Modifier,
     title: @Composable () -> Unit,
     subtitle: @Composable () -> Unit,
@@ -183,7 +183,7 @@ internal fun CollapsingTopBarLayout(
     }
 }
 
-internal val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =
+private val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =
     { navigationIcon ->
         if (navigationIcon == null) Spacer(modifier = noNavIconSpacerModifier)
         else {
@@ -195,7 +195,7 @@ internal val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit 
         }
     }
 
-internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
+private val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
     { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
         val enterAnimation = if (centeredTitleAndSubtitle)
             expandVertically(
@@ -216,7 +216,7 @@ internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit
 /**
  * The Section where all the options menu items will be laid out on
  * */
-internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
+private val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
     Row(
         modifier = Modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.End,
@@ -266,7 +266,7 @@ internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit =
  * [currentTopBarHeight] reaches past [collapsedTopBarHeight] + [margin]
  */
 @Composable
-internal fun getTitleAndSubtitleColumnAlpha(
+private fun getTitleAndSubtitleColumnAlpha(
     currentTopBarHeight: Dp,
     collapsedTopBarHeight: Dp,
     expandedTopBarMaxHeight: Dp,
@@ -287,7 +287,7 @@ internal fun getTitleAndSubtitleColumnAlpha(
  * Collapsed Title section should become invisible
  * */
 @Composable
-internal fun getCollapsedTitleAlpha(
+private fun getCollapsedTitleAlpha(
     currentTopBarHeight: Dp,
     visibleValue: Dp,
     invisibleValue: Dp

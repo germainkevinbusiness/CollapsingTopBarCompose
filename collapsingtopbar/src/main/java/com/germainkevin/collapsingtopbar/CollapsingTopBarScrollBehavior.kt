@@ -1,8 +1,7 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -79,9 +78,6 @@ interface CollapsingTopBarScrollBehavior {
     val nestedScrollConnection: NestedScrollConnection
 }
 
-/**
- * Here lies the logic on how the [CollapsingTopBar] behaves at all times
- * */
 class DefaultBehaviorOnScroll(
     override var isAlwaysCollapsed: Boolean,
     override var isExpandedWhenFirstDisplayed: Boolean,

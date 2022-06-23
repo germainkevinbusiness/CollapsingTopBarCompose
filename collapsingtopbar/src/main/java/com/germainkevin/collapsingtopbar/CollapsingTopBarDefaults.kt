@@ -92,12 +92,21 @@ fun rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-): CollapsingTopBarScrollBehavior = remember {
-    CollapsingTopBarDefaults.scrollBehavior(
-        isAlwaysCollapsed = isAlwaysCollapsed,
-        isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
-        centeredTitleAndSubtitle = centeredTitleAndSubtitle,
-        collapsedTopBarHeight = collapsedTopBarHeight,
-        expandedTopBarMaxHeight = expandedTopBarMaxHeight
-    )
+): CollapsingTopBarScrollBehavior {
+    return remember(
+        isAlwaysCollapsed,
+        isExpandedWhenFirstDisplayed,
+        centeredTitleAndSubtitle,
+        collapsedTopBarHeight,
+        collapsedTopBarHeight,
+        expandedTopBarMaxHeight
+    ) {
+        CollapsingTopBarDefaults.scrollBehavior(
+            isAlwaysCollapsed = isAlwaysCollapsed,
+            isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
+            centeredTitleAndSubtitle = centeredTitleAndSubtitle,
+            collapsedTopBarHeight = collapsedTopBarHeight,
+            expandedTopBarMaxHeight = expandedTopBarMaxHeight
+        )
+    }
 }

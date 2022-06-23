@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
+import com.germainkevin.collapsingtopbar.CollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.ContactListNames
 import com.germainkevin.collapsingtopbarcompose.ui.LeftDrawer
@@ -66,45 +68,15 @@ class MainActivity : ComponentActivity() {
                         centeredTitleAndSubtitle = false,
                         expandedTopBarMaxHeight = 156.dp,
                     )
+
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                         scaffoldState = scaffoldState,
                         drawerContent = { LeftDrawer(closeLeftDrawer = closeLeftDrawer) },
                         topBar = {
-                            CollapsingTopBar(
+                            OurCollapsingTopBar(
                                 scrollBehavior = scrollBehavior,
-                                title = {
-                                    Text(
-                                        stringResource(id = R.string.all_contacts),
-                                        style = LocalTextStyle.current.copy(
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.Normal,
-                                            color = MaterialTheme.colorScheme.onPrimary
-                                        )
-                                    )
-                                },
-                                subtitle = {
-                                    Text(
-                                        stringResource(
-                                            id = R.string.contactNamesCount,
-                                            contactNames.size.toString()
-                                        ),
-                                        style = LocalTextStyle.current.copy(
-                                            fontWeight = FontWeight.Normal,
-                                            color = MaterialTheme.colorScheme.onPrimary
-                                        )
-                                    )
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = openLeftDrawer) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Menu,
-                                            contentDescription = stringResource(id = R.string.hamburger_menu),
-                                            tint = MaterialTheme.colorScheme.onPrimary
-                                        )
-                                    }
-                                },
-                                actions = { MoreMenuIcons() },
+                                contactNames = contactNames, openLeftDrawer = openLeftDrawer
                             )
                         },
                         content = { innerPadding ->
@@ -129,4 +101,47 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun OurCollapsingTopBar(
+    scrollBehavior: CollapsingTopBarScrollBehavior,
+    contactNames: Array<String>,
+    openLeftDrawer: () -> Unit,
+) {
+    CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        title = {
+            Text(
+                stringResource(id = R.string.all_contacts),
+                style = LocalTextStyle.current.copy(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        },
+        subtitle = {
+            Text(
+                stringResource(
+                    id = R.string.contactNamesCount,
+                    contactNames.size.toString()
+                ),
+                style = LocalTextStyle.current.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = openLeftDrawer) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = stringResource(id = R.string.hamburger_menu),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        },
+        actions = { MoreMenuIcons() },
+    )
 }
