@@ -76,6 +76,17 @@ interface CollapsingTopBarScrollBehavior {
      * keep track of the scroll events.
      */
     val nestedScrollConnection: NestedScrollConnection
+
+    /**
+     * The visibility alpha value of the Column which holds as children the Title and Subtitle
+     * */
+    val expandedColumnAlphaValue: @Composable () -> State<Float>
+
+    /**
+     * The visibility alpha value of the Title displayed and visible when the [CollapsingTopBar] is
+     * collapsed
+     * */
+    val collapsedTitleAlpha: @Composable () -> State<Float>
 }
 
 class DefaultBehaviorOnScroll(
@@ -88,7 +99,8 @@ class DefaultBehaviorOnScroll(
 
     init {
         require(expandedTopBarMaxHeight > collapsedTopBarHeight) {
-            "expandedTopBarMaxHeight must be greater than collapsedTopBarHeight"
+            "expandedTopBarMaxHeight ($expandedTopBarMaxHeight) must be greater " +
+                    "than collapsedTopBarHeight ($collapsedTopBarHeight)"
         }
     }
 
@@ -132,5 +144,76 @@ class DefaultBehaviorOnScroll(
 
             return Offset.Zero
         }
+    }
+
+    override val expandedColumnAlphaValue: @Composable () -> State<Float> = {
+        getExpandedColumnAlpha()
+    }
+
+    override val collapsedTitleAlpha: @Composable () -> State<Float> = {
+        getCollapsedTitleAlpha()
+    }
+
+    /**
+     * In order to know when the "title subtitle column" should have a 1f alpha visibility or 0f alpha
+     * visibility or a alpha value between 0f and 1f, we need to base that alpha value on the
+     * [currentTopBarHeight] of the [CollapsingTopBar].
+     *
+     * So in this sense when the [currentTopBarHeight] of the [CollapsingTopBar]
+     * is [collapsedTopBarHeight] + [margin] then  the "title subtitle column" should be invisible
+     * or alpha = 0f, and when the [CollapsingTopBar]'s [currentTopBarHeight] is
+     * [expandedTopBarMaxHeight] then the "title subtitle column" should be visible or alpha = 1f.
+     *
+     * But we also want the "title subtitle column"'s alpha value to be between 0f and 1f when the
+     * [CollapsingTopBar]'s [currentTopBarHeight] is between
+     * [collapsedTopBarHeight] + [margin] and [expandedTopBarMaxHeight]
+     *
+     * We'll reference [collapsedTopBarHeight] as 56 (Dp) and [expandedTopBarMaxHeight] as 200 (Dp), and
+     * the [margin] as 20 (Dp)
+     *
+     * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle column is fully invisible)
+     *
+     * 200      --------> 1f (alpha value meaning when the title subtitle column is fully visible)
+     *
+     * The distance between [expandedTopBarMaxHeight] - ([collapsedTopBarHeight] + [margin])
+     * << A distance which we will label as 124 (Dp) because (200 - (56+20) = 124) >>,
+     * is going to be the 100% distance from making the "title subtitle column" fully visible (100%) or
+     * alpha =1f and fully invisible (0%) or alpha = 0f, or in between (0%..100%) 0.0f to 1.0f.
+     *
+     * So what we do is:
+     * 124                                ----------> 100%
+     *
+     * currentTopBarHeight's actual value -------------> alphaValue
+     *
+     * Whatever value alphaValue is, is considered the level of visibility the "title subtitle column"
+     * should have
+     *
+     * @param margin Making sure that the 'title subtitle column" become visible once the
+     * [currentTopBarHeight] reaches past [collapsedTopBarHeight] + [margin]
+     */
+    @Composable
+    fun getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
+        return animateFloatAsState(
+            (currentTopBarHeight - (collapsedTopBarHeight + margin)) /
+                    (expandedTopBarMaxHeight - (collapsedTopBarHeight + margin))
+        )
+    }
+
+    /**
+     * Sets the alpha value of the collapsed title section
+     * @param visibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
+     * Collapsed Title should become visible
+     * @param invisibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
+     * Collapsed Title section should become invisible
+     * */
+    @Composable
+    fun getCollapsedTitleAlpha(
+        visibleValue: Dp = collapsedTopBarHeight,
+        invisibleValue: Dp = collapsedTopBarHeight + 6.dp
+    ): State<Float> {
+        return animateFloatAsState(
+            if (currentTopBarHeight == visibleValue) 1f
+            else (visibleValue - currentTopBarHeight) / (invisibleValue - visibleValue)
+        )
     }
 }

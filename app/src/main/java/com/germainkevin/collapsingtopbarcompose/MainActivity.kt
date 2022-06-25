@@ -103,6 +103,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * @param scrollBehavior Defines how a [CollapsingTopBar] should behave during a
+ * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
+ * @param contactNames Just the list of contact names so we can count how much names there are to
+ * display that number inside our subtitle [Text]
+ * @param openLeftDrawer Triggers the Left Drawer to be displayed
+ * */
 @Composable
 fun OurCollapsingTopBar(
     scrollBehavior: CollapsingTopBarScrollBehavior,
