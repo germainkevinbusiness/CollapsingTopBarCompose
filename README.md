@@ -35,7 +35,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-beta09'
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.0-rc01"
 }
 ```
 
@@ -53,7 +53,7 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
     isExpandedWhenFirstDisplayed = true,
     centeredTitleAndSubtitle = false,
     collapsedTopBarHeight = 56.dp,
-    expandedTopBarMaxHeight = 256.dp,
+    expandedTopBarMaxHeight = 156.dp,
 )
 ```
 
@@ -78,12 +78,14 @@ So when we put it all together we got:
 
 ```kotlin
 
+val contactNames = stringArrayResource(id = R.array.contactNames)
+
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
     centeredTitleAndSubtitle = false,
     collapsedTopBarHeight = 56.dp,
-    expandedTopBarMaxHeight = 256.dp,
+    expandedTopBarMaxHeight = 156.dp,
 )
 Scaffold(
     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -104,10 +106,7 @@ Scaffold(
             Spacer(modifier = Modifier.height(6.dp))
         }
         items(count = contactNames.size) {
-            ContactListNames(
-                context = LocalContext.current,
-                contactName = contactNames[it]
-            )
+            ContactNameItem(LocalContext.current, contactNames[it])
         }
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Defines how a [CollapsingTopBar] should behave during a
+ * Defines how a [CollapsingTopBar] should behave, mainly during a
  * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
  * */
 interface CollapsingTopBarScrollBehavior {
@@ -19,28 +19,31 @@ interface CollapsingTopBarScrollBehavior {
     var isAlwaysCollapsed: Boolean
 
     /**
-     * The height of the CollapsingTopBar when it's collapsed in [Dp]
+     * The height of the [CollapsingTopBar] when it's collapsed in [Dp]
      * */
     var collapsedTopBarHeight: Dp
 
     /**
-     * The height of the CollapsingTopBar when it's fully expanded in [Dp]
+     * The height of the [CollapsingTopBar] when it's fully expanded in [Dp]
      * */
     var expandedTopBarMaxHeight: Dp
 
     /**
-     * The live height of the [CollapsingTopBar] in [Dp]
+     * The current height of the [CollapsingTopBar] in [Dp]
      * */
     var currentTopBarHeight: Dp
 
     /**
-     * The offset that is added to the height of the [CollapsingTopBar] based on scroll events
+     * The offset that is added to the height of the [CollapsingTopBar] based on detected
+     * scroll events from the
+     * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
      * */
     var topBarOffset: Float
 
     /**
      * When true, Sets the [CollapsingTopBar] to an expanded state when first displayed on the UI
-     * by setting the [CollapsingTopBar]'s height to [expandedTopBarMaxHeight]
+     * by setting the [CollapsingTopBar]'s height to [expandedTopBarMaxHeight] when it's first
+     * being displayed on the UI.
      * */
     var isExpandedWhenFirstDisplayed: Boolean
 
@@ -52,7 +55,7 @@ interface CollapsingTopBarScrollBehavior {
     /**
      * Tracks how many times [topBarOffset]'s value is 0.0f. Useful when
      * [isExpandedWhenFirstDisplayed] is set to false, because we want the [CollapsingTopBar] to
-     * start changing size only after the first scrolling up event is detected through our
+     * start changing height only after the first scrolling up event is detected through our
      * [nestedScrollConnection], and because the first scrolling up event tend to be the third time
      * [topBarOffset] is equal to 0.0f, all we gotta do is check when [topBarOffset] is equal to
      * 0.0f 3 times, then let [currentTopBarHeight] be equal to

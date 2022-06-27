@@ -1,6 +1,5 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,7 +17,7 @@ import androidx.compose.ui.unit.dp
  *
  * @param modifier A modifier that is passed down to the main layer which is a [Surface]
  * @param title The title to be displayed inside the [CollapsingTopBar]
- * @param subtitle The subtitle to be displayed inside the [CollapsingTopBar], it's optional though
+ * @param subtitle The subtitle to be displayed inside the [CollapsingTopBar]
  * @param navigationIcon the navigation icon displayed at the start of the [CollapsingTopBar].
  * This should typically be an [IconButton] or [IconToggleButton].
  * @param actions the actions displayed at the end of the [CollapsingTopBar]. This should typically
@@ -27,10 +26,14 @@ import androidx.compose.ui.unit.dp
  * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
- * @param scrollBehavior  [CollapsingTopBarScrollBehavior] which holds certain values that will be applied by
- * this [CollapsingTopBar] to set up its height. A scroll behavior is designed to work in
- * conjunction with a scrolled content to change the [CollapsingTopBar] appearance as the content
- * scrolls. See [CollapsingTopBarScrollBehavior.nestedScrollConnection].
+ * @param scrollBehavior determines the behavior of the [CollapsingTopBar]. If you want the
+ * [CollapsingTopBar] to stay collapsed, you set it there, if you want the [CollapsingTopBar] to
+ * have a different [collapsed height][CollapsingTopBarScrollBehavior.collapsedTopBarHeight] or
+ * a different [expanded height][CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight], you set it
+ * there, if you want the [CollapsingTopBar] to detect when a scroll event has occured in your UI
+ * and you want the [CollapsingTopBar] to collapse or expand, you simply pass
+ * [scrollBehavior.nestedScrollConnection][CollapsingTopBarScrollBehavior.nestedScrollConnection] to
+ * your Layout's [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll].
  * @author Germain Kevin
  * */
 @Composable
@@ -164,46 +167,4 @@ private fun CollapsingTopBarLayout(
             )
         }
     }
-}
-
-private val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =
-    { navigationIcon ->
-        if (navigationIcon == null) Spacer(modifier = noNavIconSpacerModifier)
-        else {
-            Row(
-                modifier = navigationIconModifier,
-                verticalAlignment = Alignment.Bottom,
-                content = { navigationIcon() }
-            )
-        }
-    }
-
-private val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
-    { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
-        val enterAnimation = if (centeredTitleAndSubtitle)
-            expandVertically(
-                // Expands from bottom to top.
-                expandFrom = Alignment.Top
-            ) + fadeIn(initialAlpha = collapsedTitleAlpha)
-        else fadeIn(initialAlpha = collapsedTitleAlpha)
-
-        val exitAnimation = if (centeredTitleAndSubtitle)
-            slideOutVertically() + fadeOut() else fadeOut()
-        AnimatedVisibility(
-            visible = collapsedTitleAlpha in 0f..1f,
-            enter = enterAnimation,
-            exit = exitAnimation
-        ) { title() }
-    }
-
-/**
- * The Section where all the options menu items will be laid out on
- * */
-private val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
-    Row(
-        modifier = Modifier.fillMaxHeight(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.Bottom,
-        content = it
-    )
 }
