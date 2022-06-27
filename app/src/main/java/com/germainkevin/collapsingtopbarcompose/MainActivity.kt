@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
