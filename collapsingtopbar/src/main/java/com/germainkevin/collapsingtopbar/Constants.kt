@@ -7,7 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 /**
  * The collapsed height of the [CollapsingTopBar]
  * */
@@ -18,20 +17,20 @@ internal val defaultMinimumTopBarHeight = 56.dp
  * */
 internal val defaultMaximumTopBarHeight = 156.dp
 
-internal val appBarHorizontalPadding = 4.dp
+internal val topBarHorizontalPadding = 4.dp
 
 /**
  * [Modifier] when there isn't a navigation icon provided. Start inset for the title slot inside
  * the [CollapsingTopBar]
  * */
-private val noNavIconSpacerModifier = Modifier.width(16.dp - appBarHorizontalPadding)
+private val noNavIconSpacerModifier = Modifier.width(16.dp - topBarHorizontalPadding)
 
 /**
  * [Modifier] when there is a navigation icon provided
  * */
 private val navigationIconModifier = Modifier
     .fillMaxHeight()
-    .width(56.dp - appBarHorizontalPadding)
+    .width(56.dp - topBarHorizontalPadding)
 
 
 internal val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =

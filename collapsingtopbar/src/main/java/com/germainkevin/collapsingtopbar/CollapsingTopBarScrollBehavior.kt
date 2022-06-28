@@ -195,7 +195,7 @@ class DefaultBehaviorOnScroll(
      * [currentTopBarHeight] reaches past [collapsedTopBarHeight] + [margin]
      */
     @Composable
-    fun getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
+    private fun getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
         return animateFloatAsState(
             (currentTopBarHeight - (collapsedTopBarHeight + margin)) /
                     (expandedTopBarMaxHeight - (collapsedTopBarHeight + margin))
@@ -210,7 +210,7 @@ class DefaultBehaviorOnScroll(
      * Collapsed Title section should become invisible
      * */
     @Composable
-    fun getCollapsedTitleAlpha(
+    private fun getCollapsedTitleAlpha(
         visibleValue: Dp = collapsedTopBarHeight,
         invisibleValue: Dp = collapsedTopBarHeight + 6.dp
     ): State<Float> {

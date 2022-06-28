@@ -24,7 +24,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.germainkevin.collapsingtopbarcompose'
                 artifactId = 'collapsingtopbarcompose'
-                version = '1.0.0-rc02'
+                version = '1.0.0-rc03'
             }
         }
     }

@@ -115,9 +115,9 @@ private fun CollapsingTopBarLayout(
                     .padding(
                         if (centeredTitleAndSubtitle) PaddingValues() else PaddingValues(
                             start =
-                            if (navigationIcon != null) 56.dp - appBarHorizontalPadding
-                            else 16.dp - appBarHorizontalPadding,
-                            end = appBarHorizontalPadding
+                            if (navigationIcon != null) 56.dp - topBarHorizontalPadding
+                            else 16.dp - topBarHorizontalPadding,
+                            end = topBarHorizontalPadding
                         )
                     )
                     .alpha(expandedColumnAlphaValue),
