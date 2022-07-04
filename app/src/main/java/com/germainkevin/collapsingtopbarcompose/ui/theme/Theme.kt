@@ -53,7 +53,7 @@ fun CollapsingTopBarComposeTheme(
         SideEffect {
             (view.context as Activity).apply {
                 window.statusBarColor = colorScheme.primary.toArgb()
-                WindowCompat.getInsetsController(window, view)?.isAppearanceLightStatusBars =
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                     darkTheme
             }
         }

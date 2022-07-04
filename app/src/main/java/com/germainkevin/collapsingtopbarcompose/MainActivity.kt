@@ -1,6 +1,7 @@
 package com.germainkevin.collapsingtopbarcompose
 
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -17,11 +18,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
+import com.germainkevin.collapsingtopbar.CollapsingTopBarDefaults
 import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
@@ -55,7 +58,8 @@ class MainActivity : ComponentActivity() {
                         contactNames = stringArrayResource(id = R.array.contactNames),
                         scaffoldState = scaffoldState,
                         openLeftDrawer = openLeftDrawer,
-                        closeLeftDrawer = closeLeftDrawer
+                        closeLeftDrawer = closeLeftDrawer,
+                        window = this@MainActivity.window
                     )
                 }
             }
@@ -68,7 +72,8 @@ private fun HomeScreen(
     contactNames: Array<String>,
     scaffoldState: ScaffoldState,
     openLeftDrawer: () -> Unit,
-    closeLeftDrawer: () -> Unit
+    closeLeftDrawer: () -> Unit,
+    window: Window
 ) {
     val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
         isAlwaysCollapsed = false,
@@ -83,6 +88,14 @@ private fun HomeScreen(
         topBar = {
             CollapsingTopBar(
                 scrollBehavior = scrollBehavior,
+                colors = CollapsingTopBarDefaults
+                    .colors(
+                        backgroundColorWhenNotCollapsedOrExpanded =
+                        MaterialTheme.colorScheme.onPrimaryContainer,
+                        onBackgroundColorChange = {
+                            window.statusBarColor = it.toArgb()
+                        },
+                    ),
                 title = TitleText,
                 subtitle = { SubtitleText(contactNames) },
                 navigationIcon = { NavigationIcon(openLeftDrawer) },

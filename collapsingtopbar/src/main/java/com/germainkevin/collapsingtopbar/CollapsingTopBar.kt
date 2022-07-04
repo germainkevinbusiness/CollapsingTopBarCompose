@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -56,11 +57,12 @@ fun CollapsingTopBar(
         actions = actions,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         contentPadding = contentPadding,
-        colors = colors,
         expandedColumnAlphaValue = expandedColumnAlphaValue.invoke().value,
         collapsedTitleAlpha = collapsedTitleAlpha.invoke().value,
         currentTopBarHeight = currentTopBarHeight,
-        elevation = elevation
+        elevation = elevation,
+        currentBackgroundColor = currentBackgroundColor(colors).value,
+        currentContentColor = colors.contentColor
     )
 }
 
@@ -72,8 +74,6 @@ fun CollapsingTopBar(
  * This should typically be an [IconButton] or [IconToggleButton].
  * @param actions the actions displayed at the end of the [CollapsingTopBar]. This should typically
  * be [IconButton]s. The default layout here is a [Row], so icons inside will be placed horizontally.
- * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
- * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
  * @param currentTopBarHeight The current height of the [CollapsingTopBar]
@@ -88,7 +88,8 @@ private fun CollapsingTopBarLayout(
     actions: @Composable RowScope.() -> Unit,
     centeredTitleAndSubtitle: Boolean,
     contentPadding: PaddingValues,
-    colors: CollapsingTopBarColors,
+    currentBackgroundColor: Color,
+    currentContentColor: Color,
     expandedColumnAlphaValue: Float,
     collapsedTitleAlpha: Float,
     currentTopBarHeight: Dp,
@@ -96,8 +97,8 @@ private fun CollapsingTopBarLayout(
 ) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
     Surface(
         modifier = modifier,
-        color = colors.backgroundColor,
-        contentColor = colors.contentColor,
+        color = currentBackgroundColor,
+        contentColor = currentContentColor,
         elevation = elevation,
     ) {
         Box(

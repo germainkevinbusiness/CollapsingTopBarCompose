@@ -3,8 +3,10 @@ package com.germainkevin.collapsingtopbar
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -74,3 +76,21 @@ internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit =
         content = it
     )
 }
+
+/**
+ * Will provide us with the current background color of the [CollapsingTopBar]*/
+@Composable
+internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
+    colors: CollapsingTopBarColors
+): State<Color> = animateColorAsState(
+    targetValue =
+    if (currentTopBarHeight == collapsedTopBarHeight ||
+        currentTopBarHeight == expandedTopBarMaxHeight
+    ) {
+        colors.onBackgroundColorChange(colors.backgroundColor)
+        colors.backgroundColor
+    } else {
+        colors.onBackgroundColorChange(colors.backgroundColorWhenNotCollapsedOrExpanded)
+        colors.backgroundColorWhenNotCollapsedOrExpanded
+    }
+)
