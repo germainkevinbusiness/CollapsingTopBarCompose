@@ -52,17 +52,19 @@ object CollapsingTopBarDefaults {
      * Default colors used in the [CollapsingTopBar]
      * @param backgroundColor The background color of the [CollapsingTopBar] when collapsed
      * or expanded
-     * @param contentColor The content color inside of the [CollapsingTopBar] when collapsed
-     * or expanded
      * @param backgroundColorWhenNotCollapsedOrExpanded The background color of
      * the [CollapsingTopBar] when it's not collapsed or expanded
+     * @param contentColor The content color inside of the [CollapsingTopBar] when collapsed
+     * or expanded
+     * @param onBackgroundColorChange This callback method has a Color parameter which emits the current
+     * background color of the [CollapsingTopBar] whenever it changes
      * */
     @Composable
     fun colors(
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
-        contentColor: Color = contentColorFor(backgroundColor = backgroundColor),
         backgroundColorWhenNotCollapsedOrExpanded: Color = backgroundColor,
         onBackgroundColorChange: (Color) -> Unit = {},
+        contentColor: Color = contentColorFor(backgroundColor),
     ): CollapsingTopBarColors = CollapsingTopBarColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
