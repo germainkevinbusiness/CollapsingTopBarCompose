@@ -16,6 +16,26 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170043487-5e78724b-bd66-4617-b703-624281d49c2a.gif" alt="Demonstration 2" width="100%" height="auto"/></td>
   </tr>
  </table>
+ 
+ <table>
+  <tr>
+    <td>Background color can animate when expanding</td>
+    <td>Background color can animate when expanding</td>
+    <td>Background color can animate when expanding</td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 4" width="100%"         height="auto"/>
+    </td>
+    <td valign="top">
+      <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 5" width="100%"         height="auto"/>
+    </td>
+    <td valign="top">
+      <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 6" width="100%"         height="auto"/>
+    </td>
+  </tr>
+ </table>
+
 
 # How to get this library in your android app
 
