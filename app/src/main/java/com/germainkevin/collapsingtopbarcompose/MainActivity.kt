@@ -99,6 +99,7 @@ private fun HomeScreen(
                         // " CollapsingTopBarDefaults.colors(backgroundColor) "
                         backgroundColorWhenCollapsingOrExpanding =
                         MaterialTheme.colorScheme.onPrimaryContainer,
+                        // Emits any current backgroundColor of the CollapsingTopBar
                         onBackgroundColorChange = {
                             window.statusBarColor = it.toArgb()
                         },
