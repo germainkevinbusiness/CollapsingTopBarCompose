@@ -52,8 +52,8 @@ object CollapsingTopBarDefaults {
      * Default colors used in the [CollapsingTopBar]
      * @param backgroundColor The background color of the [CollapsingTopBar] when collapsed
      * or expanded
-     * @param backgroundColorWhenNotCollapsedOrExpanded The background color of
-     * the [CollapsingTopBar] when it's not collapsed or expanded
+     * @param backgroundColorWhenCollapsingOrExpanding The background color of
+     * the [CollapsingTopBar] when it's collapsing or expanding
      * @param contentColor The content color inside of the [CollapsingTopBar] when collapsed
      * or expanded
      * @param onBackgroundColorChange This callback method has a Color parameter which emits the current
@@ -62,13 +62,13 @@ object CollapsingTopBarDefaults {
     @Composable
     fun colors(
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
-        backgroundColorWhenNotCollapsedOrExpanded: Color = backgroundColor,
+        backgroundColorWhenCollapsingOrExpanding: Color = backgroundColor,
         onBackgroundColorChange: (Color) -> Unit = {},
         contentColor: Color = contentColorFor(backgroundColor),
     ): CollapsingTopBarColors = CollapsingTopBarColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
-        backgroundColorWhenNotCollapsedOrExpanded = backgroundColorWhenNotCollapsedOrExpanded,
+        backgroundColorWhenCollapsingOrExpanding = backgroundColorWhenCollapsingOrExpanding,
         onBackgroundColorChange = onBackgroundColorChange,
     )
 }
@@ -79,15 +79,15 @@ object CollapsingTopBarDefaults {
  * or expanded
  * @param contentColor The content color inside of the [CollapsingTopBar] when collapsed
  * or expanded
- * @param backgroundColorWhenNotCollapsedOrExpanded The background color of
- * the [CollapsingTopBar] when it's not collapsed or expanded
+ * @param backgroundColorWhenCollapsingOrExpanding The background color of
+ * the [CollapsingTopBar] when it's collapsing or expanding
  * @param onBackgroundColorChange This callback method has a Color parameter which emits the current
  * background color of the [CollapsingTopBar] whenever it changes
  * */
 class CollapsingTopBarColors(
     var backgroundColor: Color,
     var contentColor: Color,
-    var backgroundColorWhenNotCollapsedOrExpanded: Color,
+    var backgroundColorWhenCollapsingOrExpanding: Color,
     var onBackgroundColorChange: (Color) -> Unit,
 )
 

@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
- * The collapsed height of the [CollapsingTopBar]
+ * The default collapsed height of the [CollapsingTopBar]
  * */
 internal val defaultMinimumTopBarHeight = 56.dp
 
 /**
- * The expanded height of the [CollapsingTopBar]
+ * The default expanded height of the [CollapsingTopBar]
  * */
 internal val defaultMaximumTopBarHeight = 156.dp
 
@@ -78,7 +78,8 @@ internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit =
 }
 
 /**
- * Will provide us with the current background color of the [CollapsingTopBar]*/
+ * Will provide us with the current background color of the [CollapsingTopBar].
+ * */
 @Composable
 internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
     colors: CollapsingTopBarColors
@@ -90,7 +91,7 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
         colors.onBackgroundColorChange(colors.backgroundColor)
         colors.backgroundColor
     } else {
-        colors.onBackgroundColorChange(colors.backgroundColorWhenNotCollapsedOrExpanded)
-        colors.backgroundColorWhenNotCollapsedOrExpanded
+        colors.onBackgroundColorChange(colors.backgroundColorWhenCollapsingOrExpanding)
+        colors.backgroundColorWhenCollapsingOrExpanding
     }
 )

@@ -88,9 +88,16 @@ private fun HomeScreen(
         topBar = {
             CollapsingTopBar(
                 scrollBehavior = scrollBehavior,
+                // With the addition of the onBackgroundColorChange() callback method
+                // you can color your app's status bar the same as whatever color your
+                // CollapsingTopBar background is
                 colors = CollapsingTopBarDefaults
                     .colors(
-                        backgroundColorWhenNotCollapsedOrExpanded =
+                        // This will be the color of the CollapsingTopBar when your
+                        // CollapsingTopBar is either collapsing or expanding,
+                        // By default, its value is the same as backgroundColor :
+                        // " CollapsingTopBarDefaults.colors(backgroundColor) "
+                        backgroundColorWhenCollapsingOrExpanding =
                         MaterialTheme.colorScheme.onPrimaryContainer,
                         onBackgroundColorChange = {
                             window.statusBarColor = it.toArgb()
