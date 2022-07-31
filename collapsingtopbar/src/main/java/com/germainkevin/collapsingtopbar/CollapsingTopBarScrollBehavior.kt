@@ -48,6 +48,11 @@ interface CollapsingTopBarScrollBehavior {
     var isExpandedWhenFirstDisplayed: Boolean
 
     /**
+     * Should the title be centered when the [CollapsingTopBar] is collapsed
+     * */
+    var centeredTitleWhenCollapsed: Boolean
+
+    /**
      * Whether the title and subtitle should be centered when Expanded
      * */
     var centeredTitleAndSubtitle: Boolean
@@ -95,6 +100,7 @@ interface CollapsingTopBarScrollBehavior {
 class DefaultBehaviorOnScroll(
     override var isAlwaysCollapsed: Boolean,
     override var isExpandedWhenFirstDisplayed: Boolean,
+    override var centeredTitleWhenCollapsed: Boolean,
     override var centeredTitleAndSubtitle: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,

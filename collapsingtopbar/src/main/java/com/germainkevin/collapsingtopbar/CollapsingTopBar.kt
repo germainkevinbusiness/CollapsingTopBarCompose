@@ -55,6 +55,7 @@ fun CollapsingTopBar(
         subtitle = subtitle,
         navigationIcon = navigationIcon,
         actions = actions,
+        centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         contentPadding = contentPadding,
         expandedColumnAlphaValue = expandedColumnAlphaValue.invoke().value,
@@ -77,6 +78,8 @@ fun CollapsingTopBar(
  * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
  * @param currentTopBarHeight The current height of the [CollapsingTopBar]
+ * @param centeredTitleWhenCollapsed Whether the [title] should be centered when the
+ * [CollapsingTopBar] is collapsed
  * @param elevation The size of the shadow below the [Surface]
  * */
 @Composable
@@ -86,6 +89,7 @@ private fun CollapsingTopBarLayout(
     subtitle: @Composable () -> Unit,
     navigationIcon: @Composable (() -> Unit)?,
     actions: @Composable RowScope.() -> Unit,
+    centeredTitleWhenCollapsed: Boolean,
     centeredTitleAndSubtitle: Boolean,
     contentPadding: PaddingValues,
     currentBackgroundColor: Color,
@@ -152,6 +156,8 @@ private fun CollapsingTopBarLayout(
                             .fillMaxHeight()
                             .weight(1f),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement =
+                        if (centeredTitleWhenCollapsed) Arrangement.Center else Arrangement.Start,
                         content = {
                             collapsedTitle(
                                 centeredTitleAndSubtitle,

@@ -35,14 +35,16 @@ object CollapsingTopBarDefaults {
      * the default value is [defaultMaximumTopBarHeight]
      * */
     fun scrollBehavior(
-        isAlwaysCollapsed: Boolean = false,
-        isExpandedWhenFirstDisplayed: Boolean = true,
-        centeredTitleAndSubtitle: Boolean = true,
+        isAlwaysCollapsed: Boolean,
+        isExpandedWhenFirstDisplayed: Boolean,
+        centeredTitleWhenCollapsed: Boolean,
+        centeredTitleAndSubtitle: Boolean,
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
         expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
     ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
+        centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         collapsedTopBarHeight = collapsedTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight
@@ -100,6 +102,8 @@ class CollapsingTopBarColors(
  * @param isExpandedWhenFirstDisplayed When true, Sets the [CollapsingTopBar] to an expanded
  * state when first displayed on the UI by setting the [CollapsingTopBar]'s height to
  * [expandedTopBarMaxHeight]
+ * @param centeredTitleWhenCollapsed Should the title be centered when it's the [CollapsingTopBar]
+ * is collapsed
  * @param centeredTitleAndSubtitle Whether the title and subtitle should be centered when Expanded
  * @param collapsedTopBarHeight The height of the [CollapsingTopBar] when it's collapsed, the
  * default value is [defaultMinimumTopBarHeight]
@@ -110,6 +114,7 @@ class CollapsingTopBarColors(
 fun rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed: Boolean = false,
     isExpandedWhenFirstDisplayed: Boolean = true,
+    centeredTitleWhenCollapsed: Boolean = false,
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
@@ -117,6 +122,7 @@ fun rememberCollapsingTopBarScrollBehavior(
     return remember(
         isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed,
+        centeredTitleWhenCollapsed,
         centeredTitleAndSubtitle,
         collapsedTopBarHeight,
         collapsedTopBarHeight,
@@ -125,6 +131,7 @@ fun rememberCollapsingTopBarScrollBehavior(
         CollapsingTopBarDefaults.scrollBehavior(
             isAlwaysCollapsed = isAlwaysCollapsed,
             isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
+            centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
             centeredTitleAndSubtitle = centeredTitleAndSubtitle,
             collapsedTopBarHeight = collapsedTopBarHeight,
             expandedTopBarMaxHeight = expandedTopBarMaxHeight
