@@ -79,6 +79,7 @@ private fun HomeScreen(
     val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
         isAlwaysCollapsed = false,
         isExpandedWhenFirstDisplayed = true,
+        centeredTitleWhenCollapsed = false,
         centeredTitleAndSubtitle = false,
         expandedTopBarMaxHeight = 156.dp,
     )

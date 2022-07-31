@@ -71,6 +71,7 @@ In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarSc
  val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
+    centeredTitleWhenCollapsed = false,
     centeredTitleAndSubtitle = false,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
@@ -103,6 +104,7 @@ val contactNames = stringArrayResource(id = R.array.contactNames)
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
+    centeredTitleWhenCollapsed = false,
     centeredTitleAndSubtitle = false,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
