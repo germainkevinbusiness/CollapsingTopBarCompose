@@ -146,7 +146,7 @@ private fun CollapsingTopBarLayout(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Bottom,
                 content = {
-                    navigationIconRow(navigationIcon)
+                    navigationIconRow(navigationIcon, contentPadding, centeredTitleWhenCollapsed)
 
                     /**
                      * Title section, shown when the [CollapsingTopBar] is collapsed

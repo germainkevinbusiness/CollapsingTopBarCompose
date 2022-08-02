@@ -2,7 +2,7 @@ buildscript {
     ext {
         compose_version = '1.2.0'
         coreKtx = '1.8.0'
-        libraryVersion ='1.0.0'
+        libraryVersion ='1.0.1'
         material3Version ='1.0.0-alpha15'
         timberVersion ='5.0.1'
     }

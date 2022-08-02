@@ -7,6 +7,8 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 /**
@@ -22,12 +24,6 @@ internal val defaultMaximumTopBarHeight = 156.dp
 internal val topBarHorizontalPadding = 4.dp
 
 /**
- * [Modifier] when there isn't a navigation icon provided. Start inset for the title slot inside
- * the [CollapsingTopBar]
- * */
-private val noNavIconSpacerModifier = Modifier.width(16.dp - topBarHorizontalPadding)
-
-/**
  * [Modifier] when there is a navigation icon provided
  * */
 private val navigationIconModifier = Modifier
@@ -35,17 +31,28 @@ private val navigationIconModifier = Modifier
     .width(56.dp - topBarHorizontalPadding)
 
 
-internal val navigationIconRow: @Composable (@Composable (() -> Unit)?) -> Unit =
-    { navigationIcon ->
-        if (navigationIcon == null) Spacer(modifier = noNavIconSpacerModifier)
-        else {
-            Row(
-                modifier = navigationIconModifier,
-                verticalAlignment = Alignment.Bottom,
-                content = { navigationIcon() }
-            )
-        }
-    }
+internal val navigationIconRow: @Composable (
+    @Composable (() -> Unit)?, PaddingValues, Boolean
+) -> Unit = { navigationIcon, contentPadding, centeredTitleWhenCollapsed ->
+
+    val noIconModifier = Modifier.width(
+        16.dp - contentPadding.calculateStartPadding(
+            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
+            else LayoutDirection.Rtl
+        )
+    )
+    if (navigationIcon == null) Spacer(modifier = noIconModifier)
+    else if (centeredTitleWhenCollapsed) Row(
+        modifier = Modifier.wrapContentWidth(),
+        verticalAlignment = Alignment.Bottom,
+        content = { navigationIcon() }
+    )
+    else Row(
+        modifier = navigationIconModifier,
+        verticalAlignment = Alignment.Bottom,
+        content = { navigationIcon() }
+    )
+}
 
 internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
     { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
