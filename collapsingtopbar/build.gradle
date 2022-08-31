@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
+apply plugin: 'kotlin-android'
 
 android {
     publishing {
@@ -68,11 +69,14 @@ android {
 dependencies {
 
     implementation "androidx.core:core-ktx:$coreKtx"
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.material3:material3:$material3Version"
+}
+repositories {
+    mavenCentral()
 }

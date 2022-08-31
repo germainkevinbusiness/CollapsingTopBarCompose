@@ -55,7 +55,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.1"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.2"
 }
 ```
 

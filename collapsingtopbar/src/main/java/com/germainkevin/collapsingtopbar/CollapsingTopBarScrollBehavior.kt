@@ -34,6 +34,11 @@ interface CollapsingTopBarScrollBehavior {
     var currentTopBarHeight: Dp
 
     /**
+     * Notifies about the current [CollapsingTopBarState]
+     * */
+    val currentState: State<CollapsingTopBarState>
+
+    /**
      * The offset that is added to the height of the [CollapsingTopBar] based on detected
      * scroll events from the
      * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
@@ -132,10 +137,9 @@ class DefaultBehaviorOnScroll(
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
             if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                // Just making sure trackOffSetIsZero doesn't store high numbers, koz it's unnecessary
-                if (trackOffSetIsZero > 6) {
-                    trackOffSetIsZero = 3
-                }
+                // Just making sure trackOffSetIsZero doesn't store high numbers,
+                // koz it's unnecessary
+                if (trackOffSetIsZero > 6) trackOffSetIsZero = 3
                 currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
             } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
                 currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
@@ -154,6 +158,15 @@ class DefaultBehaviorOnScroll(
             return Offset.Zero
         }
     }
+
+    override val currentState: State<CollapsingTopBarState>
+        get() = mutableStateOf(
+            when (currentTopBarHeight) {
+                collapsedTopBarHeight -> CollapsingTopBarState.COLLAPSED
+                expandedTopBarMaxHeight -> CollapsingTopBarState.EXPANDED
+                else -> CollapsingTopBarState.IN_BETWEEN
+            }
+        )
 
     override val expandedColumnAlphaValue: @Composable () -> State<Float> = {
         getExpandedColumnAlpha()

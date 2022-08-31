@@ -122,12 +122,12 @@ fun LeftDrawer(
 }
 
 @Composable
-fun ContactNameItem(context: Context, contactName: String) {
+fun ContactNameItem(contactName: String, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
-            .clickable { createToast(context, contactName) },
+            .clickable { onClick(contactName) },
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Text(

@@ -23,12 +23,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
-import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarDefaults
-import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
+import com.germainkevin.collapsingtopbar.*
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,6 +111,8 @@ private fun HomeScreen(
             )
         },
     ) { contentPadding ->
+        val context = LocalContext.current
+        var topBarState = true
         LazyColumn(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             contentPadding = contentPadding,
@@ -119,9 +120,15 @@ private fun HomeScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(6.dp))
+                Timber.d("CollapsingTopBarState currentTopBarHeight: ${scrollBehavior.currentTopBarHeight}")
+                Timber.d("CollapsingTopBarState: ${scrollBehavior.currentState.value}")
             }
             items(count = contactNames.size) {
-                ContactNameItem(LocalContext.current, contactNames[it])
+                ContactNameItem(contactNames[it]) { name ->
+                    createToast(context, name)
+                    if (topBarState) scrollBehavior.collapse() else scrollBehavior.expand()
+                    topBarState = !topBarState
+                }
             }
         }
     }

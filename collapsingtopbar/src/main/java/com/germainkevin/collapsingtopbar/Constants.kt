@@ -102,3 +102,21 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
         colors.backgroundColorWhenCollapsingOrExpanding
     }
 )
+
+/**
+ * Collapses the [CollapsingTopBar]
+ * */
+fun CollapsingTopBarScrollBehavior.collapse() {
+    if (currentTopBarHeight != collapsedTopBarHeight) {
+        currentTopBarHeight = collapsedTopBarHeight
+    }
+}
+
+/**
+ * Expands the [CollapsingTopBar]
+ * */
+fun CollapsingTopBarScrollBehavior.expand() {
+    if (currentTopBarHeight != expandedTopBarMaxHeight) {
+        currentTopBarHeight = expandedTopBarMaxHeight
+    }
+}
