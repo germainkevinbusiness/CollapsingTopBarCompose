@@ -25,14 +25,13 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
   </tr>
   <tr>
     <td valign="top">
+      <img src="https://user-images.githubusercontent.com/83923717/188755003-dee6b3a7-6d4c-4391-b3a1-96e7cdb4ba8f.gif" alt="Demonstration 6" width="100%"       height="auto"/>
+    </td>
+    <td valign="top">
       <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 4" width="100%"         height="auto"/>
     </td>
     <td valign="top">
       <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 5" width="100%"         height="auto"/>
-    </td>
-    <td valign="top">
-      <img src="https://user-images.githubusercontent.com/83923717/188755003-dee6b3a7-6d4c-4391-b3a1-96e7cdb4ba8f.gif" alt="Demonstration 6" width="100%" height="auto"/>
-
     </td>
   </tr>
  </table>
