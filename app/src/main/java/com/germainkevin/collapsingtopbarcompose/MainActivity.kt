@@ -78,7 +78,7 @@ private fun HomeScreen(
         isAlwaysCollapsed = false,
         isExpandedWhenFirstDisplayed = true,
         centeredTitleWhenCollapsed = false,
-        centeredTitleAndSubtitle = false,
+        centeredTitleAndSubtitle = true,
         expandedTopBarMaxHeight = 156.dp,
     )
     Scaffold(
@@ -105,6 +105,7 @@ private fun HomeScreen(
                         },
                     ),
                 title = TitleText,
+                expandedTitle = ExpandedTitleText,
                 subtitle = { SubtitleText(contactNames) },
                 navigationIcon = { NavigationIcon(openLeftDrawer) },
                 actions = { MoreMenuIcons() },

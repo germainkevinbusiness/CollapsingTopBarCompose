@@ -1,6 +1,6 @@
 package com.germainkevin.collapsingtopbarcompose.ui
 
-import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,12 +18,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.germainkevin.collapsingtopbar.CollapsingTopBar
 import com.germainkevin.collapsingtopbarcompose.R
-import com.germainkevin.collapsingtopbarcompose.createToast
 
 
 /**
@@ -32,7 +34,7 @@ import com.germainkevin.collapsingtopbarcompose.createToast
  * */
 val TitleText: @Composable () -> Unit = {
     Text(
-        stringResource(id = R.string.all_contacts),
+        text = stringResource(id = R.string.contacts),
         style = LocalTextStyle.current.copy(
             fontSize = 24.sp,
             fontWeight = FontWeight.Normal,
@@ -41,14 +43,41 @@ val TitleText: @Composable () -> Unit = {
     )
 }
 
+
+/**
+ * Content that appears when the [CollapsingTopBar] is expanded
+ * */
+val ExpandedTitleText: @Composable () -> Unit = {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            modifier = Modifier.size(46.dp),
+            painter = painterResource(id = R.drawable.ic_baseline_contacts_24),
+            contentDescription = "Contacts icon",
+            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
+        )
+        Text(
+            stringResource(id = R.string.contacts),
+            style = LocalTextStyle.current.copy(
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        )
+    }
+}
+
 /**
  * Text that appears in the subtitle slot of the
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
 val SubtitleText: @Composable (Array<String>) -> Unit = { contactNames ->
     Text(
-        stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
+        text = stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
         style = LocalTextStyle.current.copy(
+            fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onPrimary
         )

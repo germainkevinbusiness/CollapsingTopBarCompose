@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CollapsingTopBarCompose</string>
-    <string name="all_contacts">All Contacts</string>
+    <string name="contacts">Contacts</string>
     <string name="contactNamesCount">%s contacts</string>
     <string name="action_search">Search</string>
     <string name="hamburger_menu">Hamburger menu</string>

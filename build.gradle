@@ -2,7 +2,7 @@ buildscript {
     ext {
         compose_version = '1.2.1'
         coreKtx = '1.8.0'
-        libraryVersion ='1.0.3'
+        libraryVersion ='1.0.4'
         kotlin_version = '1.7.0'
         material3Version ='1.0.0-beta01'
         timberVersion ='5.0.1'

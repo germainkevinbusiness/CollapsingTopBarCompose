@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
  *
  * @param modifier A modifier that is passed down to the main layer which is a [Surface]
  * @param title The title to be displayed inside the [CollapsingTopBar]
+ * @param expandedTitle Optional, In case you want the [title] to look different when the
+ * [CollapsingTopBar] is expanded
  * @param subtitle The subtitle to be displayed inside the [CollapsingTopBar]
  * @param navigationIcon the navigation icon displayed at the start of the [CollapsingTopBar].
  * This should typically be an [IconButton] or [IconToggleButton].
@@ -41,6 +43,7 @@ import androidx.compose.ui.unit.dp
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
     title: @Composable () -> Unit,
+    expandedTitle: @Composable (() -> Unit)? = null,
     subtitle: @Composable () -> Unit = {},
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
@@ -52,6 +55,7 @@ fun CollapsingTopBar(
     CollapsingTopBarLayout(
         modifier = modifier,
         title = title,
+        expandedTitle = expandedTitle,
         subtitle = subtitle,
         navigationIcon = navigationIcon,
         actions = actions,
@@ -86,6 +90,7 @@ fun CollapsingTopBar(
 private fun CollapsingTopBarLayout(
     modifier: Modifier,
     title: @Composable () -> Unit,
+    expandedTitle: @Composable (() -> Unit)?,
     subtitle: @Composable () -> Unit,
     navigationIcon: @Composable (() -> Unit)?,
     actions: @Composable RowScope.() -> Unit,
@@ -130,7 +135,7 @@ private fun CollapsingTopBarLayout(
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
                 verticalArrangement = Arrangement.Center,
                 content = {
-                    title()
+                    if (expandedTitle == null) title() else expandedTitle()
                     subtitle()
                 }
             )

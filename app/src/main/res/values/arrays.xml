@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="contactNames">
-        <item>"Andre Bosan"</item>
-        <item>Emiliano Martinez</item>
-        <item>Ibrahim Hovis</item>
-        <item>Omaz</item>
-        <item>Ubanohf</item>
-        <item>Yerri Mina</item>
-        <item>Benzema</item>
-        <item>Jonahtan</item>
-        <item>David Jamez</item>
-        <item>irano Sanri</item>
-        <item>Himenez Verdan</item>
-        <item>Kalib Mandi</item>
         <item>Andre Bosan</item>
+        <item>Benzema</item>
+        <item>David Jamez</item>
+        <item>Frantzdy Pierrot</item>
         <item>Emiliano Martinez</item>
-        <item>Ibrahim Hovis</item>
+        <item>Irano Sanri</item>
+        <item>Inaki Pena</item>
+        <item>Kalib Mandi</item>
+        <item>Jonahtan</item>
+        <item>Himenez Verdan</item>
+        <item>Lionel Messi</item>
+        <item>Ronald Araujo</item>
+        <item>Robert Lewandowski</item>
+        <item>Omaz</item>
+        <item>Pedri</item>
+        <item>Yerri Mina</item>
+        <item>Ubanohf</item>
+        <item>Emiliano Martinez</item>
         <item>Omaz</item>
         <item>Ubanohf</item>
-        <item>Yerri Mina</item>
     </string-array>
 </resources>
