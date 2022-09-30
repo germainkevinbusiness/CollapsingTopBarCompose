@@ -16,7 +16,7 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170043487-5e78724b-bd66-4617-b703-624281d49c2a.gif" alt="Demonstration 2" width="100%" height="auto"/></td>
   </tr>
  </table>
- 
+
  <table>
   <tr>
     <td>Background color can animate when expanding</td>
@@ -35,7 +35,6 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
     </td>
   </tr>
  </table>
-
 
 # How to get this library in your android app
 
@@ -109,6 +108,11 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
 )
+
+val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
+val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
+val window = this@MainActivity.window
+
 Scaffold(
     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
@@ -116,6 +120,16 @@ Scaffold(
             scrollBehavior = scrollBehavior,
             title = { Text(text = "All contacts") },
             subtitle = { Text(text = "17 contacts") },
+            colors = CollapsingTopBarDefaults.colors(
+                // This will be the color of the CollapsingTopBar when its state
+                // is CollapsingTopBarState.IN_BETWEEN
+                backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
+                onBackgroundColorChange = {
+                    // Changes the status bar color to the current background color of the
+                    // CollapsingTopBar
+                    window.statusBarColor = it.toArgb()
+                },
+            ),
         )
     },
 ) { contentPadding ->
@@ -128,7 +142,13 @@ Scaffold(
             Spacer(modifier = Modifier.height(6.dp))
         }
         items(count = contactNames.size) {
-            ContactNameItem(LocalContext.current, contactNames[it])
+            ContactNameItem(contactNames[it]) {
+                if (isExpanded) {
+                    scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+                } else if (isCollapsed) {
+                    scrollBehavior.expand(delay = 10L, steps = 5.dp)
+                }
+            }
         }
     }
 }
