@@ -27,14 +27,12 @@ import com.germainkevin.collapsingtopbar.*
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CollapsingTopBarComposeTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -88,22 +86,16 @@ private fun HomeScreen(
         topBar = {
             CollapsingTopBar(
                 scrollBehavior = scrollBehavior,
-                // With the addition of the onBackgroundColorChange() callback method
-                // you can color your app's status bar the same as whatever color your
-                // CollapsingTopBar background is
-                colors = CollapsingTopBarDefaults
-                    .colors(
-                        // This will be the color of the CollapsingTopBar when your
-                        // CollapsingTopBar is either collapsing or expanding,
-                        // By default, its value is the same as backgroundColor :
-                        // " CollapsingTopBarDefaults.colors(backgroundColor) "
-                        backgroundColorWhenCollapsingOrExpanding =
-                        MaterialTheme.colorScheme.onPrimaryContainer,
-                        // Emits any current backgroundColor of the CollapsingTopBar
-                        onBackgroundColorChange = {
-                            window.statusBarColor = it.toArgb()
-                        },
-                    ),
+                colors = CollapsingTopBarDefaults.colors(
+                    // This will be the color of the CollapsingTopBar when its state
+                    // is CollapsingTopBarState.IN_BETWEEN
+                    backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
+                    onBackgroundColorChange = {
+                        // Changes the status bar color to the current background color of the
+                        // CollapsingTopBar
+                        window.statusBarColor = it.toArgb()
+                    },
+                ),
                 title = TitleText,
                 expandedTitle = ExpandedTitleText,
                 subtitle = { SubtitleText(contactNames) },
@@ -112,8 +104,6 @@ private fun HomeScreen(
             )
         },
     ) { contentPadding ->
-        val context = LocalContext.current
-        var topBarState = true
         LazyColumn(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             contentPadding = contentPadding,
@@ -121,14 +111,18 @@ private fun HomeScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(6.dp))
-                Timber.d("CollapsingTopBarState currentTopBarHeight: ${scrollBehavior.currentTopBarHeight}")
-                Timber.d("CollapsingTopBarState: ${scrollBehavior.currentState.value}")
             }
             items(count = contactNames.size) {
-                ContactNameItem(contactNames[it]) { name ->
-                    createToast(context, name)
-                    if (topBarState) scrollBehavior.collapse() else scrollBehavior.expand()
-                    topBarState = !topBarState
+                val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
+                val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
+//                val context = LocalContext.current
+                ContactNameItem(contactNames[it]) { _ ->
+//                    createToast(context, name)
+                    if (isExpanded) {
+                        scrollBehavior.collapse(delay = 10, steps = 5.dp)
+                    } else if (isCollapsed) {
+                        scrollBehavior.expand(delay = 10, steps = 5.dp)
+                    }
                 }
             }
         }

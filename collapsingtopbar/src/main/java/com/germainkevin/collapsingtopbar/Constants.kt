@@ -8,8 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.*
 
 /**
  * The default collapsed height of the [CollapsingTopBar]
@@ -29,6 +31,11 @@ internal val topBarHorizontalPadding = 4.dp
 private val navigationIconModifier = Modifier
     .fillMaxHeight()
     .width(56.dp - topBarHorizontalPadding)
+
+/**
+ * A way to  remove any floating number from the [Dp] value, and just get the [Int] side of the [Dp]
+ * */
+fun Dp.toIntDp() = this.value.toInt().dp
 
 
 internal val navigationIconRow: @Composable (
@@ -92,8 +99,8 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
     colors: CollapsingTopBarColors
 ): State<Color> = animateColorAsState(
     targetValue =
-    if (currentTopBarHeight == collapsedTopBarHeight ||
-        currentTopBarHeight == expandedTopBarMaxHeight
+    if (currentTopBarHeight.toIntDp() == collapsedTopBarHeight ||
+        currentTopBarHeight.toIntDp() == expandedTopBarMaxHeight
     ) {
         colors.onBackgroundColorChange(colors.backgroundColor)
         colors.backgroundColor
@@ -104,19 +111,102 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
 )
 
 /**
- * Collapses the [CollapsingTopBar]
+ * Assigns a [CollapsingTopBarState] to [CollapsingTopBarScrollBehavior.currentState]
  * */
-fun CollapsingTopBarScrollBehavior.collapse() {
-    if (currentTopBarHeight != collapsedTopBarHeight) {
-        currentTopBarHeight = collapsedTopBarHeight
+internal fun CollapsingTopBarScrollBehavior.defineCurrentState() {
+    currentState = when (currentTopBarHeight.toIntDp()) {
+        collapsedTopBarHeight -> CollapsingTopBarState.COLLAPSED
+        expandedTopBarMaxHeight -> CollapsingTopBarState.EXPANDED
+        else -> CollapsingTopBarState.IN_BETWEEN
+    }
+}
+
+private var collapseJob: Job? = null
+private var expandJob: Job? = null
+
+/**
+ * Expands the [CollapsingTopBar]
+ * @param delay How often in milliseconds should the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight] subtract [steps] to
+ * itself until it reaches the size of
+ * [collapsedTopBarHeight][CollapsingTopBarScrollBehavior.collapsedTopBarHeight]
+ * @param steps How many [Dp]s should the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight] subtract to itself
+ * every [delay] until it reaches the size of
+ * [collapsedTopBarHeight][CollapsingTopBarScrollBehavior.collapsedTopBarHeight]
+ * @param coroutineScope The [CoroutineScope] on which the calculations will occur
+ * @param onFinishedCollapsing Called when the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight]
+ * has reached the value of
+ * [collapsedTopBarHeight][CollapsingTopBarScrollBehavior.collapsedTopBarHeight]
+ * */
+fun CollapsingTopBarScrollBehavior.collapse(
+    delay: Long = 10L,
+    steps: Dp = 5.dp,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+    onFinishedCollapsing: () -> Unit = {}
+) {
+    if (!isAlwaysCollapsed) {
+        collapseJob?.cancel()
+        collapseJob = coroutineScope.launch {
+            val ascendingDistance: IntRange =
+                collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
+
+            val descendingDistance = ascendingDistance.sortedDescending()
+
+            for (currentHeight in descendingDistance) {
+                if (currentTopBarHeight - steps > collapsedTopBarHeight) {
+                    currentTopBarHeight -= steps
+                }
+                if (currentTopBarHeight - steps <= collapsedTopBarHeight) {
+                    currentTopBarHeight = collapsedTopBarHeight
+                    defineCurrentState()
+                    onFinishedCollapsing()
+                }
+                delay(delay)
+            }
+        }
     }
 }
 
 /**
  * Expands the [CollapsingTopBar]
+ * @param delay How often in milliseconds should the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight] add [steps] to itself
+ * until it reaches the size of
+ * [expandedTopBarMaxHeight][CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight]
+ * @param steps How many [Dp]s should the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight] add to itself every
+ * [delay] until it reaches the size of
+ * [expandedTopBarMaxHeight][CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight]
+ * @param coroutineScope The [CoroutineScope] on which the calculations will occur
+ * @param onFinishedExpanding Called when the
+ * [currentTopBarHeight][CollapsingTopBarScrollBehavior.currentTopBarHeight]
+ * has reached the value of
+ * [expandedTopBarMaxHeight][CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight]
  * */
-fun CollapsingTopBarScrollBehavior.expand() {
-    if (currentTopBarHeight != expandedTopBarMaxHeight) {
-        currentTopBarHeight = expandedTopBarMaxHeight
+fun CollapsingTopBarScrollBehavior.expand(
+    delay: Long = 10L,
+    steps: Dp = 5.dp,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+    onFinishedExpanding: () -> Unit = {}
+) {
+    if (!isAlwaysCollapsed) {
+        expandJob?.cancel()
+        expandJob = coroutineScope.launch {
+            val ascendingDistance: IntRange =
+                collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
+            for (currentHeight in ascendingDistance) {
+                if (currentTopBarHeight + steps < expandedTopBarMaxHeight) {
+                    currentTopBarHeight += steps
+                }
+                if (currentTopBarHeight + steps >= expandedTopBarMaxHeight) {
+                    currentTopBarHeight = expandedTopBarMaxHeight
+                    defineCurrentState()
+                    onFinishedExpanding()
+                }
+                delay(delay)
+            }
+        }
     }
 }
