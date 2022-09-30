@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
+import com.germainkevin.collapsingtopbar.CollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.R
 
 
@@ -148,25 +149,4 @@ fun LeftDrawer(
             )
         }
     }
-}
-
-@Composable
-fun ContactNameItem(contactName: String, onClick: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-            .clickable { onClick(contactName) },
-        verticalAlignment = Alignment.CenterVertically,
-        content = {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                text = contactName,
-                style = MaterialTheme.typography.bodyLarge
-                    .copy(color = MaterialTheme.colorScheme.onBackground)
-            )
-        }
-    )
 }

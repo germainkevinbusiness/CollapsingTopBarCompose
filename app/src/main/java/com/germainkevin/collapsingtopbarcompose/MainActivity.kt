@@ -5,18 +5,20 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -79,6 +81,9 @@ private fun HomeScreen(
         centeredTitleAndSubtitle = true,
         expandedTopBarMaxHeight = 156.dp,
     )
+    val context = LocalContext.current
+    val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
+    val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         scaffoldState = scaffoldState,
@@ -112,17 +117,38 @@ private fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.height(6.dp))
             }
-            items(count = contactNames.size) {
-                val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
-                val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
-//                val context = LocalContext.current
-                ContactNameItem(contactNames[it]) { _ ->
-//                    createToast(context, name)
-                    if (isExpanded) {
-                        scrollBehavior.collapse(delay = 10, steps = 5.dp)
-                    } else if (isCollapsed) {
-                        scrollBehavior.expand(delay = 10, steps = 5.dp)
+            items(contactNames) { name ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .clickable {
+                            createToast(context, name)
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(16.dp),
+                        text = name,
+                        style = MaterialTheme.typography.bodyLarge
+                            .copy(color = MaterialTheme.colorScheme.onBackground)
+                    )
+                    OutlinedButton(onClick = {
+                        if (isExpanded) {
+                            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+                        } else if (isCollapsed) {
+                            scrollBehavior.expand(delay = 10L, steps = 5.dp)
+                        }
+                    }) {
+                        Text(
+                            text = if (isCollapsed) "Expand" else if (isExpanded) "Collapse" else "...",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }
