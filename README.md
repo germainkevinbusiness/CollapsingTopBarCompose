@@ -20,18 +20,18 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
  <table>
   <tr>
     <td>Background color can animate when expanding</td>
-    <td>Background color can animate when expanding</td>
-    <td>Different title content when expanded or collapsed</td>
+    <td>Change background color when scrolling</td>
+    <td>Collapse or Expand TopBar without scroll</td>
   </tr>
   <tr>
     <td valign="top">
-      <img src="https://user-images.githubusercontent.com/83923717/188755003-dee6b3a7-6d4c-4391-b3a1-96e7cdb4ba8f.gif" alt="Demonstration 4" width="100%" height="auto"/>
+      <img src="https://user-images.githubusercontent.com/83923717/193355730-6cbd8e4c-1992-42fb-8048-f454a1cf90ff.gif" alt="Demonstration 4" width="100%" height="auto"/>
     </td>
     <td valign="top">
-      <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 5" width="100%" height="auto"/>
+      <img src="https://user-images.githubusercontent.com/83923717/193355830-71b69c34-f1e0-47ce-9510-f0ce0615cad6.gif" alt="Demonstration 5" width="100%" height="auto"/>
     </td>
     <td valign="top">
-      <img src="https://user-images.githubusercontent.com/83923717/177464670-545be4be-92f6-43d4-96d4-10bbb88758a7.gif" alt="Demonstration 6" width="100%" height="auto"/>
+      <img src="https://user-images.githubusercontent.com/83923717/193355906-f936dc18-7381-4eb4-8219-7f05655fb472.gif" alt="Demonstration 6" width="100%" height="auto"/>
     </td>
   </tr>
  </table>
