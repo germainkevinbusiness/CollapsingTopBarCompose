@@ -20,8 +20,8 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
  <table>
   <tr>
     <td>Background color can animate when expanding</td>
-    <td>Background color can animate when expanding</td>
-    <td>Different title content when expanded or collapsed</td>
+    <td>Collapse or Expand TopBar without scroll</td>
+    <td>Collapse or Expand TopBar without scroll</td>
   </tr>
   <tr>
     <td valign="top">
