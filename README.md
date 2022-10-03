@@ -142,13 +142,13 @@ Scaffold(
             Spacer(modifier = Modifier.height(6.dp))
         }
         items(count = contactNames.size) {
-            ContactNameItem(contactNames[it]) {
+            ContactNameItem(contactNames[it], onButtonClick = {
                 if (isExpanded) {
                     scrollBehavior.collapse(delay = 10L, steps = 5.dp)
                 } else if (isCollapsed) {
                     scrollBehavior.expand(delay = 10L, steps = 5.dp)
                 }
-            }
+            })
         }
     }
 }
