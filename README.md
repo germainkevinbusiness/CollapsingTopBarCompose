@@ -67,11 +67,11 @@ the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose
 In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarScrollBehavior```.
 
 ```kotlin
- val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
     centeredTitleWhenCollapsed = false,
-    centeredTitleAndSubtitle = false,
+    centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
 )
@@ -97,58 +97,54 @@ Scaffold(
 So when we put it all together we got:
 
 ```kotlin
-
-val contactNames = stringArrayResource(id = R.array.contactNames)
-
+private val contacts = listOf(
+    "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
+    "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
+    "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+)
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
     centeredTitleWhenCollapsed = false,
-    centeredTitleAndSubtitle = false,
+    centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
 )
-
 val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
 val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
-val window = this@MainActivity.window
-
-Scaffold(
-    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = {
-        CollapsingTopBar(
-            scrollBehavior = scrollBehavior,
-            title = { Text(text = "All contacts") },
-            subtitle = { Text(text = "17 contacts") },
-            colors = CollapsingTopBarDefaults.colors(
-                // This will be the color of the CollapsingTopBar when its state
-                // is CollapsingTopBarState.IN_BETWEEN
-                backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
-                onBackgroundColorChange = {
-                    // Changes the status bar color to the current background color of the
-                    // CollapsingTopBar
-                    window.statusBarColor = it.toArgb()
-                },
-            ),
-        )
-    },
-) { contentPadding ->
+Column(
+    modifier = Modifier
+        .fillMaxSize()
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
+) {
+    CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        colors = collapsingTopBarColors(window),
+        title = TitleText,
+        expandedTitle = ExpandedTitleText,
+        subtitle = { SubtitleText(contacts) },
+        navigationIcon = { NavigationIcon() },
+        actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
+    )
     LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background),
-        contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
     ) {
-        item {
-            Spacer(modifier = Modifier.height(6.dp))
-        }
-        items(count = contactNames.size) {
-            ContactNameItem(contactNames[it], onButtonClick = {
-                if (isExpanded) {
-                    scrollBehavior.collapse(delay = 10L, steps = 5.dp)
-                } else if (isCollapsed) {
-                    scrollBehavior.expand(delay = 10L, steps = 5.dp)
-                }
-            })
+        items(contacts) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = it,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             CollapsingTopBarComposeTheme {
                 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                     isAlwaysCollapsed = false,
-                    isExpandedWhenFirstDisplayed = false,
+                    isExpandedWhenFirstDisplayed = true,
                     centeredTitleWhenCollapsed = false,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 156.dp,
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-//                        colors = collapsingTopBarColors(window),
+                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
