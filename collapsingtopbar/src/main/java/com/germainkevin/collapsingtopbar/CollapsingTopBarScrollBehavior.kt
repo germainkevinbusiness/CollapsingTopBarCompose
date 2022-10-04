@@ -117,6 +117,10 @@ interface CollapsingTopBarScrollBehavior {
      * */
     val collapsedTitleAlpha: @Composable () -> State<Float>
 
+    /**
+     * Useful to ignore the [NestedScrollConnection.onPreScroll] data when the methods
+     * [collapse] or [expand] are active
+     * */
     var ignorePreScrollDetection: Boolean
 }
 
@@ -165,25 +169,23 @@ class DefaultBehaviorOnScroll(
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
-            if (!isAlwaysCollapsed) {
-                if (!ignorePreScrollDetection) {
-                    val availableY = available.y.toInt()
-                    val newOffset = (topBarOffset + availableY)
-                    val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
-                    topBarOffset = coerced
-                    val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+            if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
+                val availableY = available.y.toInt()
+                val newOffset = (topBarOffset + availableY)
+                val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
+                topBarOffset = coerced
+                val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
 
-                    incrementTopBarOffset()
-                    plateauTopBarOffset()
+                incrementTopBarOffset()
+                plateauTopBarOffset()
 
-                    if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                        currentTopBarHeight = newHeight
-                    } else if (isExpandedWhenFirstDisplayed) {
-                        currentTopBarHeight = newHeight
-                    }
-
-                    defineCurrentState()
+                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                    currentTopBarHeight = newHeight
+                } else if (isExpandedWhenFirstDisplayed) {
+                    currentTopBarHeight = newHeight
                 }
+
+                defineCurrentState()
             }
 
             return Offset.Zero
