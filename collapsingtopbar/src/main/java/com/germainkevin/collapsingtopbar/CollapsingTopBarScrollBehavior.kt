@@ -8,6 +8,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -167,6 +168,7 @@ class DefaultBehaviorOnScroll(
                 val newOffset = (topBarOffset + availableY)
                 val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
                 topBarOffset = coerced
+                val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
 
                 if (topBarOffset == 0f) {
                     trackOffSetIsZero += 1
@@ -178,9 +180,9 @@ class DefaultBehaviorOnScroll(
                 }
 
                 if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                    currentTopBarHeight = newHeight
                 } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                    currentTopBarHeight = newHeight
                 }
 
                 defineCurrentState()
