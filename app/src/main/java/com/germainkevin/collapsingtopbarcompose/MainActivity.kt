@@ -4,25 +4,25 @@ import android.os.Bundle
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.germainkevin.collapsingtopbar.*
+import com.germainkevin.collapsingtopbar.CollapsingTopBar
+import com.germainkevin.collapsingtopbar.CollapsingTopBarState
+import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
 
@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomeScreen(
     scaffoldState: ScaffoldState,
@@ -82,28 +83,27 @@ private fun HomeScreen(
         isExpandedWhenFirstDisplayed = false,
         centeredTitleWhenCollapsed = false,
         centeredTitleAndSubtitle = true,
-        expandedTopBarMaxHeight = 200.dp,
+        expandedTopBarMaxHeight = 156.dp,
     )
     val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
     val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
-    Scaffold(
+    Column(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        scaffoldState = scaffoldState,
-        topBar = {
-            CollapsingTopBar(
-                scrollBehavior = scrollBehavior,
-                colors = collapsingTopBarColors(window),
-                title = TitleText,
-                expandedTitle = ExpandedTitleText,
-                subtitle = { SubtitleText(contacts) },
-                navigationIcon = { NavigationIcon() },
-                actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
-            )
-        },
-    ) { contentPadding ->
+    ) {
+        CollapsingTopBar(
+            scrollBehavior = scrollBehavior,
+            colors = collapsingTopBarColors(window),
+            title = TitleText,
+            expandedTitle = ExpandedTitleText,
+            subtitle = { SubtitleText(contacts) },
+            navigationIcon = { NavigationIcon() },
+            actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
+        )
         LazyColumn(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            contentPadding = contentPadding,
+            modifier = Modifier
+                .weight(1f)
+                .background(MaterialTheme.colorScheme.background),
+//            contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(contacts) {

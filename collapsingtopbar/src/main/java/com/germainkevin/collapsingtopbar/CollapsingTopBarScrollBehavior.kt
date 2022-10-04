@@ -8,7 +8,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -117,6 +116,8 @@ interface CollapsingTopBarScrollBehavior {
      * collapsed
      * */
     val collapsedTitleAlpha: @Composable () -> State<Float>
+
+    var ignorePreScrollDetection: Boolean
 }
 
 class DefaultBehaviorOnScroll(
@@ -158,34 +159,31 @@ class DefaultBehaviorOnScroll(
 
     override var offsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value
 
+    override var ignorePreScrollDetection: Boolean by mutableStateOf(false)
+
     override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
             if (!isAlwaysCollapsed) {
+                if (!ignorePreScrollDetection) {
+                    val availableY = available.y.toInt()
+                    val newOffset = (topBarOffset + availableY)
+                    val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
+                    topBarOffset = coerced
+                    val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
 
-                val availableY = available.y.toInt()
-                val newOffset = (topBarOffset + availableY)
-                val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
-                topBarOffset = coerced
-                val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                    incrementTopBarOffset()
+                    plateauTopBarOffset()
 
-                if (topBarOffset == 0f) {
-                    trackOffSetIsZero += 1
+                    if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                        currentTopBarHeight = newHeight
+                    } else if (isExpandedWhenFirstDisplayed) {
+                        currentTopBarHeight = newHeight
+                    }
+
+                    defineCurrentState()
                 }
-
-                // Just keeping trackOffSetIsZero from storing high numbers that are above 3
-                if (trackOffSetIsZero > 6) {
-                    trackOffSetIsZero = 3
-                }
-
-                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                    currentTopBarHeight = newHeight
-                } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = newHeight
-                }
-
-                defineCurrentState()
             }
 
             return Offset.Zero
@@ -198,6 +196,19 @@ class DefaultBehaviorOnScroll(
 
     override val collapsedTitleAlpha: @Composable () -> State<Float> = {
         getCollapsedTitleAlpha()
+    }
+
+    private fun incrementTopBarOffset() {
+        if (topBarOffset == 0f) {
+            trackOffSetIsZero += 1
+        }
+    }
+
+    private fun plateauTopBarOffset() {
+        // Just keeping trackOffSetIsZero from storing high numbers that are above 3
+        if (trackOffSetIsZero > 6) {
+            trackOffSetIsZero = 3
+        }
     }
 
     /**

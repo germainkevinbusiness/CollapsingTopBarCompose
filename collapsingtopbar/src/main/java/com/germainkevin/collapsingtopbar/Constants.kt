@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 /**
  * The default collapsed height of the [CollapsingTopBar]
@@ -94,7 +94,7 @@ internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit
         val exitAnimation = if (centeredTitleAndSubtitle)
             slideOutVertically() + fadeOut() else fadeOut()
         AnimatedVisibility(
-            visible = collapsedTitleAlpha in 0F.. 1F,
+            visible = collapsedTitleAlpha in 0F..1F,
             enter = enterAnimation,
             exit = exitAnimation
         ) { title() }
@@ -168,28 +168,32 @@ fun CollapsingTopBarScrollBehavior.collapse(
     onFinishedCollapsing: () -> Unit = {}
 ) {
     if (!isAlwaysCollapsed) {
+        ignorePreScrollDetection = true
         collapseJob?.cancel()
         collapseJob = coroutineScope.launch {
-            // Making sure the [CollapsingTopBar] can smoothly change height size
-            // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
-            // for better understanding
-            trackOffSetIsZero = 0
-
             val ascendingDistance: IntRange =
                 collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
             val descendingDistance = ascendingDistance.sortedDescending()
 
             for (currentHeight in descendingDistance) {
                 val valueDecreasedTo = currentTopBarHeight - steps
+                if (valueDecreasedTo <= collapsedTopBarHeight) {
+//                    topBarOffset = collapsedTopBarHeight.value
+                    currentTopBarHeight = collapsedTopBarHeight
+                    Timber.d("Reached final step : collapse()")
+                    ignorePreScrollDetection = false
+                    // Making sure the [CollapsingTopBar] can smoothly change height size
+                    // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
+                    // for better understanding
+                    trackOffSetIsZero = 0
+                    defineCurrentState()
+                    onFinishedCollapsing()
+                }
                 if (currentTopBarHeight - steps > collapsedTopBarHeight) {
+//                    topBarOffset = valueDecreasedTo.value
                     currentTopBarHeight = valueDecreasedTo
                     defineCurrentState()
                     delay(delay)
-                }
-                if (valueDecreasedTo <= collapsedTopBarHeight) {
-                    currentTopBarHeight = collapsedTopBarHeight
-                    defineCurrentState()
-                    onFinishedCollapsing()
                 }
             }
         }
@@ -219,21 +223,27 @@ fun CollapsingTopBarScrollBehavior.expand(
     onFinishedExpanding: () -> Unit = {}
 ) {
     if (!isAlwaysCollapsed) {
+        ignorePreScrollDetection = true
         expandJob?.cancel()
         expandJob = coroutineScope.launch {
-            trackOffSetIsZero = 3
             val ascendingDistance: IntRange =
                 collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
             for (currentHeight in ascendingDistance) {
-                if (currentTopBarHeight + steps < expandedTopBarMaxHeight) {
-                    currentTopBarHeight += steps
-                    defineCurrentState()
-                    delay(delay)
-                }
-                if (currentTopBarHeight + steps >= expandedTopBarMaxHeight) {
+                val valueIncreasedTo = currentTopBarHeight + steps
+                if (valueIncreasedTo >= expandedTopBarMaxHeight) {
+//                    topBarOffset = expandedTopBarMaxHeight.value
                     currentTopBarHeight = expandedTopBarMaxHeight
+                    Timber.d("Reached final step : expand()")
+                    ignorePreScrollDetection = false
+                    trackOffSetIsZero = 3
                     defineCurrentState()
                     onFinishedExpanding()
+                }
+                if (valueIncreasedTo < expandedTopBarMaxHeight) {
+//                    topBarOffset = valueIncreasedTo.value
+                    currentTopBarHeight = valueIncreasedTo
+                    defineCurrentState()
+                    delay(delay)
                 }
             }
         }
