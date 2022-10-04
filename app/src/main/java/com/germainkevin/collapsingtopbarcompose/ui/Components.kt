@@ -1,31 +1,28 @@
 package com.germainkevin.collapsingtopbarcompose.ui
 
+import android.view.Window
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarScrollBehavior
+import com.germainkevin.collapsingtopbar.*
 import com.germainkevin.collapsingtopbarcompose.R
 
 
@@ -74,7 +71,7 @@ val ExpandedTitleText: @Composable () -> Unit = {
  * Text that appears in the subtitle slot of the
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
-val SubtitleText: @Composable (Array<String>) -> Unit = { contactNames ->
+val SubtitleText: @Composable (List<String>) -> Unit = { contactNames ->
     Text(
         text = stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
         style = LocalTextStyle.current.copy(
@@ -89,8 +86,8 @@ val SubtitleText: @Composable (Array<String>) -> Unit = { contactNames ->
  * [IconButton] that appears in the navigationIcon slot of the
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
-val NavigationIcon: @Composable (() -> Unit) -> Unit = { openLeftDrawer ->
-    IconButton(onClick = openLeftDrawer) {
+val NavigationIcon: @Composable () -> Unit = {
+    IconButton(onClick = {}) {
         Icon(
             imageVector = Icons.Filled.Menu,
             contentDescription = stringResource(id = R.string.hamburger_menu),
@@ -103,50 +100,43 @@ val NavigationIcon: @Composable (() -> Unit) -> Unit = { openLeftDrawer ->
  * [IconButton]s that appear in the actions slot of the
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
-val MoreMenuIcons: @Composable () -> Unit = {
-    IconButton(onClick = { }) {
-        Icon(
-            Icons.Outlined.Search,
-            contentDescription = stringResource(id = R.string.action_search),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-    IconButton(onClick = {
-    }) {
-        Icon(
-            Icons.Outlined.MoreVert,
-            contentDescription = stringResource(id = R.string.more_menu_desc),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LeftDrawer(
-    closeLeftDrawer: () -> Unit
-) {
-    // icons to mimic drawer destinations
-    val drawerItems = listOf(Icons.Default.Contacts, Icons.Default.Settings, Icons.Default.Email)
-    val selectedItem = remember { mutableStateOf(drawerItems[0]) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        drawerItems.forEach { item ->
-            NavigationDrawerItem(
-                icon = { Icon(item, contentDescription = null) },
-                label = { Text(item.name.replace("Filled.", "")) },
-                selected = item == selectedItem.value,
-                onClick = {
-                    selectedItem.value = item
-                    closeLeftDrawer()
-                },
-                shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp),
-                badge = { Text(text = "20") },
-                modifier = Modifier.padding(end = 16.dp, top = 12.dp, bottom = 12.dp)
+val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior, Boolean, Boolean) -> Unit =
+    { scrollBehavior, isCollapsed, isExpanded ->
+        IconButton(onClick = { }) {
+            Icon(
+                Icons.Outlined.Add,
+                contentDescription = Icons.Outlined.Add.name,
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        IconButton(onClick = {
+            if (isExpanded) {
+                scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+            } else if (isCollapsed) {
+                scrollBehavior.expand(delay = 10L, steps = 5.dp)
+            }
+        }) {
+            val currentStateIcon =
+                if (isCollapsed) Icons.Default.KeyboardArrowDown
+                else if (isExpanded) Icons.Default.KeyboardArrowUp
+                else Icons.Default.MoreHoriz
+            Icon(
+                imageVector = currentStateIcon,
+                contentDescription = currentStateIcon.name,
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
+
+val collapsingTopBarColors: @Composable (Window) -> CollapsingTopBarColors = { window ->
+    CollapsingTopBarDefaults.colors(
+        // This will be the color of the CollapsingTopBar when its state
+        // is CollapsingTopBarState.IN_BETWEEN
+        backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
+        onBackgroundColorChange = {
+            // Changes the status bar color to the current background color of the
+            // CollapsingTopBar
+            window.statusBarColor = it.toArgb()
+        },
+    )
 }

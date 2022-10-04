@@ -35,8 +35,7 @@ private val navigationIconModifier = Modifier
 /**
  * A way to  remove any floating number from the [Dp] value, and just get the [Int] side of the [Dp]
  * */
-fun Dp.toIntDp() = this.value.toInt().dp
-
+internal fun Dp.toIntDp() = this.value.toInt().dp
 
 internal val navigationIconRow: @Composable (
     @Composable (() -> Unit)?, PaddingValues, Boolean
@@ -149,21 +148,24 @@ fun CollapsingTopBarScrollBehavior.collapse(
     if (!isAlwaysCollapsed) {
         collapseJob?.cancel()
         collapseJob = coroutineScope.launch {
+            // Making sure scrolling down is not automatically possible
+            trackOffSetIsZero = 0
             val ascendingDistance: IntRange =
                 collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
-
             val descendingDistance = ascendingDistance.sortedDescending()
 
             for (currentHeight in descendingDistance) {
+                val valueDecreasedTo = currentTopBarHeight - steps
                 if (currentTopBarHeight - steps > collapsedTopBarHeight) {
-                    currentTopBarHeight -= steps
+                    currentTopBarHeight = valueDecreasedTo
+                    defineCurrentState()
+                    delay(delay)
                 }
-                if (currentTopBarHeight - steps <= collapsedTopBarHeight) {
+                if (valueDecreasedTo <= collapsedTopBarHeight) {
                     currentTopBarHeight = collapsedTopBarHeight
                     defineCurrentState()
                     onFinishedCollapsing()
                 }
-                delay(delay)
             }
         }
     }
@@ -194,18 +196,20 @@ fun CollapsingTopBarScrollBehavior.expand(
     if (!isAlwaysCollapsed) {
         expandJob?.cancel()
         expandJob = coroutineScope.launch {
+            trackOffSetIsZero = 3
             val ascendingDistance: IntRange =
                 collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
             for (currentHeight in ascendingDistance) {
                 if (currentTopBarHeight + steps < expandedTopBarMaxHeight) {
                     currentTopBarHeight += steps
+                    defineCurrentState()
+                    delay(delay)
                 }
                 if (currentTopBarHeight + steps >= expandedTopBarMaxHeight) {
                     currentTopBarHeight = expandedTopBarMaxHeight
                     defineCurrentState()
                     onFinishedExpanding()
                 }
-                delay(delay)
             }
         }
     }

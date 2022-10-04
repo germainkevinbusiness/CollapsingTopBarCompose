@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import timber.log.Timber
 import kotlin.math.roundToInt
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 
 /**
  * Defines how a [CollapsingTopBar] should behave, mainly during a
@@ -41,9 +42,9 @@ interface CollapsingTopBarScrollBehavior {
     var currentState: CollapsingTopBarState
 
     /**
-     * The offset that is added to the height of the [CollapsingTopBar] based on detected
-     * scroll events from the
-     * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
+     * Is initially assigned the [NestedScrollConnection.onPreScroll]'s "available" [Offset.y].
+     * It's a value that is added to the height of the [CollapsingTopBar] when there is a
+     * [nestedScroll] event and [isAlwaysCollapsed] is false.
      * */
     var topBarOffset: Float
 
@@ -65,12 +66,13 @@ interface CollapsingTopBarScrollBehavior {
     var centeredTitleAndSubtitle: Boolean
 
     /**
-     * Tracks how many times [topBarOffset]'s value is 0.0f. Useful when
+     * Is incremented inside this [nestedScrollConnection]'s [NestedScrollConnection.onPreScroll]
+     * event listener, everytime the [topBarOffset] is equal to 0f. Useful when
      * [isExpandedWhenFirstDisplayed] is set to false, because we want the [CollapsingTopBar] to
-     * start changing height only after the first scrolling up event is detected through our
-     * [nestedScrollConnection], and because the first scrolling up event tend to be the third time
-     * [topBarOffset] is equal to 0.0f, all we gotta do is check when [topBarOffset] is equal to
-     * 0.0f 3 times, then let [currentTopBarHeight] be equal to
+     * start changing height only after the first scrolling down event is detected through our
+     * [nestedScrollConnection], and because the first scrolling down event tend to be the third
+     * time [topBarOffset] is equal to 0f, all we gotta do is check when [topBarOffset] is equal
+     * to 0f 3 times, then let [currentTopBarHeight] be equal to
      * [expandedTopBarMaxHeight] + [topBarOffset]
      * */
     var trackOffSetIsZero: Int
@@ -126,11 +128,11 @@ class DefaultBehaviorOnScroll(
     override var trackOffSetIsZero: Int by mutableStateOf(0)
 
     override var currentTopBarHeight: Dp by mutableStateOf(
-        if (isAlwaysCollapsed && isExpandedWhenFirstDisplayed) collapsedTopBarHeight
-        else if (isAlwaysCollapsed && !isExpandedWhenFirstDisplayed) collapsedTopBarHeight
-        else if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed) collapsedTopBarHeight
-        else if (!isAlwaysCollapsed && isExpandedWhenFirstDisplayed) expandedTopBarMaxHeight
-        else expandedTopBarMaxHeight
+        if (isAlwaysCollapsed) collapsedTopBarHeight else {
+            if (isExpandedWhenFirstDisplayed) expandedTopBarMaxHeight
+            if (!isExpandedWhenFirstDisplayed) collapsedTopBarHeight
+            else expandedTopBarMaxHeight
+        }
     )
 
     override var currentState: CollapsingTopBarState by mutableStateOf(
@@ -146,28 +148,29 @@ class DefaultBehaviorOnScroll(
     override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            if (!isAlwaysCollapsed && !isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+            if (!isAlwaysCollapsed) {
+                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                } else if (isExpandedWhenFirstDisplayed) {
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                }
+
+                defineCurrentState()
+
+                val availableY = available.y.toInt()
+                val newOffset = (topBarOffset + availableY)
+                val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
+                topBarOffset = coerced
+
+                if (topBarOffset == 0f) {
+                    trackOffSetIsZero += 1
+                }
+
                 // Just keeping trackOffSetIsZero from storing high numbers that are above 3
                 if (trackOffSetIsZero > 6) {
                     trackOffSetIsZero = 3
                 }
-                currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
-            } else if (isExpandedWhenFirstDisplayed && !isAlwaysCollapsed) {
-                currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
             }
-
-            val newOffset = (topBarOffset + available.y)
-            val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
-            topBarOffset = coerced
-
-            if (topBarOffset == 0.0f) {
-                trackOffSetIsZero += 1
-            }
-
-            defineCurrentState()
-
-            // Consume only the scroll on the Y axis.
-            available.copy(x = 0f)
 
             return Offset.Zero
         }
