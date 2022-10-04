@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 /**
  * The default collapsed height of the [CollapsingTopBar]
@@ -178,9 +177,7 @@ fun CollapsingTopBarScrollBehavior.collapse(
             for (currentHeight in descendingDistance) {
                 val valueDecreasedTo = currentTopBarHeight - steps
                 if (valueDecreasedTo <= collapsedTopBarHeight) {
-//                    topBarOffset = collapsedTopBarHeight.value
                     currentTopBarHeight = collapsedTopBarHeight
-                    Timber.d("Reached final step : collapse()")
                     ignorePreScrollDetection = false
                     // Making sure the [CollapsingTopBar] can smoothly change height size
                     // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
@@ -190,7 +187,6 @@ fun CollapsingTopBarScrollBehavior.collapse(
                     onFinishedCollapsing()
                 }
                 if (currentTopBarHeight - steps > collapsedTopBarHeight) {
-//                    topBarOffset = valueDecreasedTo.value
                     currentTopBarHeight = valueDecreasedTo
                     defineCurrentState()
                     delay(delay)
@@ -231,16 +227,13 @@ fun CollapsingTopBarScrollBehavior.expand(
             for (currentHeight in ascendingDistance) {
                 val valueIncreasedTo = currentTopBarHeight + steps
                 if (valueIncreasedTo >= expandedTopBarMaxHeight) {
-//                    topBarOffset = expandedTopBarMaxHeight.value
                     currentTopBarHeight = expandedTopBarMaxHeight
-                    Timber.d("Reached final step : expand()")
                     ignorePreScrollDetection = false
                     trackOffSetIsZero = 3
                     defineCurrentState()
                     onFinishedExpanding()
                 }
                 if (valueIncreasedTo < expandedTopBarMaxHeight) {
-//                    topBarOffset = valueIncreasedTo.value
                     currentTopBarHeight = valueIncreasedTo
                     defineCurrentState()
                     delay(delay)

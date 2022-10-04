@@ -204,8 +204,8 @@ class DefaultBehaviorOnScroll(
         }
     }
 
+    // Just keeping trackOffSetIsZero from storing high numbers that are above 3
     private fun plateauTopBarOffset() {
-        // Just keeping trackOffSetIsZero from storing high numbers that are above 3
         if (trackOffSetIsZero > 6) {
             trackOffSetIsZero = 3
         }
