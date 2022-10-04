@@ -1,6 +1,7 @@
 package com.germainkevin.collapsingtopbarcompose.ui
 
 import android.view.Window
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

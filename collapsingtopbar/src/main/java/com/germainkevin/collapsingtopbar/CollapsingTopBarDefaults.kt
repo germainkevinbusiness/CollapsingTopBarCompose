@@ -65,7 +65,7 @@ object CollapsingTopBarDefaults {
     fun colors(
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
         backgroundColorWhenCollapsingOrExpanding: Color = backgroundColor,
-        onBackgroundColorChange: (Color) -> Unit = {},
+        onBackgroundColorChange: @Composable (Color) -> Unit = {},
         contentColor: Color = contentColorFor(backgroundColor),
     ): CollapsingTopBarColors = CollapsingTopBarColors(
         backgroundColor = backgroundColor,
@@ -90,7 +90,7 @@ class CollapsingTopBarColors(
     var backgroundColor: Color,
     var contentColor: Color,
     var backgroundColorWhenCollapsingOrExpanding: Color,
-    var onBackgroundColorChange: (Color) -> Unit,
+    var onBackgroundColorChange: @Composable (Color) -> Unit,
 )
 
 /**

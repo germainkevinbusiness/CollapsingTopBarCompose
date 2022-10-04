@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
@@ -24,6 +25,27 @@ internal val defaultMinimumTopBarHeight = 56.dp
 internal val defaultMaximumTopBarHeight = 156.dp
 
 internal val topBarHorizontalPadding = 4.dp
+
+internal val emptyPaddingValues = PaddingValues()
+
+internal val expandedColumnPaddingValues: @Composable (@Composable (() -> Unit)?, PaddingValues)
+-> PaddingValues = { navigationIcon, contentPadding ->
+    PaddingValues(
+        start =
+        if (navigationIcon != null) 56.dp - contentPadding.calculateStartPadding(
+            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
+            else LayoutDirection.Rtl
+        )
+        else 16.dp - contentPadding.calculateStartPadding(
+            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
+            else LayoutDirection.Rtl
+        ),
+        end = contentPadding.calculateStartPadding(
+            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
+            else LayoutDirection.Rtl
+        )
+    )
+}
 
 /**
  * [Modifier] when there is a navigation icon provided
@@ -72,7 +94,7 @@ internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit
         val exitAnimation = if (centeredTitleAndSubtitle)
             slideOutVertically() + fadeOut() else fadeOut()
         AnimatedVisibility(
-            visible = collapsedTitleAlpha in 0f..1f,
+            visible = collapsedTitleAlpha in 0F.. 1F,
             enter = enterAnimation,
             exit = exitAnimation
         ) { title() }
@@ -148,8 +170,11 @@ fun CollapsingTopBarScrollBehavior.collapse(
     if (!isAlwaysCollapsed) {
         collapseJob?.cancel()
         collapseJob = coroutineScope.launch {
-            // Making sure scrolling down is not automatically possible
+            // Making sure the [CollapsingTopBar] can smoothly change height size
+            // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
+            // for better understanding
             trackOffSetIsZero = 0
+
             val ascendingDistance: IntRange =
                 collapsedTopBarHeight.value.toInt()..expandedTopBarMaxHeight.value.toInt()
             val descendingDistance = ascendingDistance.sortedDescending()

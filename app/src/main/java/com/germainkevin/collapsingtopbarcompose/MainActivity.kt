@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
         "Contact #17",
         "Contact #18",
         "Contact #19",
+        "Contact #20",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +92,7 @@ private fun HomeScreen(
         topBar = {
             CollapsingTopBar(
                 scrollBehavior = scrollBehavior,
-//                colors = collapsingTopBarColors(window),
+                colors = collapsingTopBarColors(window),
                 title = TitleText,
                 expandedTitle = ExpandedTitleText,
                 subtitle = { SubtitleText(contacts) },

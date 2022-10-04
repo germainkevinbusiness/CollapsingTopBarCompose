@@ -5,11 +5,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
 import kotlin.math.roundToInt
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 
 /**
  * Defines how a [CollapsingTopBar] should behave, mainly during a
@@ -66,14 +65,27 @@ interface CollapsingTopBarScrollBehavior {
     var centeredTitleAndSubtitle: Boolean
 
     /**
+     * Exists only to handle the case of [isExpandedWhenFirstDisplayed] == false.
+     *
+     *
      * Is incremented inside this [nestedScrollConnection]'s [NestedScrollConnection.onPreScroll]
-     * event listener, everytime the [topBarOffset] is equal to 0f. Useful when
-     * [isExpandedWhenFirstDisplayed] is set to false, because we want the [CollapsingTopBar] to
-     * start changing height only after the first scrolling down event is detected through our
-     * [nestedScrollConnection], and because the first scrolling down event tend to be the third
-     * time [topBarOffset] is equal to 0f, all we gotta do is check when [topBarOffset] is equal
-     * to 0f 3 times, then let [currentTopBarHeight] be equal to
-     * [expandedTopBarMaxHeight] + [topBarOffset]
+     * event listener, everytime the [topBarOffset] is equal to 0f.
+     *
+     *
+     * When the [currentTopBarHeight] is equal to [collapsedTopBarHeight] the first time it's drawn
+     * on the UI, we want to prevent a sudden change of the [currentTopBarHeight]'s value from
+     * being [collapsedTopBarHeight] to now being equal to [expandedTopBarMaxHeight],
+     *
+     * instead
+     * we give the [topBarOffset] the time to resolve the exact number of dp we should add to
+     * the [currentTopBarHeight] so that we add the right amount of dp to expand from its
+     * size of [collapsedTopBarHeight] to whatever necessary size <= [expandedTopBarMaxHeight].
+     *
+     * In order for the [topBarOffset] to have time to do that, we wait until the 3rd time the
+     * user tries to scroll down from the absolute top of the layout where the scroll is detected,
+     * then we make the [CollapsingTopBar] expandable, meaning we now start adding dp values to
+     * [currentTopBarHeight] meanwhile it's equal to [collapsedTopBarHeight]
+     *
      * */
     var trackOffSetIsZero: Int
 
@@ -148,14 +160,8 @@ class DefaultBehaviorOnScroll(
     override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            if (!isAlwaysCollapsed) {
-                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
-                } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
-                }
 
-                defineCurrentState()
+            if (!isAlwaysCollapsed) {
 
                 val availableY = available.y.toInt()
                 val newOffset = (topBarOffset + availableY)
@@ -170,6 +176,14 @@ class DefaultBehaviorOnScroll(
                 if (trackOffSetIsZero > 6) {
                     trackOffSetIsZero = 3
                 }
+
+                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                } else if (isExpandedWhenFirstDisplayed) {
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                }
+
+                defineCurrentState()
             }
 
             return Offset.Zero
@@ -185,41 +199,32 @@ class DefaultBehaviorOnScroll(
     }
 
     /**
-     * In order to know when the "title subtitle column" should have a 1f alpha visibility or 0f alpha
-     * visibility or a alpha value between 0f and 1f, we need to base that alpha value on the
-     * [currentTopBarHeight] of the [CollapsingTopBar].
+     * In order to know the alpha value between 0F and 1F of the "expandedTitle subtitle column",
+     * we will use the height of the [CollapsingTopBar] which is the [currentTopBarHeight].
      *
-     * So in this sense when the [currentTopBarHeight] of the [CollapsingTopBar]
-     * is [collapsedTopBarHeight] + [margin] then  the "title subtitle column" should be invisible
-     * or alpha = 0f, and when the [CollapsingTopBar]'s [currentTopBarHeight] is
-     * [expandedTopBarMaxHeight] then the "title subtitle column" should be visible or alpha = 1f.
      *
-     * But we also want the "title subtitle column"'s alpha value to be between 0f and 1f when the
-     * [CollapsingTopBar]'s [currentTopBarHeight] is between
-     * [collapsedTopBarHeight] + [margin] and [expandedTopBarMaxHeight]
+     * We want that whenever the
+     * [currentTopBarHeight] is exactly equal to the value of [collapsedTopBarHeight] + [margin]
+     * that the "expandedTitle subtitle Column" become fully invisible or alpha = 0F
      *
-     * We'll reference [collapsedTopBarHeight] as 56 (Dp) and [expandedTopBarMaxHeight] as 200 (Dp), and
-     * the [margin] as 20 (Dp)
      *
-     * 56 + 20  --------> 0f (alpha value meaning  when the title subtitle column is fully invisible)
+     * But, when the [currentTopBarHeight] is exactly equal to the value of
+     * [expandedTopBarMaxHeight] that the "expandedTitle subtitle Column"
+     * become fully visible or alpha = 1F.
      *
-     * 200      --------> 1f (alpha value meaning when the title subtitle column is fully visible)
      *
-     * The distance between [expandedTopBarMaxHeight] - ([collapsedTopBarHeight] + [margin])
-     * << A distance which we will label as 124 (Dp) because (200 - (56+20) = 124) >>,
-     * is going to be the 100% distance from making the "title subtitle column" fully visible (100%) or
-     * alpha =1f and fully invisible (0%) or alpha = 0f, or in between (0%..100%) 0.0f to 1.0f.
+     * So in this sense, the 0F and 1F alpha value of the "expandedTitle subtitle Column" are:
      *
-     * So what we do is:
-     * 124                                ----------> 100%
      *
-     * currentTopBarHeight's actual value -------------> alphaValue
+     * val fullyInvisibleValue: Dp = [collapsedTopBarHeight] + [margin]
      *
-     * Whatever value alphaValue is, is considered the level of visibility the "title subtitle column"
-     * should have
      *
-     * @param margin Making sure that the 'title subtitle column" become visible once the
-     * [currentTopBarHeight] reaches past [collapsedTopBarHeight] + [margin]
+     * val fullyVisibleValue: Dp = [expandedTopBarMaxHeight] - (fullyInvisibleValue)
+     *
+     *
+     * @param margin When [collapsedTopBarHeight] + [margin] is the current value of
+     * [currentTopBarHeight], it will trigger the "expandedTitle subtitle Column"'s alpha value
+     * to be equal to 0F.
      */
     @Composable
     private fun getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
@@ -237,12 +242,12 @@ class DefaultBehaviorOnScroll(
      * */
     @Composable
     private fun getCollapsedTitleAlpha(
-        visibleValue: Dp = collapsedTopBarHeight.value.toInt().dp,
-        invisibleValue: Dp = collapsedTopBarHeight + 6.dp
+        visibleValue: Dp = collapsedTopBarHeight.toIntDp(),
+        invisibleValue: Dp = (collapsedTopBarHeight + 6.dp).toIntDp()
     ): State<Float> {
         return animateFloatAsState(
             if (currentTopBarHeight.toIntDp() == visibleValue) 1f
-            else (visibleValue - currentTopBarHeight) / (invisibleValue - visibleValue)
+            else (visibleValue - currentTopBarHeight.toIntDp()) / (invisibleValue - visibleValue)
         )
     }
 }

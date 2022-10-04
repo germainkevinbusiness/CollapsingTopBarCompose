@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 /**
  * [CollapsingTopBar] is like a [TopAppBar] that can collapse and/or expand.
@@ -123,12 +122,8 @@ private fun CollapsingTopBarLayout(
                     .fillMaxWidth()
                     .height(currentTopBarHeight)
                     .padding(
-                        if (centeredTitleAndSubtitle) PaddingValues() else PaddingValues(
-                            start =
-                            if (navigationIcon != null) 56.dp - topBarHorizontalPadding
-                            else 16.dp - topBarHorizontalPadding,
-                            end = topBarHorizontalPadding
-                        )
+                        if (centeredTitleAndSubtitle) emptyPaddingValues
+                        else expandedColumnPaddingValues(navigationIcon, contentPadding)
                     )
                     .alpha(expandedColumnAlphaValue),
                 horizontalAlignment =
