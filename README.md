@@ -43,11 +43,11 @@ dependencies {
 
 # Usage
 
-Basic usage is shown below, there's a more elaborate example in
+Basic usage is shown below, for a more elaborate example check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
 .
 
-In order to use a ```CollapsingTopBar```, you first need to create a ```TopBarScrollBehavior```.
+In order to use a ```CollapsingTopBar```, you first need to create a ```CollapsingTopBarScrollBehavior```.
 
 ```kotlin
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
