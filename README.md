@@ -8,7 +8,7 @@ A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scr
 <table>
   <tr>
     <td>Collapse/Expand due to user scroll</td>
-     <td>Programmatically collapse/expand</td>
+     <td>Collapse/Expand due to onClick event</td>
     <td>Left expanded title without subtitle</td>
   </tr>
   <tr>
