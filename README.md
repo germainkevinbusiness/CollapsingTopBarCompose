@@ -83,7 +83,8 @@ Layout's  ```Modifier.nestedScroll``` :
 
 ```kotlin
 Scaffold(
-    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    modifier = Modifier
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
         CollapsingTopBar(
             scrollBehavior = scrollBehavior,
@@ -99,8 +100,7 @@ So when we put it all together we got:
 ```kotlin
 private val contacts = listOf(
     "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
-    "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
-    "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+    "Federico Valverde", "Granit Xhaka", "Harry Kane", "Lionel Andres Messi",
 )
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
@@ -112,6 +112,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
 )
 val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
 val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
+val window = this@Activity.window
 Column(
     modifier = Modifier
         .fillMaxSize()
@@ -119,12 +120,18 @@ Column(
 ) {
     CollapsingTopBar(
         scrollBehavior = scrollBehavior,
-        colors = collapsingTopBarColors(window),
         title = TitleText,
         expandedTitle = ExpandedTitleText,
         subtitle = { SubtitleText(contacts) },
         navigationIcon = { NavigationIcon() },
         actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
+        colors = CollapsingTopBarDefaults.colors(
+            backgroundColorWhenCollapsingOrExpanding =
+            MaterialTheme.colorScheme.onPrimaryContainer,
+            onBackgroundColorChange = {
+                window.statusBarColor = it.toArgb()
+            },
+        ),
     )
     LazyColumn(
         modifier = Modifier
