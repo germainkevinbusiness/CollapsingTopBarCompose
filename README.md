@@ -2,7 +2,7 @@
 
 # CollapsingTopBarCompose
 
-A Jetpack Compose Collapsing Top Bar, that expands or collapses based on the scrolling of a content
+A Jetpack Compose Collapsing TopBar that collapses or expands either based on the scrolling of a content or by you calling the ```CollapsingTopBarScrollBehavior.collapse()``` or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
 
 
 <table>
