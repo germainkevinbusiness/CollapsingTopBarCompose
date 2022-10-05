@@ -40,8 +40,6 @@ class MainActivity : ComponentActivity() {
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 156.dp,
                 )
-                val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
-                val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -54,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
                         navigationIcon = { NavigationIcon() },
-                        actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
+                        actions = { MoreMenuIcons(scrollBehavior) },
                     )
                     LazyColumn(
                         modifier = Modifier

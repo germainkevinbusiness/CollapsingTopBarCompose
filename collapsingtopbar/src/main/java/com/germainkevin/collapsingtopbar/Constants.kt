@@ -135,10 +135,19 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
  * */
 internal fun CollapsingTopBarScrollBehavior.defineCurrentState() {
     currentState = when (currentTopBarHeight.toIntDp()) {
-        collapsedTopBarHeight -> CollapsingTopBarState.COLLAPSED
-        expandedTopBarMaxHeight -> CollapsingTopBarState.EXPANDED
-        else -> CollapsingTopBarState.IN_BETWEEN
+        collapsedTopBarHeight -> {
+            CollapsingTopBarState.COLLAPSED
+        }
+        expandedTopBarMaxHeight -> {
+            CollapsingTopBarState.EXPANDED
+        }
+        else -> {
+            CollapsingTopBarState.MOVING
+        }
     }
+    isCollapsed = currentState == CollapsingTopBarState.COLLAPSED
+    isMoving = currentState == CollapsingTopBarState.MOVING
+    isExpanded = currentState == CollapsingTopBarState.EXPANDED
 }
 
 private var collapseJob: Job? = null

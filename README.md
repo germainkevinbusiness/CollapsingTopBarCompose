@@ -54,7 +54,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.8"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.0.9"
 }
 ```
 
@@ -110,8 +110,9 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
 )
-val isCollapsed = scrollBehavior.currentState == CollapsingTopBarState.COLLAPSED
-val isExpanded = scrollBehavior.currentState == CollapsingTopBarState.EXPANDED
+//val isMoving = scrollBehavior.isMoving
+val isCollapsed = scrollBehavior.isCollapsed
+val isExpanded = scrollBehavior.isExpanded
 val window = this@Activity.window
 Column(
     modifier = Modifier
@@ -124,7 +125,7 @@ Column(
         expandedTitle = ExpandedTitleText,
         subtitle = { SubtitleText(contacts) },
         navigationIcon = { NavigationIcon() },
-        actions = { MoreMenuIcons(scrollBehavior, isCollapsed, isExpanded) },
+        actions = { MoreMenuIcons(isCollapsed, isExpanded) },
         colors = CollapsingTopBarDefaults.colors(
             backgroundColorWhenCollapsingOrExpanding =
             MaterialTheme.colorScheme.onPrimaryContainer,

@@ -13,6 +13,8 @@ import kotlin.math.roundToInt
 /**
  * Defines how a [CollapsingTopBar] should behave, mainly during a
  * [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll] event.
+ *
+ * Have a class extend this interface if you want to create your own scroll behavior.
  * */
 interface CollapsingTopBarScrollBehavior {
 
@@ -39,6 +41,21 @@ interface CollapsingTopBarScrollBehavior {
      * Notifies about the current [CollapsingTopBarState]
      * */
     var currentState: CollapsingTopBarState
+
+    /**
+     * Checks whether the [currentState] is [CollapsingTopBarState.COLLAPSED]
+     * */
+    var isCollapsed: Boolean
+
+    /**
+     * Checks whether the [currentState] is [CollapsingTopBarState.MOVING]
+     * */
+    var isMoving: Boolean
+
+    /**
+     * Checks whether the [currentState] is [CollapsingTopBarState.EXPANDED]
+     * */
+    var isExpanded: Boolean
 
     /**
      * Is initially assigned the [NestedScrollConnection.onPreScroll]'s "available" [Offset.y].
@@ -157,8 +174,20 @@ class DefaultBehaviorOnScroll(
         when (currentTopBarHeight) {
             collapsedTopBarHeight -> CollapsingTopBarState.COLLAPSED
             expandedTopBarMaxHeight -> CollapsingTopBarState.EXPANDED
-            else -> CollapsingTopBarState.IN_BETWEEN
+            else -> CollapsingTopBarState.MOVING
         }
+    )
+
+    override var isCollapsed: Boolean by mutableStateOf(
+        currentState == CollapsingTopBarState.COLLAPSED
+    )
+
+    override var isMoving: Boolean by mutableStateOf(
+        currentState == CollapsingTopBarState.MOVING
+    )
+
+    override var isExpanded: Boolean by mutableStateOf(
+        currentState == CollapsingTopBarState.EXPANDED
     )
 
     override var offsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value

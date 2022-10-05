@@ -101,33 +101,32 @@ val NavigationIcon: @Composable () -> Unit = {
  * [IconButton]s that appear in the actions slot of the
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
-val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior, Boolean, Boolean) -> Unit =
-    { scrollBehavior, isCollapsed, isExpanded ->
-        IconButton(onClick = { }) {
-            Icon(
-                Icons.Outlined.Add,
-                contentDescription = Icons.Outlined.Add.name,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-        IconButton(onClick = {
-            if (isExpanded) {
-                scrollBehavior.collapse(delay = 10L, steps = 5.dp)
-            } else if (isCollapsed) {
-                scrollBehavior.expand(delay = 10L, steps = 5.dp)
-            }
-        }) {
-            val currentStateIcon =
-                if (isCollapsed) Icons.Default.KeyboardArrowDown
-                else if (isExpanded) Icons.Default.KeyboardArrowUp
-                else Icons.Default.MoreHoriz
-            Icon(
-                imageVector = currentStateIcon,
-                contentDescription = currentStateIcon.name,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
+val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior) -> Unit = { scrollBehavior ->
+    IconButton(onClick = { }) {
+        Icon(
+            Icons.Outlined.Add,
+            contentDescription = Icons.Outlined.Add.name,
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
     }
+    IconButton(onClick = {
+        if (scrollBehavior.isExpanded) {
+            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+        } else if (scrollBehavior.isCollapsed) {
+            scrollBehavior.expand(delay = 10L, steps = 5.dp)
+        }
+    }) {
+        val currentStateIcon =
+            if (scrollBehavior.isCollapsed) Icons.Default.KeyboardArrowDown
+            else if (scrollBehavior.isExpanded) Icons.Default.KeyboardArrowUp
+            else Icons.Default.MoreHoriz
+        Icon(
+            imageVector = currentStateIcon,
+            contentDescription = currentStateIcon.name,
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
 
 val collapsingTopBarColors: @Composable (Window) -> CollapsingTopBarColors = { window ->
     CollapsingTopBarDefaults.colors(
