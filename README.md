@@ -78,7 +78,7 @@ Scaffold(
 ) {}
 ```
 
-So when we put it all together we got:
+So a complete example could look like:
 
 ```kotlin
 private val contacts = listOf(
