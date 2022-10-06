@@ -8,6 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -16,7 +20,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
-import com.germainkevin.collapsingtopbar.CollapsingTopBarState
 import com.germainkevin.collapsingtopbar.rememberCollapsingTopBarScrollBehavior
 import com.germainkevin.collapsingtopbarcompose.ui.*
 import com.germainkevin.collapsingtopbarcompose.ui.theme.CollapsingTopBarComposeTheme
@@ -38,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     isExpandedWhenFirstDisplayed = true,
                     centeredTitleWhenCollapsed = false,
                     centeredTitleAndSubtitle = true,
-                    expandedTopBarMaxHeight = 156.dp,
+                    expandedTopBarMaxHeight = 200.dp,
                 )
                 Column(
                     modifier = Modifier
@@ -47,11 +50,20 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-                        colors = collapsingTopBarColors(window),
+//                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
                         navigationIcon = { NavigationIcon() },
+                        mainAction = {
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    Icons.Outlined.Add,
+                                    contentDescription = Icons.Outlined.Add.name,
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                        },
                         actions = { MoreMenuIcons(scrollBehavior) },
                     )
                     LazyColumn(

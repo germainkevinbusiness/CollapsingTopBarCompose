@@ -52,7 +52,7 @@ val ExpandedTitleText: @Composable () -> Unit = {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(46.dp),
+            modifier = Modifier.size(42.dp),
             painter = painterResource(id = R.drawable.ic_baseline_contacts_24),
             contentDescription = "Contacts icon",
             colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
@@ -102,13 +102,6 @@ val NavigationIcon: @Composable () -> Unit = {
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
 val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior) -> Unit = { scrollBehavior ->
-    IconButton(onClick = { }) {
-        Icon(
-            Icons.Outlined.Add,
-            contentDescription = Icons.Outlined.Add.name,
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
     IconButton(onClick = {
         if (scrollBehavior.isExpanded) {
             scrollBehavior.collapse(delay = 10L, steps = 5.dp)

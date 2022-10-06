@@ -25,31 +25,10 @@ internal val defaultMaximumTopBarHeight = 156.dp
 
 internal val topBarHorizontalPadding = 4.dp
 
-internal val emptyPaddingValues = PaddingValues()
-
-internal val expandedColumnPaddingValues: @Composable (@Composable (() -> Unit)?, PaddingValues)
--> PaddingValues = { navigationIcon, contentPadding ->
-    PaddingValues(
-        start =
-        if (navigationIcon != null) 56.dp - contentPadding.calculateStartPadding(
-            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
-            else LayoutDirection.Rtl
-        )
-        else 16.dp - contentPadding.calculateStartPadding(
-            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
-            else LayoutDirection.Rtl
-        ),
-        end = contentPadding.calculateStartPadding(
-            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
-            else LayoutDirection.Rtl
-        )
-    )
-}
-
 /**
  * [Modifier] when there is a navigation icon provided
  * */
-private val navigationIconModifier = Modifier
+internal val navigationIconModifier = Modifier
     .fillMaxHeight()
     .width(56.dp - topBarHorizontalPadding)
 
@@ -58,26 +37,19 @@ private val navigationIconModifier = Modifier
  * */
 internal fun Dp.toIntDp() = this.value.toInt().dp
 
-internal val navigationIconRow: @Composable (
-    @Composable (() -> Unit)?, PaddingValues, Boolean
-) -> Unit = { navigationIcon, contentPadding, centeredTitleWhenCollapsed ->
+internal val emptyPaddingValues = PaddingValues()
 
-    val noIconModifier = Modifier.width(
-        16.dp - contentPadding.calculateStartPadding(
-            if (LocalLayoutDirection.current == LayoutDirection.Ltr) LayoutDirection.Ltr
-            else LayoutDirection.Rtl
-        )
-    )
-    if (navigationIcon == null) Spacer(modifier = noIconModifier)
-    else if (centeredTitleWhenCollapsed) Row(
-        modifier = Modifier.wrapContentWidth(),
-        verticalAlignment = Alignment.Bottom,
-        content = { navigationIcon() }
-    )
-    else Row(
-        modifier = navigationIconModifier,
-        verticalAlignment = Alignment.Bottom,
-        content = { navigationIcon() }
+internal val expandedColumnPaddingValues: @Composable (@Composable (() -> Unit)?, PaddingValues)
+-> PaddingValues = { navigationIcon, contentPadding ->
+    PaddingValues(
+        top = contentPadding.calculateTopPadding(),
+        bottom = contentPadding.calculateBottomPadding(),
+        start = if (navigationIcon != null) {
+            56.dp - contentPadding.calculateStartPadding(LocalLayoutDirection.current)
+        } else {
+            16.dp - contentPadding.calculateStartPadding(LocalLayoutDirection.current)
+        },
+        end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
     )
 }
 
@@ -98,6 +70,7 @@ internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit
             exit = exitAnimation
         ) { title() }
     }
+
 
 /**
  * The Section where all the options menu items will be laid out on
