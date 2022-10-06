@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                     isAlwaysCollapsed = false,
                     isExpandedWhenFirstDisplayed = true,
-                    centeredTitleWhenCollapsed = false,
+                    centeredTitleWhenCollapsed = true,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 200.dp,
                 )

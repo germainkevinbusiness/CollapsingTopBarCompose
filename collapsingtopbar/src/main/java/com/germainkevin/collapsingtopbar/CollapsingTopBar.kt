@@ -1,6 +1,8 @@
 package com.germainkevin.collapsingtopbar
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -118,8 +120,10 @@ private fun CollapsingTopBarLayout(
     scrollBehavior: CollapsingTopBarScrollBehavior,
     elevation: Dp,
 ) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+    val scrollState = rememberScrollState()
+    val contentPaddingStart = contentPadding.calculateStartPadding(LocalLayoutDirection.current)
     Surface(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(scrollState),
         color = currentBackgroundColor,
         contentColor = currentContentColor,
         elevation = elevation,
@@ -134,23 +138,17 @@ private fun CollapsingTopBarLayout(
              * */
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .wrapContentWidth()
+                    .align(if (centeredTitleAndSubtitle) Alignment.Center else Alignment.CenterStart)
                     .height(currentTopBarHeight)
                     .alpha(expandedColumnAlphaValue)
                     .padding(
                         if (centeredTitleAndSubtitle) emptyPaddingValues else {
                             PaddingValues(
                                 bottom = contentPadding.calculateBottomPadding(),
-                                start = if (navigationIcon != null) {
-                                    56.dp - contentPadding.calculateStartPadding(
-                                        LocalLayoutDirection.current
-                                    )
-                                } else {
-                                    16.dp - contentPadding.calculateStartPadding(
-                                        LocalLayoutDirection.current
-                                    )
-                                },
-                                end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+                                start = if (navigationIcon != null) 56.dp - contentPaddingStart
+                                else 16.dp - contentPaddingStart,
+                                end = contentPaddingStart,
                             )
                         }
                     ),
@@ -170,12 +168,12 @@ private fun CollapsingTopBarLayout(
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
              * */
 
-            val collapsedLayoutSize = remember { mutableStateOf(IntSize.Zero) }
+            val collapsedRowLayoutSize = remember { mutableStateOf(IntSize.Zero) }
 
             val collapsedRowLayoutModifier = if (mainAction != null) {
                 Modifier
                     .fillMaxWidth()
-                    .onSizeChanged { collapsedLayoutSize.value = it }
+                    .onSizeChanged { collapsedRowLayoutSize.value = it }
                     .height(currentTopBarHeight)
                     .padding(contentPadding)
                     .align(Alignment.BottomStart)
@@ -196,9 +194,7 @@ private fun CollapsingTopBarLayout(
                 /**
                  * Navigation Icon Row
                  * */
-                val noNavIconModifier = Modifier.width(
-                    16.dp - contentPadding.calculateStartPadding(LocalLayoutDirection.current)
-                )
+                val noNavIconModifier = Modifier.width(16.dp - contentPaddingStart)
                 if (navigationIcon == null) Spacer(modifier = noNavIconModifier)
                 else if (centeredTitleWhenCollapsed) Row(
                     modifier = Modifier.wrapContentWidth(),
@@ -239,9 +235,10 @@ private fun CollapsingTopBarLayout(
 
                     var mainActionPosInWndw by remember { mutableStateOf(Offset.Zero) }
 
-                    val centerPosOfCollapsedLyt = collapsedLayoutSize.value.width / 2
+                    val centerPosOfCollapsedLyt = collapsedRowLayoutSize.value.width / 2
 
-                    val distanceTilCenter = mainActionPosInWndw.x - centerPosOfCollapsedLyt
+                    val distanceTilCenter =
+                        (mainActionPosInWndw.x - (centerPosOfCollapsedLyt)) + contentPaddingStart.value
 
                     val mainActionInCenterOfLyt = (distanceTilCenter - mainActionWidthSize).dp
 

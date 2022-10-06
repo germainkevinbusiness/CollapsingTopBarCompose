@@ -1,6 +1,7 @@
 package com.germainkevin.collapsingtopbar
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -41,12 +42,11 @@ internal val emptyPaddingValues = PaddingValues()
 
 internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
     { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
-        val enterAnimation = if (centeredTitleAndSubtitle)
-            expandVertically(
-                // Expands from bottom to top.
-                expandFrom = Alignment.Top
-            ) + fadeIn(initialAlpha = collapsedTitleAlpha)
-        else fadeIn(initialAlpha = collapsedTitleAlpha)
+        val enterAnimation = if (centeredTitleAndSubtitle) {
+            fadeIn(initialAlpha = collapsedTitleAlpha) + expandVertically(
+                expandFrom = Alignment.Bottom
+            )
+        } else fadeIn(initialAlpha = collapsedTitleAlpha)
 
         val exitAnimation = if (centeredTitleAndSubtitle)
             slideOutVertically() + fadeOut() else fadeOut()
