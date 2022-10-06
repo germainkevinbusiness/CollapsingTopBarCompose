@@ -76,8 +76,6 @@ fun CollapsingTopBar(
         expandedColumnAlphaValue = expandedColumnAlphaValue.invoke().value,
         collapsedTitleAlpha = collapsedTitleAlpha.invoke().value,
         currentTopBarHeight = currentTopBarHeight,
-        collapsedTopBarHeight = collapsedTopBarHeight,
-        expandedTopBarMaxHeight = expandedTopBarMaxHeight,
         elevation = elevation,
         currentBackgroundColor = currentBackgroundColor(colors).value,
         currentContentColor = colors.contentColor,
@@ -117,8 +115,6 @@ private fun CollapsingTopBarLayout(
     expandedColumnAlphaValue: Float,
     collapsedTitleAlpha: Float,
     currentTopBarHeight: Dp,
-    collapsedTopBarHeight: Dp,
-    expandedTopBarMaxHeight: Dp,
     scrollBehavior: CollapsingTopBarScrollBehavior,
     elevation: Dp,
 ) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
@@ -162,7 +158,7 @@ private fun CollapsingTopBarLayout(
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
              * */
 
-            val collapsedLayoutSize = remember { mutableStateOf(IntSize(0, 0)) }
+            val collapsedLayoutSize = remember { mutableStateOf(IntSize.Zero) }
 
             Row(
                 modifier = Modifier
@@ -212,37 +208,37 @@ private fun CollapsingTopBarLayout(
                     }
                 )
 
-                var mainActionWidthSize by remember { mutableStateOf(0) }
-
-                var mainActionPosInWndw by remember { mutableStateOf(Offset.Zero) }
-
-                val centerPosOfCollapsedLyt = collapsedLayoutSize.value.width / 2
-
-                val distanceTilCenter = mainActionPosInWndw.x - centerPosOfCollapsedLyt
-
-                val mainActionInCenterOfLyt = (distanceTilCenter - mainActionWidthSize).dp
-
-                val endPaddingValue =
-                    if (scrollBehavior.isExpanded && mainActionInCenterOfLyt > currentTopBarHeight) {
-                        mainActionInCenterOfLyt
-                    } else {
-                        currentTopBarHeight.coerceIn(0.dp, mainActionInCenterOfLyt)
-                    }
-
-                val mainActionPadding = PaddingValues(
-                    end = if (!scrollBehavior.isCollapsed
-                        && mainActionPosInWndw.x > centerPosOfCollapsedLyt
-                    ) {
-                        endPaddingValue
-                    } else 0.dp
-                )
-
-                var onGlobalPositionSizeChange by remember { mutableStateOf(true) }
-
                 /**
                  * Main Action Row
                  * */
                 if (mainAction != null) {
+
+                    var mainActionWidthSize by remember { mutableStateOf(0) }
+
+                    var mainActionPosInWndw by remember { mutableStateOf(Offset.Zero) }
+
+                    val centerPosOfCollapsedLyt = collapsedLayoutSize.value.width / 2
+
+                    val distanceTilCenter = mainActionPosInWndw.x - centerPosOfCollapsedLyt
+
+                    val mainActionInCenterOfLyt = (distanceTilCenter - mainActionWidthSize).dp
+
+                    val endPaddingValue =
+                        if (scrollBehavior.isExpanded && mainActionInCenterOfLyt > currentTopBarHeight) {
+                            mainActionInCenterOfLyt
+                        } else {
+                            currentTopBarHeight.coerceIn(0.dp, mainActionInCenterOfLyt)
+                        }
+
+                    val mainActionPadding = PaddingValues(
+                        end = if (!scrollBehavior.isCollapsed
+                            && mainActionPosInWndw.x > centerPosOfCollapsedLyt
+                        ) {
+                            endPaddingValue
+                        } else 0.dp
+                    )
+
+                    var onGlobalPositionSizeChange by remember { mutableStateOf(true) }
                     Row(
                         modifier = Modifier
                             .fillMaxHeight()
