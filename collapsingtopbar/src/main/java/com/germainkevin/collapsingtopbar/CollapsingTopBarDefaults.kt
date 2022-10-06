@@ -18,7 +18,7 @@ object CollapsingTopBarDefaults {
         PaddingValues(
             start = topBarHorizontalPadding,
             end = topBarHorizontalPadding,
-            bottom = topBarHorizontalPadding
+            top = topBarHorizontalPadding
         )
 
     /**

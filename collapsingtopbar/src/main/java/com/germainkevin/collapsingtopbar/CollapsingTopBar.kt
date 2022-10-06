@@ -145,10 +145,10 @@ private fun CollapsingTopBarLayout(
                     .padding(
                         if (centeredTitleAndSubtitle) emptyPaddingValues else {
                             PaddingValues(
-                                bottom = contentPadding.calculateBottomPadding(),
                                 start = if (navigationIcon != null) 56.dp - contentPaddingStart
                                 else 16.dp - contentPaddingStart,
                                 end = contentPaddingStart,
+                                bottom = contentPadding.calculateBottomPadding()
                             )
                         }
                     ),
@@ -162,7 +162,9 @@ private fun CollapsingTopBarLayout(
                     expandedTitle()
                 }
                 subtitle()
+                Spacer(modifier = Modifier.height(16.dp))
             }
+
             /**
              * Collapsed Layout
              * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
@@ -268,13 +270,6 @@ private fun CollapsingTopBarLayout(
                                     mainActionPosInWndw = coordinates.positionInWindow()
                                     onGlobalPositionSizeChange = false
                                 }
-                                Timber.d("currentTopBarHeight:$currentTopBarHeight")
-                                Timber.d("mainActionWidthSize:$mainActionWidthSize")
-                                Timber.d("mainActionPosInWndw:$mainActionPosInWndw")
-                                Timber.d("centerPosOfCollapsedLyt:$centerPosOfCollapsedLyt")
-                                Timber.d("distanceTilCenter:$distanceTilCenter")
-                                Timber.d("mainActionInCenterOfLyt:$mainActionInCenterOfLyt")
-                                Timber.d("endPaddingValue:$endPaddingValue")
                             }
                             .padding(
                                 if (centeredTitleAndSubtitle) mainActionPadding else emptyPaddingValues

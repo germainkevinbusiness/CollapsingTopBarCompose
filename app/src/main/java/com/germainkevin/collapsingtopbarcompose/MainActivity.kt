@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-//                        colors = collapsingTopBarColors(window),
+                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },

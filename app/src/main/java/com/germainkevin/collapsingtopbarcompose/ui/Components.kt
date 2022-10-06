@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.*
@@ -78,7 +79,8 @@ val SubtitleText: @Composable (List<String>) -> Unit = { contactNames ->
         style = LocalTextStyle.current.copy(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimary,
+            textAlign = TextAlign.Center
         )
     )
 }
