@@ -15,7 +15,11 @@ object CollapsingTopBarDefaults {
     val DefaultCollapsingTopBarElevation = 0.dp
 
     val ContentPadding =
-        PaddingValues(start = topBarHorizontalPadding, end = topBarHorizontalPadding)
+        PaddingValues(
+            start = topBarHorizontalPadding,
+            end = topBarHorizontalPadding,
+            bottom = topBarHorizontalPadding
+        )
 
     /**
      * Specifies how the [CollapsingTopBar] should behave when a

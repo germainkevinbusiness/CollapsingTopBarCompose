@@ -139,7 +139,19 @@ private fun CollapsingTopBarLayout(
                     .alpha(expandedColumnAlphaValue)
                     .padding(
                         if (centeredTitleAndSubtitle) emptyPaddingValues else {
-                            expandedColumnPaddingValues(navigationIcon, contentPadding)
+                            PaddingValues(
+                                bottom = contentPadding.calculateBottomPadding(),
+                                start = if (navigationIcon != null) {
+                                    56.dp - contentPadding.calculateStartPadding(
+                                        LocalLayoutDirection.current
+                                    )
+                                } else {
+                                    16.dp - contentPadding.calculateStartPadding(
+                                        LocalLayoutDirection.current
+                                    )
+                                },
+                                end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+                            )
                         }
                     ),
                 horizontalAlignment =
@@ -160,13 +172,23 @@ private fun CollapsingTopBarLayout(
 
             val collapsedLayoutSize = remember { mutableStateOf(IntSize.Zero) }
 
-            Row(
-                modifier = Modifier
+            val collapsedRowLayoutModifier = if (mainAction != null) {
+                Modifier
                     .fillMaxWidth()
                     .onSizeChanged { collapsedLayoutSize.value = it }
                     .height(currentTopBarHeight)
                     .padding(contentPadding)
-                    .align(Alignment.BottomStart),
+                    .align(Alignment.BottomStart)
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .height(currentTopBarHeight)
+                    .padding(contentPadding)
+                    .align(Alignment.BottomStart)
+            }
+
+            Row(
+                modifier = collapsedRowLayoutModifier,
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Bottom,
             ) {
@@ -223,12 +245,13 @@ private fun CollapsingTopBarLayout(
 
                     val mainActionInCenterOfLyt = (distanceTilCenter - mainActionWidthSize).dp
 
-                    val endPaddingValue =
-                        if (scrollBehavior.isExpanded && mainActionInCenterOfLyt > currentTopBarHeight) {
-                            mainActionInCenterOfLyt
-                        } else {
-                            currentTopBarHeight.coerceIn(0.dp, mainActionInCenterOfLyt)
-                        }
+                    val endPaddingValue = if (scrollBehavior.isExpanded
+                        && mainActionInCenterOfLyt > currentTopBarHeight
+                    ) {
+                        mainActionInCenterOfLyt
+                    } else {
+                        currentTopBarHeight.coerceIn(0.dp, mainActionInCenterOfLyt)
+                    }
 
                     val mainActionPadding = PaddingValues(
                         end = if (!scrollBehavior.isCollapsed

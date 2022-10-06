@@ -39,20 +39,6 @@ internal fun Dp.toIntDp() = this.value.toInt().dp
 
 internal val emptyPaddingValues = PaddingValues()
 
-internal val expandedColumnPaddingValues: @Composable (@Composable (() -> Unit)?, PaddingValues)
--> PaddingValues = { navigationIcon, contentPadding ->
-    PaddingValues(
-        top = contentPadding.calculateTopPadding(),
-        bottom = contentPadding.calculateBottomPadding(),
-        start = if (navigationIcon != null) {
-            56.dp - contentPadding.calculateStartPadding(LocalLayoutDirection.current)
-        } else {
-            16.dp - contentPadding.calculateStartPadding(LocalLayoutDirection.current)
-        },
-        end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
-    )
-}
-
 internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
     { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
         val enterAnimation = if (centeredTitleAndSubtitle)
