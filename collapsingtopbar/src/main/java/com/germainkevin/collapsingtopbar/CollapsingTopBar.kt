@@ -41,7 +41,6 @@ import kotlin.math.roundToInt
  * be [IconButton]s. The default layout here is a [Row], so icons inside will be placed horizontally.
  * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
  * [CollapsingTopBar] in different states. See [CollapsingTopBarDefaults.colors].
- * @param contentPadding The padding of the content inside the [CollapsingTopBar]
  * @param elevation The size of the shadow below the [Surface]
  * @param scrollBehavior determines the behavior of the [CollapsingTopBar]. If you want the
  * [CollapsingTopBar] to stay collapsed, you set it there, if you want the [CollapsingTopBar] to
@@ -382,11 +381,10 @@ private fun TopBarLayout(
                     0
                 }
 
-            // Have no clue why this positioning is working, but it works !
-            val navIconYPosInCenter = titleBaseline / 3
+            val navIconYPosition = titleBaseline / 3
 
             // Navigation icon
-            navigationIconPlaceable.placeRelative(x = 0, y = navIconYPosInCenter)
+            navigationIconPlaceable.placeRelative(x = 0, y = navIconYPosition)
 
             val mainActionWidth = mainActionIconPlaceable.width.toFloat()
             val actionsWidth = actionIconsPlaceable.width.toFloat()
@@ -411,12 +409,13 @@ private fun TopBarLayout(
                 constraints.maxWidth - actionIconsPlaceable.width - mainActionIconPlaceable.width
 
             val currentHeight = currentTopBarHeight.toPx().toInt()
+            val currentExpandedHeight = expandedTopBarMaxHeight.toPx().toInt()
 
             val mainActionInCenter = (constraints.maxWidth - actionIconsPlaceable.width) / 2
 
             val mainActionX: Int = if (!scrollBehavior.isCollapsed) {
                 val x = mainActionFixedXPosition - currentHeight
-                if (x > mainActionInCenter && currentTopBarHeight != expandedTopBarMaxHeight) x
+                if (x > mainActionInCenter && currentHeight != currentExpandedHeight) x
                 else {
                     mainActionInCenter
                 }
