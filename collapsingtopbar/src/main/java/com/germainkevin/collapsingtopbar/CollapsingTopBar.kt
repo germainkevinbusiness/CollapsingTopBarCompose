@@ -138,14 +138,14 @@ private fun CollapsingTopBarLayout(
             val modifierWhenCentered = Modifier
                 .alpha(expandedColumnAlphaValue)
                 .fillMaxWidth()
-                .height(currentTopBarHeight - collapsedTopBarHeight)
+                .height(currentTopBarHeight)
                 .padding(horizontal = TopBarHorizontalPadding * 4)
 
             val modifierWhenAtStart = Modifier
                 .alpha(expandedColumnAlphaValue)
                 .wrapContentWidth()
+                .height(currentTopBarHeight)
                 .align(Alignment.TopStart)
-                .height(currentTopBarHeight - collapsedTopBarHeight)
                 .padding(
                     PaddingValues(
                         start = if (navigationIcon != null) 56.dp - TopBarHorizontalPadding
@@ -166,6 +166,7 @@ private fun CollapsingTopBarLayout(
                 ) {
                     expandedTitle()
                     subtitle()
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
             SingleRowTopBar(
@@ -327,7 +328,7 @@ private fun TopBarLayout(
                     .padding(horizontal = TopBarHorizontalPadding),
             ) {
                 AnimatedVisibility(
-                    visible = collapsedTitleAlpha == 1F,
+                    visible = collapsedTitleAlpha in 0F..1F,
                     enter = titleEnterAnimation,
                     exit = titleExitAnimation,
                     content = { title() }

@@ -28,12 +28,12 @@ object CollapsingTopBarDefaults {
      * the default value is [defaultMaximumTopBarHeight]
      * */
     fun scrollBehavior(
+        collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
+        expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
         isAlwaysCollapsed: Boolean,
         isExpandedWhenFirstDisplayed: Boolean,
         centeredTitleWhenCollapsed: Boolean,
         centeredTitleAndSubtitle: Boolean,
-        collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
-        expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
     ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
