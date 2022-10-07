@@ -41,8 +41,6 @@ internal val DefaultContentPadding =
  * */
 internal fun Dp.toIntDp() = this.value.toInt().dp
 
-internal val emptyPaddingValues = PaddingValues()
-
 /**
  * Will provide us with the current background color of the [CollapsingTopBar].
  * */
@@ -118,7 +116,8 @@ fun CollapsingTopBarScrollBehavior.collapse(
             for (currentHeight in descendingDistance) {
                 val valueDecreasedTo = currentTopBarHeight - steps
                 if (valueDecreasedTo <= collapsedTopBarHeight) {
-                    currentTopBarHeight = collapsedTopBarHeight
+                    topBarOffset = collapsedTopBarHeight.value
+                    currentTopBarHeight = topBarOffset.dp
                     ignorePreScrollDetection = false
                     // Making sure the [CollapsingTopBar] can smoothly change height size
                     // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
@@ -168,7 +167,8 @@ fun CollapsingTopBarScrollBehavior.expand(
             for (currentHeight in ascendingDistance) {
                 val valueIncreasedTo = currentTopBarHeight + steps
                 if (valueIncreasedTo >= expandedTopBarMaxHeight) {
-                    currentTopBarHeight = expandedTopBarMaxHeight
+                    topBarOffset = expandedTopBarMaxHeight.value
+                    currentTopBarHeight = topBarOffset.dp
                     ignorePreScrollDetection = false
                     trackOffSetIsZero = 3
                     defineCurrentState()

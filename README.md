@@ -2,8 +2,9 @@
 
 # CollapsingTopBarCompose
 
-A Jetpack Compose Collapsing TopBar that collapses or expands either based on the scrolling of a content or by you calling the ```CollapsingTopBarScrollBehavior.collapse()``` or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
-
+A Jetpack Compose TopBar that collapses or expands based on the scrolling of a content or by you
+calling: ```CollapsingTopBarScrollBehavior.collapse()```
+or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
 
 <table>
   <tr>
@@ -17,7 +18,6 @@ A Jetpack Compose Collapsing TopBar that collapses or expands either based on th
     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/194070935-afd190b5-821f-4d02-83f2-cbf444e9541d.gif" alt="Demonstration 3" width="100%" height="auto"/></td>
   </tr>
  </table>
-
 
 # How to get this library in your android app
 
@@ -37,8 +37,31 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.0-beta01"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.0-beta02"
 }
+```
+
+## Experimental (The new mainAction slot inside the CollapsingTopBar() )
+
+```kotlin
+CollapsingTopBar(
+    scrollBehavior = scrollBehavior,
+    title = { Text(text = "Contacts") },
+    subtitle = { Text(text = "17 contacts") },
+    // (Experimental)  New Slot that animates as the CollapsingTopBar collapses or expands
+    mainAction = {
+        Icon(
+            Icons.Outlined.Add,
+            contentDescription = Icons.Outlined.Add.name,
+        )
+    },
+    actions = {
+        Icon(
+            Icons.Default.MoreVert,
+            contentDescription = Icons.Default.MoreVert.name,
+        )
+    },
+)
 ```
 
 # Usage
@@ -47,7 +70,8 @@ Basic usage is shown below, for a more elaborate example check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
 .
 
-In order to use a ```CollapsingTopBar```, you first need to create a ```CollapsingTopBarScrollBehavior```.
+In order to use a ```CollapsingTopBar```, you first need to create
+a ```CollapsingTopBarScrollBehavior```.
 
 ```kotlin
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
@@ -71,7 +95,7 @@ Scaffold(
     topBar = {
         CollapsingTopBar(
             scrollBehavior = scrollBehavior,
-            title = { Text(text = "All contacts") },
+            title = { Text(text = "Contacts") },
             subtitle = { Text(text = "17 contacts") },
         )
     },

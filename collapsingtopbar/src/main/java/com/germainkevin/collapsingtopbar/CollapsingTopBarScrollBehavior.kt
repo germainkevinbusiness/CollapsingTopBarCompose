@@ -157,7 +157,6 @@ class DefaultBehaviorOnScroll(
         }
     }
 
-
     override var topBarOffset: Float by mutableStateOf(0f)
 
     override var trackOffSetIsZero: Int by mutableStateOf(0)
@@ -199,19 +198,13 @@ class DefaultBehaviorOnScroll(
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
             if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
-                val availableY = available.y.toInt()
-                val newOffset = (topBarOffset + availableY)
-                val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
-                topBarOffset = coerced
-                val newHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
-
                 incrementTopBarOffset()
                 plateauTopBarOffset()
-
+                trackPreScrollData(available)
                 if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                    currentTopBarHeight = newHeight
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
                 } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = newHeight
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
                 }
 
                 defineCurrentState()
@@ -221,12 +214,11 @@ class DefaultBehaviorOnScroll(
         }
     }
 
-    override val expandedColumnAlphaValue: @Composable () -> State<Float> = {
-        getExpandedColumnAlpha()
-    }
-
-    override val collapsedTitleAlpha: @Composable () -> State<Float> = {
-        getCollapsedTitleAlpha()
+    private fun trackPreScrollData(available: Offset) {
+        val availableY = available.y.toInt()
+        val newOffset = (topBarOffset + availableY)
+        val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
+        topBarOffset = coerced
     }
 
     private fun incrementTopBarOffset() {
@@ -240,6 +232,14 @@ class DefaultBehaviorOnScroll(
         if (trackOffSetIsZero > 6) {
             trackOffSetIsZero = 3
         }
+    }
+
+    override val expandedColumnAlphaValue: @Composable () -> State<Float> = {
+        getExpandedColumnAlpha()
+    }
+
+    override val collapsedTitleAlpha: @Composable () -> State<Float> = {
+        getCollapsedTitleAlpha()
     }
 
     /**
@@ -287,7 +287,7 @@ class DefaultBehaviorOnScroll(
     @Composable
     private fun getCollapsedTitleAlpha(
         visibleValue: Dp = collapsedTopBarHeight.toIntDp(),
-        invisibleValue: Dp = (collapsedTopBarHeight + 6.dp).toIntDp()
+        invisibleValue: Dp = (collapsedTopBarHeight + 15.dp).toIntDp()
     ): State<Float> {
         return animateFloatAsState(
             if (currentTopBarHeight.toIntDp() == visibleValue) 1f

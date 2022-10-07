@@ -399,10 +399,8 @@ private fun TopBarLayout(
             val placeTitleAtStart = max(TopBarTitleInset.roundToPx(), navigationIconPlaceable.width)
             val placeTitleInCenter =
                 if (mainActionWidth > horizPaddingPx && actionsWidth > horizPaddingPx) {
-                    Timber.d("Calculus Option 1")
                     (constraints.maxWidth - titlePlaceable.width - actionIconsPlaceable.width) / 2
                 } else {
-                    Timber.d("Calculus Option 2")
                     (constraints.maxWidth - titlePlaceable.width) / 2
                 }
 
