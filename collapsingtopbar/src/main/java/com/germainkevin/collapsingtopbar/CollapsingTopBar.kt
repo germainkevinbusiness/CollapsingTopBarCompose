@@ -134,7 +134,7 @@ private fun CollapsingTopBarLayout(
         contentColor = currentContentColor,
         elevation = elevation,
     ) {
-        Column {
+        Box {
             val modifierWhenCentered = Modifier
                 .alpha(expandedColumnAlphaValue)
                 .fillMaxWidth()
@@ -144,6 +144,7 @@ private fun CollapsingTopBarLayout(
             val modifierWhenAtStart = Modifier
                 .alpha(expandedColumnAlphaValue)
                 .wrapContentWidth()
+                .align(Alignment.TopStart)
                 .height(currentTopBarHeight - collapsedTopBarHeight)
                 .padding(
                     PaddingValues(
@@ -168,6 +169,7 @@ private fun CollapsingTopBarLayout(
                 }
             }
             SingleRowTopBar(
+                modifier = Modifier.align(Alignment.BottomStart),
                 title = title,
                 navigationIcon = navigationIcon,
                 mainAction = mainAction,

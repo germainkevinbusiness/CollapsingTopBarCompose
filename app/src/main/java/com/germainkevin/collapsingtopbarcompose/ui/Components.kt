@@ -50,20 +50,20 @@ val TitleText: @Composable () -> Unit = {
  * */
 val ExpandedTitleText: @Composable () -> Unit = {
     val expandedTitleText = stringResource(id = R.string.contacts)
-        Image(
-            modifier = Modifier.size(42.dp),
-            painter = painterResource(id = R.drawable.ic_baseline_contacts_24),
-            contentDescription = "Contacts icon",
-            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
+    Image(
+        modifier = Modifier.size(42.dp),
+        painter = painterResource(id = R.drawable.ic_baseline_contacts_24),
+        contentDescription = "Contacts icon",
+        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
+    )
+    Text(
+        text = expandedTitleText,
+        style = LocalTextStyle.current.copy(
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onPrimary
         )
-        Text(
-            text = expandedTitleText,
-            style = LocalTextStyle.current.copy(
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        )
+    )
 }
 
 /**
@@ -72,9 +72,9 @@ val ExpandedTitleText: @Composable () -> Unit = {
  * */
 val SubtitleText: @Composable (List<String>) -> Unit = { contactNames ->
     Text(
-        text = "adnfabkfas.fdb.saf.djahbs.fhdsfsah.fdafaf.dfkhdsafk.akds.hfksa.fhsfk.s",
+        text = stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
         style = LocalTextStyle.current.copy(
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center
