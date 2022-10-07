@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -16,8 +17,6 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
@@ -56,7 +55,7 @@ import kotlin.math.roundToInt
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
     title: @Composable () -> Unit,
-    expandedTitle: @Composable (() -> Unit)? = null,
+    expandedTitle: @Composable () -> Unit = title,
     subtitle: @Composable () -> Unit = {},
     navigationIcon: @Composable (() -> Unit)? = null,
     mainAction: @Composable () -> Unit = { },
@@ -75,14 +74,13 @@ fun CollapsingTopBar(
         actions = actions,
         centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
-        contentPadding = DefaultContentPadding,
         expandedColumnAlphaValue = expandedColumnAlphaValue.invoke().value,
         collapsedTitleAlpha = collapsedTitleAlpha.invoke().value,
         currentTopBarHeight = currentTopBarHeight,
         collapsedTopBarHeight = collapsedTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight,
         elevation = elevation,
-        currentBackgroundColor = currentBackgroundColor(colors).value,
+        currentBackgroundColor = currentBackgroundColor(colors),
         currentContentColor = colors.contentColor,
         scrollBehavior = scrollBehavior,
         colors = colors
@@ -108,15 +106,14 @@ fun CollapsingTopBar(
 private fun CollapsingTopBarLayout(
     modifier: Modifier,
     title: @Composable () -> Unit,
-    expandedTitle: @Composable (() -> Unit)?,
+    expandedTitle: @Composable () -> Unit,
     subtitle: @Composable () -> Unit,
     navigationIcon: @Composable (() -> Unit)?,
     mainAction: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit,
     centeredTitleWhenCollapsed: Boolean,
     centeredTitleAndSubtitle: Boolean,
-    contentPadding: PaddingValues,
-    currentBackgroundColor: Color,
+    currentBackgroundColor: State<Color>,
     currentContentColor: Color,
     expandedColumnAlphaValue: Float,
     collapsedTitleAlpha: Float,
@@ -126,55 +123,54 @@ private fun CollapsingTopBarLayout(
     scrollBehavior: CollapsingTopBarScrollBehavior,
     colors: CollapsingTopBarColors,
     elevation: Dp,
-) = CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-    val scrollState = rememberScrollState()
-    val contentPaddingStart = contentPadding.calculateStartPadding(LocalLayoutDirection.current)
+) {
     Surface(
-        modifier = modifier.verticalScroll(scrollState),
-        color = currentBackgroundColor,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(currentTopBarHeight)
+            .verticalScroll(rememberScrollState()),
+        color = currentBackgroundColor.value,
         contentColor = currentContentColor,
         elevation = elevation,
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(currentTopBarHeight),
-        ) {
+        Box {
             /**
              * Title and Subtitle section, shown when the [CollapsingTopBar] is expanded
              * */
+            val modifierWhenCentered = Modifier
+                .wrapContentWidth()
+                .align(Alignment.Center)
+                .height(currentTopBarHeight)
+                .alpha(expandedColumnAlphaValue)
+                .padding(emptyPaddingValues)
+
+            val modifierWhenAtStart = Modifier
+                .wrapContentWidth()
+                .align(Alignment.CenterStart)
+                .height(currentTopBarHeight)
+                .alpha(expandedColumnAlphaValue)
+                .padding(
+                    PaddingValues(
+                        start = if (navigationIcon != null) 56.dp - TopBarHorizontalPadding
+                        else TopBarTitleInset,
+                        end = TopBarHorizontalPadding,
+                    )
+                )
             Column(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .align(if (centeredTitleAndSubtitle) Alignment.Center else Alignment.CenterStart)
-                    .height(currentTopBarHeight)
-                    .alpha(expandedColumnAlphaValue)
-                    .padding(
-                        if (centeredTitleAndSubtitle) emptyPaddingValues else {
-                            PaddingValues(
-                                start = if (navigationIcon != null) 56.dp - contentPaddingStart
-                                else 16.dp - contentPaddingStart,
-                                end = contentPaddingStart,
-                                bottom = contentPadding.calculateBottomPadding()
-                            )
-                        }
-                    ),
+                modifier = if (centeredTitleAndSubtitle) modifierWhenCentered else modifierWhenAtStart,
                 horizontalAlignment =
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                if (expandedTitle == null) {
-                    title()
-                } else {
-                    expandedTitle()
-                }
+                expandedTitle()
                 subtitle()
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             /**
              * Collapsed Layout
-             * Bottom of the [CollapsingTopBar] with navigation icon, title and actions icons
+             * Bottom of the [CollapsingTopBar]
+             * with navigation icon, title, mainAction and actions icons
              * */
 
             SingleRowTopBar(
@@ -197,28 +193,6 @@ private fun CollapsingTopBarLayout(
 }
 
 @Composable
-private fun TitleSubtitleColumn(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Layout(
-        modifier = modifier,
-        content = content
-    ) { measurables, constraints ->
-
-        val placeables = measurables.map { measurable -> measurable.measure(constraints) }
-
-        val largestPlaceable = placeables.maxOf { it.width }
-        val longestPlaceable = placeables.sumOf { it.height }
-
-        layout(largestPlaceable, longestPlaceable) {
-            var yPosition = 0
-            placeables.forEach { placeable ->
-                placeable.placeRelative(x = 0, y = yPosition)
-                yPosition += placeable.height
-            }
-        }
-    }
-}
-
-@Composable
 private fun SingleRowTopBar(
     modifier: Modifier = Modifier,
     title: @Composable () -> Unit,
@@ -235,13 +209,13 @@ private fun SingleRowTopBar(
     scrollBehavior: CollapsingTopBarScrollBehavior,
 ) {
 
-    val enterAnimation = if (centeredTitleAndSubtitle) {
+    val titleEnterAnimation = if (centeredTitleAndSubtitle) {
         fadeIn(initialAlpha = collapsedTitleAlpha) + expandVertically(
             expandFrom = Alignment.Bottom
         )
     } else fadeIn(initialAlpha = collapsedTitleAlpha)
 
-    val exitAnimation = if (centeredTitleAndSubtitle)
+    val titleExitAnimation = if (centeredTitleAndSubtitle)
         slideOutVertically() + fadeOut() else fadeOut()
 
     // Wrap the given actions in a Row.
@@ -261,18 +235,15 @@ private fun SingleRowTopBar(
         heightPx = height,
         currentTopBarHeight = currentTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-        navigationIconContentColor = colors.contentColor,
-        titleContentColor = colors.contentColor,
-        actionIconContentColor = colors.contentColor,
+        contentColor = colors.contentColor,
         title = title,
-        titleTextStyle = LocalTextStyle.current,
         centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
         navigationIcon = navigationIcon ?: {},
         mainAction = mainAction,
         actions = actionsRow,
         collapsedTitleAlpha = collapsedTitleAlpha,
-        titleEnterAnimation = enterAnimation,
-        titleExitAnimation = exitAnimation,
+        titleEnterAnimation = titleEnterAnimation,
+        titleExitAnimation = titleExitAnimation,
         scrollBehavior = scrollBehavior,
     )
 }
@@ -283,11 +254,8 @@ private fun TopBarLayout(
     currentTopBarHeight: Dp,
     expandedTopBarMaxHeight: Dp,
     heightPx: Float,
-    navigationIconContentColor: Color,
-    titleContentColor: Color,
-    actionIconContentColor: Color,
+    contentColor: Color,
     title: @Composable () -> Unit,
-    titleTextStyle: TextStyle,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     mainAction: @Composable () -> Unit,
@@ -306,7 +274,7 @@ private fun TopBarLayout(
                     .padding(start = TopBarHorizontalPadding)
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides navigationIconContentColor,
+                    LocalContentColor provides contentColor,
                     content = navigationIcon
                 )
             }
@@ -315,19 +283,12 @@ private fun TopBarLayout(
                     .layoutId("title")
                     .padding(horizontal = TopBarHorizontalPadding),
             ) {
-                ProvideTextStyle(value = titleTextStyle) {
-                    CompositionLocalProvider(
-                        LocalContentColor provides titleContentColor,
-                        content = {
-                            AnimatedVisibility(
-                                visible = collapsedTitleAlpha == 1F,
-                                enter = titleEnterAnimation,
-                                exit = titleExitAnimation,
-                                content = { title() }
-                            )
-                        }
-                    )
-                }
+                AnimatedVisibility(
+                    visible = collapsedTitleAlpha == 1F,
+                    enter = titleEnterAnimation,
+                    exit = titleExitAnimation,
+                    content = { title() }
+                )
             }
             Box(
                 Modifier
@@ -335,7 +296,7 @@ private fun TopBarLayout(
                     .padding(start = TopBarHorizontalPadding)
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides actionIconContentColor,
+                    LocalContentColor provides contentColor,
                     content = mainAction
                 )
             }
@@ -345,7 +306,7 @@ private fun TopBarLayout(
                     .padding(end = TopBarHorizontalPadding)
             ) {
                 CompositionLocalProvider(
-                    androidx.compose.material3.LocalContentColor provides actionIconContentColor,
+                    LocalContentColor provides contentColor,
                     content = actions
                 )
             }

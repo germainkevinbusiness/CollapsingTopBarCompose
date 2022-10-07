@@ -24,13 +24,6 @@ internal val defaultMaximumTopBarHeight = 156.dp
 
 internal val TopBarHorizontalPadding = 4.dp
 
-/**
- * [Modifier] when there is a navigation icon provided
- * */
-internal val navigationIconModifier = Modifier
-    .fillMaxHeight()
-    .width(56.dp - TopBarHorizontalPadding)
-
 internal val DefaultCollapsingTopBarElevation = 0.dp
 
 // Used to add spacing when the title is next to the navigation icon.
