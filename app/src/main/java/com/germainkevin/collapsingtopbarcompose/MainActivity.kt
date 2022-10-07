@@ -3,6 +3,7 @@ package com.germainkevin.collapsingtopbarcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,9 +12,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,10 +43,11 @@ class MainActivity : ComponentActivity() {
                 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                     isAlwaysCollapsed = false,
                     isExpandedWhenFirstDisplayed = true,
-                    centeredTitleWhenCollapsed = false,
+                    centeredTitleWhenCollapsed = true,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 200.dp,
                 )
+                val mainActionState = remember { mutableStateOf(false) }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -55,7 +61,8 @@ class MainActivity : ComponentActivity() {
                         subtitle = { SubtitleText(contacts) },
                         navigationIcon = { NavigationIcon() },
                         mainAction = {
-                            IconButton(onClick = { }) {
+                            IconButton(
+                                onClick = {}) {
                                 Icon(
                                     Icons.Outlined.Add,
                                     contentDescription = Icons.Outlined.Add.name,
@@ -75,7 +82,9 @@ class MainActivity : ComponentActivity() {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { },
+                                    .clickable {
+                                        mainActionState.value = !mainActionState.value
+                                    },
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(

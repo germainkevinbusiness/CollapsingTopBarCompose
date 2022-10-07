@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -133,22 +134,17 @@ private fun CollapsingTopBarLayout(
         contentColor = currentContentColor,
         elevation = elevation,
     ) {
-        Box {
-            /**
-             * Title and Subtitle section, shown when the [CollapsingTopBar] is expanded
-             * */
+        Column {
             val modifierWhenCentered = Modifier
-                .wrapContentWidth()
-                .align(Alignment.Center)
-                .height(currentTopBarHeight)
                 .alpha(expandedColumnAlphaValue)
-                .padding(emptyPaddingValues)
+                .fillMaxWidth()
+                .height(currentTopBarHeight - collapsedTopBarHeight)
+                .padding(horizontal = TopBarHorizontalPadding * 4)
 
             val modifierWhenAtStart = Modifier
-                .wrapContentWidth()
-                .align(Alignment.CenterStart)
-                .height(currentTopBarHeight)
                 .alpha(expandedColumnAlphaValue)
+                .wrapContentWidth()
+                .height(currentTopBarHeight - collapsedTopBarHeight)
                 .padding(
                     PaddingValues(
                         start = if (navigationIcon != null) 56.dp - TopBarHorizontalPadding
@@ -156,25 +152,22 @@ private fun CollapsingTopBarLayout(
                         end = TopBarHorizontalPadding,
                     )
                 )
-            Column(
-                modifier = if (centeredTitleAndSubtitle) modifierWhenCentered else modifierWhenAtStart,
+            SimpleColumn(
+                modifier =
+                if (centeredTitleAndSubtitle) modifierWhenCentered else modifierWhenAtStart,
                 horizontalAlignment =
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
-                verticalArrangement = Arrangement.Center
             ) {
-                expandedTitle()
-                subtitle()
-                Spacer(modifier = Modifier.height(16.dp))
+                SimpleColumn(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalAlignment =
+                    if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
+                ) {
+                    expandedTitle()
+                    subtitle()
+                }
             }
-
-            /**
-             * Collapsed Layout
-             * Bottom of the [CollapsingTopBar]
-             * with navigation icon, title, mainAction and actions icons
-             * */
-
             SingleRowTopBar(
-                modifier = Modifier.align(Alignment.BottomStart),
                 title = title,
                 navigationIcon = navigationIcon,
                 mainAction = mainAction,
@@ -192,6 +185,54 @@ private fun CollapsingTopBarLayout(
     }
 }
 
+/**
+ * A simple version of [Column] created to hold the expanded title and subtitle
+ * */
+@Composable
+private inline fun SimpleColumn(
+    modifier: Modifier = Modifier.wrapContentSize(),
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable () -> Unit,
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+
+        val placeables = measurables.map { measurable -> measurable.measure(constraints) }
+
+        val largestPlaceable = placeables.maxOf { it.width }
+
+        val layoutMaxWidth =
+            if (largestPlaceable > constraints.maxWidth) constraints.maxWidth else largestPlaceable
+
+        val layoutMaxLength = placeables.sumOf { it.height }
+
+        layout(layoutMaxWidth, layoutMaxLength) {
+            var yPosition = 0
+            placeables.forEach { placeable ->
+                placeable.placeRelative(
+                    x = when (horizontalAlignment) {
+                        Alignment.Start -> 0
+                        else -> (largestPlaceable - placeable.width) / 2
+                    },
+                    y = when (verticalArrangement) {
+                        Arrangement.Center -> {
+                            (constraints.maxHeight - layoutMaxLength) / 2
+                        }
+                        else -> yPosition
+                    }
+                )
+                yPosition += placeable.height
+            }
+        }
+    }
+}
+
+/**
+ * Holds the [navigationIcon], the [title], the [mainAction] and the [actions]
+ * */
 @Composable
 private fun SingleRowTopBar(
     modifier: Modifier = Modifier,
@@ -355,8 +396,10 @@ private fun TopBarLayout(
             val placeTitleAtStart = max(TopBarTitleInset.roundToPx(), navigationIconPlaceable.width)
             val placeTitleInCenter =
                 if (mainActionWidth > horizPaddingPx && actionsWidth > horizPaddingPx) {
+                    Timber.d("Calculus Option 1")
                     (constraints.maxWidth - titlePlaceable.width - actionIconsPlaceable.width) / 2
                 } else {
+                    Timber.d("Calculus Option 2")
                     (constraints.maxWidth - titlePlaceable.width) / 2
                 }
 

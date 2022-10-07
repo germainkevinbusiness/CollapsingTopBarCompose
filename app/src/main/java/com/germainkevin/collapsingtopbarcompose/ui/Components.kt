@@ -33,8 +33,9 @@ import com.germainkevin.collapsingtopbarcompose.R
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
 val TitleText: @Composable () -> Unit = {
+    val titleText = stringResource(id = R.string.contacts)
     Text(
-        text = stringResource(id = R.string.contacts),
+        text = titleText,
         style = LocalTextStyle.current.copy(
             fontSize = 24.sp,
             fontWeight = FontWeight.Normal,
@@ -48,10 +49,7 @@ val TitleText: @Composable () -> Unit = {
  * Content that appears when the [CollapsingTopBar] is expanded
  * */
 val ExpandedTitleText: @Composable () -> Unit = {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    val expandedTitleText = stringResource(id = R.string.contacts)
         Image(
             modifier = Modifier.size(42.dp),
             painter = painterResource(id = R.drawable.ic_baseline_contacts_24),
@@ -59,14 +57,13 @@ val ExpandedTitleText: @Composable () -> Unit = {
             colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
         )
         Text(
-            stringResource(id = R.string.contacts),
+            text = expandedTitleText,
             style = LocalTextStyle.current.copy(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Normal,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         )
-    }
 }
 
 /**
@@ -75,9 +72,9 @@ val ExpandedTitleText: @Composable () -> Unit = {
  * */
 val SubtitleText: @Composable (List<String>) -> Unit = { contactNames ->
     Text(
-        text = stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
+        text = "adnfabkfas.fdb.saf.djahbs.fhdsfsah.fdafaf.dfkhdsafk.akds.hfksa.fhsfk.s",
         style = LocalTextStyle.current.copy(
-            fontSize = 14.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center
