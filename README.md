@@ -57,7 +57,7 @@ CollapsingTopBar(
 )
 ```
 
-# Usage
+# How to use this library
 
 Basic usage is shown below, for a more elaborate example check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
