@@ -1,25 +1,14 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 /** Contains default values used for the [CollapsingTopBar] implementation. */
 object CollapsingTopBarDefaults {
-
-    val DefaultCollapsingTopBarElevation = 0.dp
-
-    val ContentPadding =
-        PaddingValues(
-            start = topBarHorizontalPadding,
-            end = topBarHorizontalPadding,
-            top = topBarHorizontalPadding
-        )
 
     /**
      * Specifies how the [CollapsingTopBar] should behave when a

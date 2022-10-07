@@ -1,16 +1,14 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
 
@@ -24,14 +22,26 @@ internal val defaultMinimumTopBarHeight = 56.dp
  * */
 internal val defaultMaximumTopBarHeight = 156.dp
 
-internal val topBarHorizontalPadding = 4.dp
+internal val TopBarHorizontalPadding = 4.dp
 
 /**
  * [Modifier] when there is a navigation icon provided
  * */
 internal val navigationIconModifier = Modifier
     .fillMaxHeight()
-    .width(56.dp - topBarHorizontalPadding)
+    .width(56.dp - TopBarHorizontalPadding)
+
+internal val DefaultCollapsingTopBarElevation = 0.dp
+
+// Used to add spacing when the title is next to the navigation icon.
+internal val TopBarTitleInset = 16.dp - TopBarHorizontalPadding
+
+internal val DefaultContentPadding =
+    PaddingValues(
+        start = TopBarHorizontalPadding,
+        end = TopBarHorizontalPadding,
+        top = TopBarHorizontalPadding
+    )
 
 /**
  * A way to  remove any floating number from the [Dp] value, and just get the [Int] side of the [Dp]
@@ -39,36 +49,6 @@ internal val navigationIconModifier = Modifier
 internal fun Dp.toIntDp() = this.value.toInt().dp
 
 internal val emptyPaddingValues = PaddingValues()
-
-internal val collapsedTitle: @Composable (Boolean, Float, @Composable () -> Unit) -> Unit =
-    { centeredTitleAndSubtitle, collapsedTitleAlpha, title ->
-        val enterAnimation = if (centeredTitleAndSubtitle) {
-            fadeIn(initialAlpha = collapsedTitleAlpha) + expandVertically(
-                expandFrom = Alignment.Bottom
-            )
-        } else fadeIn(initialAlpha = collapsedTitleAlpha)
-
-        val exitAnimation = if (centeredTitleAndSubtitle)
-            slideOutVertically() + fadeOut() else fadeOut()
-        AnimatedVisibility(
-            visible = collapsedTitleAlpha in 0F..1F,
-            enter = enterAnimation,
-            exit = exitAnimation
-        ) { title() }
-    }
-
-
-/**
- * The Section where all the options menu items will be laid out on
- * */
-internal val actionsRow: @Composable (@Composable RowScope.() -> Unit) -> Unit = {
-    Row(
-        modifier = Modifier.fillMaxHeight(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.Bottom,
-        content = it
-    )
-}
 
 /**
  * Will provide us with the current background color of the [CollapsingTopBar].
