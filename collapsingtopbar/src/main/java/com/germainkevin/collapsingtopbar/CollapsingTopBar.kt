@@ -189,11 +189,13 @@ private fun CollapsingTopBarLayout(
                 navigationIcon = navigationIcon,
                 mainAction = mainAction,
                 actions = actions,
+                currentTopBarHeight = currentTopBarHeight,
                 collapsedTopBarHeight = collapsedTopBarHeight,
                 centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
                 centeredTitleAndSubtitle = centeredTitleAndSubtitle,
                 collapsedTitleAlpha = collapsedTitleAlpha,
-                colors = colors
+                colors = colors,
+                scrollBehavior = scrollBehavior,
             )
 
 //            val collapsedRowLayoutSize = remember { mutableStateOf(IntSize.Zero) }
@@ -323,10 +325,12 @@ fun SingleRowTopBar(
     mainAction: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit,
     collapsedTopBarHeight: Dp,
+    currentTopBarHeight: Dp,
     centeredTitleWhenCollapsed: Boolean,
     centeredTitleAndSubtitle: Boolean,
     collapsedTitleAlpha: Float,
-    colors: CollapsingTopBarColors
+    colors: CollapsingTopBarColors,
+    scrollBehavior: CollapsingTopBarScrollBehavior,
 ) {
 
     val enterAnimation = if (centeredTitleAndSubtitle) {
@@ -353,6 +357,7 @@ fun SingleRowTopBar(
     TopBarLayout(
         modifier = modifier,
         heightPx = height,
+        currentTopBarHeight = currentTopBarHeight,
         navigationIconContentColor = colors.contentColor,
         titleContentColor = colors.contentColor,
         actionIconContentColor = colors.contentColor,
@@ -364,13 +369,15 @@ fun SingleRowTopBar(
         actions = actionsRow,
         collapsedTitleAlpha = collapsedTitleAlpha,
         titleEnterAnimation = enterAnimation,
-        titleExitAnimation = exitAnimation
+        titleExitAnimation = exitAnimation,
+        scrollBehavior = scrollBehavior,
     )
 }
 
 
 @Composable
 private fun TopBarLayout(
+    currentTopBarHeight: Dp,
     heightPx: Float,
     navigationIconContentColor: Color,
     titleContentColor: Color,
@@ -384,7 +391,8 @@ private fun TopBarLayout(
     centeredTitleWhenCollapsed: Boolean,
     collapsedTitleAlpha: Float,
     titleEnterAnimation: EnterTransition,
-    titleExitAnimation: ExitTransition
+    titleExitAnimation: ExitTransition,
+    scrollBehavior: CollapsingTopBarScrollBehavior,
 ) {
     Layout(
         {
@@ -408,7 +416,7 @@ private fun TopBarLayout(
                         LocalContentColor provides titleContentColor,
                         content = {
                             AnimatedVisibility(
-                                visible = collapsedTitleAlpha in 0F..1F,
+                                visible = collapsedTitleAlpha == 1F,
                                 enter = titleEnterAnimation,
                                 exit = titleExitAnimation,
                                 content = { title() }
@@ -479,8 +487,7 @@ private fun TopBarLayout(
 
             val horizPaddingPx = TopBarHorizontalPadding.toPx()
 
-            val placeTitleNextToNavIcon =
-                max(TopBarTitleInset.roundToPx(), navigationIconPlaceable.width)
+            val placeTitleAtStart = max(TopBarTitleInset.roundToPx(), navigationIconPlaceable.width)
             val placeTitleInCenter =
                 if (mainActionWidth > horizPaddingPx && actionsWidth > horizPaddingPx) {
                     (constraints.maxWidth - titlePlaceable.width - actionIconsPlaceable.width) / 2
@@ -490,13 +497,28 @@ private fun TopBarLayout(
 
             // Title
             titlePlaceable.placeRelative(
-                x = if (centeredTitleWhenCollapsed) placeTitleInCenter else placeTitleNextToNavIcon,
+                x = if (centeredTitleWhenCollapsed) placeTitleInCenter else placeTitleAtStart,
                 y = (layoutHeight - titlePlaceable.height) / 2
             )
 
+            val mainActionFixedXPosition =
+                constraints.maxWidth - actionIconsPlaceable.width - mainActionIconPlaceable.width
+
+            val currentHeight = currentTopBarHeight.toPx().toInt()
+
+            val mainActionInCenter = (
+                    (constraints.maxWidth - navigationIconPlaceable.width - mainActionIconPlaceable.width)
+                            + actionIconsPlaceable.width) / 2
+
+            val mainActionX: Int = if (!scrollBehavior.isCollapsed) {
+                if (mainActionFixedXPosition - currentHeight > mainActionInCenter) {
+                    mainActionFixedXPosition - currentHeight
+                } else mainActionInCenter
+            } else mainActionFixedXPosition
+
             // Main Action Icon
             mainActionIconPlaceable.placeRelative(
-                x = constraints.maxWidth - actionIconsPlaceable.width - mainActionIconPlaceable.width,
+                x = mainActionX,
                 y = (layoutHeight - mainActionIconPlaceable.height) / 2
             )
 
