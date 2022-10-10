@@ -2,9 +2,8 @@
 
 # CollapsingTopBarCompose
 
-A Jetpack Compose TopBar that collapses or expands based on the scrolling of a content or by you
-calling: ```CollapsingTopBarScrollBehavior.collapse()```
-or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
+A Jetpack Compose TopBar that collapses or expands based on the scrolling of a content or by calling:
+```CollapsingTopBarScrollBehavior.collapse()``` or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
 
 <table>
   <tr>
@@ -41,7 +40,7 @@ dependencies {
 }
 ```
 
-## Experimental (The new mainAction slot inside the CollapsingTopBar() )
+## Experimental (The new mainAction slot inside the CollapsingTopBar)
 
 ```kotlin
 CollapsingTopBar(
@@ -55,18 +54,12 @@ CollapsingTopBar(
             contentDescription = Icons.Outlined.Add.name,
         )
     },
-    actions = {
-        Icon(
-            Icons.Default.MoreVert,
-            contentDescription = Icons.Default.MoreVert.name,
-        )
-    },
 )
 ```
 
-# Usage
+# How to use this library
 
-Basic usage is shown below, for a more elaborate example check out
+The below example is a basic example, for a more elaborate example check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
 .
 
