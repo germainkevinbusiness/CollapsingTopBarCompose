@@ -296,7 +296,11 @@ private fun SingleRowTopBar(
     )
 }
 
-
+/**
+ * A simpler version of a Row, created to better implement the addition of the [mainAction]
+ * composable
+ * @author Germain Kevin
+ * */
 @Composable
 private fun TopBarLayout(
     currentTopBarHeight: Dp,
@@ -379,14 +383,6 @@ private fun TopBarLayout(
                 .measure(constraints.copy(maxWidth = maxTitleWidth))
 
         val layoutHeight = heightPx.roundToInt()
-
-//        val allHeights = listOf(
-//            navigationIconPlaceable.height,
-//            titlePlaceable.height, mainActionIconPlaceable.height,
-//            actionIconsPlaceable.height
-//        )
-//
-//        val longestPlaceable = allHeights.maxOrNull()
 
         layout(constraints.maxWidth, layoutHeight) {
 

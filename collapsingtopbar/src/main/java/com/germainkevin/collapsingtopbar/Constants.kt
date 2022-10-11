@@ -1,12 +1,8 @@
 package com.germainkevin.collapsingtopbar
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -28,13 +24,6 @@ internal val DefaultCollapsingTopBarElevation = 0.dp
 
 // Used to add spacing when the title is next to the navigation icon.
 internal val TopBarTitleInset = 16.dp - TopBarHorizontalPadding
-
-internal val DefaultContentPadding =
-    PaddingValues(
-        start = TopBarHorizontalPadding,
-        end = TopBarHorizontalPadding,
-        top = TopBarHorizontalPadding
-    )
 
 /**
  * A way to  remove any floating number from the [Dp] value, and just get the [Int] side of the [Dp]
@@ -116,8 +105,8 @@ fun CollapsingTopBarScrollBehavior.collapse(
             for (currentHeight in descendingDistance) {
                 val valueDecreasedTo = currentTopBarHeight - steps
                 if (valueDecreasedTo <= collapsedTopBarHeight) {
-                    topBarOffset = collapsedTopBarHeight.value
-                    currentTopBarHeight = topBarOffset.dp
+                    topBarOffset = -offsetLimit
+                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
                     ignorePreScrollDetection = false
                     // Making sure the [CollapsingTopBar] can smoothly change height size
                     // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
