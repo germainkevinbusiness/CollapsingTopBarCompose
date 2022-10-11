@@ -151,15 +151,17 @@ private fun CollapsingTopBarLayout(
                         )
                     )
             }
+
+            val horizontalAlignment =
+                if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start
+
             SimpleColumn(
                 modifier = expandedColumnModifier,
-                horizontalAlignment =
-                if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
+                horizontalAlignment = horizontalAlignment,
             ) {
                 SimpleColumn(
                     modifier = Modifier.wrapContentSize(),
-                    horizontalAlignment =
-                    if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start,
+                    horizontalAlignment = horizontalAlignment,
                 ) {
                     expandedTitle()
                     subtitle()
@@ -394,7 +396,9 @@ private fun TopBarLayout(
                     0
                 }
 
-            val navIconYPosition = titleBaseline / 3
+            val navIconYPosition = if (titleBaseline != 0) {
+                titleBaseline / 3
+            } else (layoutHeight - navigationIconPlaceable.height) / 2
 
             // Navigation icon
             navigationIconPlaceable.placeRelative(x = 0, y = navIconYPosition)
