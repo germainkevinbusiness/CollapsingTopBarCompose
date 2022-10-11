@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-//                        colors = collapsingTopBarColors(window),
+                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },

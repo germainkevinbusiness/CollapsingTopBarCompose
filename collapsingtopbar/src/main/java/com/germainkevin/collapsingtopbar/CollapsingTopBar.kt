@@ -168,6 +168,15 @@ private fun CollapsingTopBarLayout(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+            val titleEnterAnimation = if (centeredTitleAndSubtitle) {
+                fadeIn(initialAlpha = collapsedTitleAlpha) + expandVertically(
+                    expandFrom = Alignment.Bottom
+                )
+            } else fadeIn(initialAlpha = collapsedTitleAlpha)
+
+            val titleExitAnimation = if (centeredTitleAndSubtitle)
+                slideOutVertically() + fadeOut() else fadeOut()
+
             SingleRowTopBar(
                 modifier = Modifier.align(Alignment.BottomStart),
                 title = title,
@@ -178,10 +187,11 @@ private fun CollapsingTopBarLayout(
                 collapsedTopBarHeight = collapsedTopBarHeight,
                 expandedTopBarMaxHeight = expandedTopBarMaxHeight,
                 centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
-                centeredTitleAndSubtitle = centeredTitleAndSubtitle,
                 collapsedTitleAlpha = collapsedTitleAlpha,
                 colors = colors,
                 scrollBehavior = scrollBehavior,
+                titleEnterAnimation = titleEnterAnimation,
+                titleExitAnimation = titleExitAnimation,
             )
         }
     }
@@ -253,20 +263,12 @@ private fun SingleRowTopBar(
     collapsedTopBarHeight: Dp,
     expandedTopBarMaxHeight: Dp,
     centeredTitleWhenCollapsed: Boolean,
-    centeredTitleAndSubtitle: Boolean,
     collapsedTitleAlpha: Float,
     colors: CollapsingTopBarColors,
     scrollBehavior: CollapsingTopBarScrollBehavior,
+    titleEnterAnimation: EnterTransition,
+    titleExitAnimation: ExitTransition,
 ) {
-
-    val titleEnterAnimation = if (centeredTitleAndSubtitle) {
-        fadeIn(initialAlpha = collapsedTitleAlpha) + expandVertically(
-            expandFrom = Alignment.Bottom
-        )
-    } else fadeIn(initialAlpha = collapsedTitleAlpha)
-
-    val titleExitAnimation = if (centeredTitleAndSubtitle)
-        slideOutVertically() + fadeOut() else fadeOut()
 
     // Wrap the given actions in a Row.
     val actionsRow = @Composable {
