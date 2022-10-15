@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.max
 
 /**
@@ -87,15 +88,15 @@ private fun CollapsingTopBarLayout(
     elevation: Dp,
 ) = with(scrollBehavior) {
     val scrollState = rememberScrollState()
-    val surfaceColor = scrollBehavior.currentBackgroundColor(colors = colors)
-    colors.onBackgroundColorChange(surfaceColor.value)
+    val surfaceColor by scrollBehavior.currentBackgroundColor(colors)
+    colors.onBackgroundColorChange(surfaceColor)
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .height(currentTopBarHeight)
             .verticalScroll(scrollState),
-        color = surfaceColor.value,
+        color = surfaceColor,
         contentColor = colors.contentColor,
         elevation = elevation,
     ) {
@@ -124,19 +125,12 @@ private fun CollapsingTopBarLayout(
             val horizontalAlignment =
                 if (centeredTitleAndSubtitle) Alignment.CenterHorizontally else Alignment.Start
 
-            SimpleColumn(
+            SimpleColumnWithTitleSubtitle(
                 modifier = expandedColumnModifier,
                 horizontalAlignment = horizontalAlignment,
-            ) {
-                SimpleColumn(
-                    modifier = Modifier.wrapContentSize(),
-                    horizontalAlignment = horizontalAlignment,
-                ) {
-                    expandedTitle()
-                    subtitle()
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
+                expandedTitle = expandedTitle,
+                subtitle = subtitle
+            )
 
             val titleEnterAnimation = if (centeredTitleAndSubtitle) {
                 fadeIn(initialAlpha = collapsedTitleAlpha.invoke().value) + expandVertically(
@@ -144,10 +138,10 @@ private fun CollapsingTopBarLayout(
                 )
             } else fadeIn(initialAlpha = collapsedTitleAlpha.invoke().value)
 
-            val titleExitAnimation = if (centeredTitleAndSubtitle)
-                slideOutVertically() + fadeOut() else fadeOut()
+            val titleExitAnimation =
+                if (centeredTitleAndSubtitle) slideOutVertically() + fadeOut()
+                else fadeOut()
 
-            // Wrap the given actions icons in a Row.
             val actionsRow = @Composable {
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -226,14 +220,34 @@ private inline fun SimpleColumn(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable () -> Unit,
 ) {
-    Layout(
+    val measurePolicy = simpleColumnMeasurePolicy(verticalArrangement, horizontalAlignment)
+    Layout(modifier = modifier, content = content, measurePolicy = measurePolicy)
+}
+
+/**
+ * The layout that holds the Expanded Title and Subtitle slots
+ * @author Germain Kevin
+ * */
+@Composable
+private inline fun SimpleColumnWithTitleSubtitle(
+    modifier: Modifier = Modifier,
+    horizontalAlignment: Alignment.Horizontal,
+    expandedTitle: @Composable () -> Unit,
+    subtitle: @Composable () -> Unit
+) {
+    SimpleColumn(
         modifier = modifier,
-        content = content,
-        measurePolicy = simpleColumnMeasurePolicy(
-            verticalArrangement = verticalArrangement,
-            horizontalAlignment = horizontalAlignment
-        )
-    )
+        horizontalAlignment = horizontalAlignment,
+    ) {
+        SimpleColumn(
+            modifier = Modifier.wrapContentSize(),
+            horizontalAlignment = horizontalAlignment,
+        ) {
+            expandedTitle()
+            subtitle()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
 }
 
 /**
@@ -241,7 +255,7 @@ private inline fun SimpleColumn(
  * @author Germain Kevin
  * */
 @Composable
-private fun CollapsedTopBar(
+private inline fun CollapsedTopBar(
     modifier: Modifier = Modifier,
     collapsedTopBarContent: @Composable () -> Unit,
     scrollBehavior: CollapsingTopBarScrollBehavior,
@@ -249,14 +263,8 @@ private fun CollapsedTopBar(
     val collapsedTopBarHeight = LocalDensity.current.run {
         scrollBehavior.collapsedTopBarHeight.toPx().toInt()
     }
-    Layout(
-        content = collapsedTopBarContent,
-        modifier = modifier,
-        measurePolicy = collapsedTopBarMeasurePolicy(
-            collapsedTopBarHeight = collapsedTopBarHeight,
-            scrollBehavior = scrollBehavior
-        )
-    )
+    val measurePolicy = collapsedTopBarMeasurePolicy(collapsedTopBarHeight, scrollBehavior)
+    Layout(content = collapsedTopBarContent, modifier = modifier, measurePolicy = measurePolicy)
 }
 
 /**
@@ -288,10 +296,10 @@ private fun collapsedTopBarMeasurePolicy(
             constraints.copy(minWidth = 0, maxWidth = maxTitleWidth)
         )
 
-        val navIconYPosition = collapsedTopBarHeight - navigationIconPlaceable.height
-        val titleYPosition = collapsedTopBarHeight - titlePlaceable.height
-        val mainActionYPosition = collapsedTopBarHeight - mainActionIconPlaceable.height
-        val actionsYPosition = collapsedTopBarHeight - actionIconsPlaceable.height
+        val navIconYPosition = (collapsedTopBarHeight - navigationIconPlaceable.height) / 2
+        val titleYPosition = (collapsedTopBarHeight - titlePlaceable.height) / 2
+        val mainActionYPosition = (collapsedTopBarHeight - mainActionIconPlaceable.height) / 2
+        val actionsYPosition = (collapsedTopBarHeight - actionIconsPlaceable.height) / 2
 
         val horizontalPaddingPx = TopBarHorizontalPadding.toPx()
 
@@ -326,7 +334,7 @@ private fun collapsedTopBarMeasurePolicy(
 
             titlePlaceable.placeRelative(
                 x = if (scrollBehavior.centeredTitleWhenCollapsed) placeTitleInCenter else placeTitleAtStart,
-                y = titleYPosition / 2
+                y = titleYPosition
             )
 
             mainActionIconPlaceable.placeRelative(x = mainActionX, y = mainActionYPosition)

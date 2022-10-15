@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -102,18 +100,18 @@ val NavigationIcon: @Composable () -> Unit = {
  * */
 val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior) -> Unit = { scrollBehavior ->
     IconButton(onClick = {
-        if (scrollBehavior.isExpanded) {
-            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
-        } else if (scrollBehavior.isCollapsed) {
-            scrollBehavior.expand(delay = 10L, steps = 5.dp)
-        }
+//        if (scrollBehavior.isExpanded) {
+//            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+//        } else if (scrollBehavior.isCollapsed) {
+//            scrollBehavior.expand(delay = 10L, steps = 5.dp)
+//        }
     }) {
         val currentStateIcon =
             if (scrollBehavior.isCollapsed) Icons.Default.KeyboardArrowDown
             else if (scrollBehavior.isExpanded) Icons.Default.KeyboardArrowUp
             else Icons.Default.MoreHoriz
         Icon(
-            imageVector = currentStateIcon,
+            imageVector = Icons.Default.MoreVert,
             contentDescription = currentStateIcon.name,
             tint = MaterialTheme.colorScheme.onPrimary,
         )
@@ -124,8 +122,8 @@ val MainAction : @Composable () -> Unit = {
     IconButton(
         onClick = {}) {
         Icon(
-            Icons.Outlined.Add,
-            contentDescription = Icons.Outlined.Add.name,
+            Icons.Outlined.FavoriteBorder,
+            contentDescription = Icons.Outlined.FavoriteBorder.name,
             tint = MaterialTheme.colorScheme.onPrimary,
         )
     }

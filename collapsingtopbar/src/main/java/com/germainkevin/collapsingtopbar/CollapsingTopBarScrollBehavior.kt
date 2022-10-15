@@ -199,8 +199,6 @@ class DefaultBehaviorOnScroll(
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
-            Timber.d("Calculus: source: $source")
-
             if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
                 incrementTopBarOffset()
                 plateauTopBarOffset()
