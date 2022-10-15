@@ -312,6 +312,9 @@ private fun collapsedTopBarMeasurePolicy(
             (constraints.maxWidth - titlePlaceable.width) / 2
         }
 
+        val titleXPosition =
+            if (scrollBehavior.centeredTitleWhenCollapsed) placeTitleInCenter else placeTitleAtStart
+
         val mainActionFixedXPosition =
             constraints.maxWidth - actionIconsPlaceable.width - mainActionIconPlaceable.width
 
@@ -328,21 +331,17 @@ private fun collapsedTopBarMeasurePolicy(
             mainActionFixedXPosition
         }
 
+        val actionsXPosition = constraints.maxWidth - actionIconsPlaceable.width
+
         layout(constraints.maxWidth, collapsedTopBarHeight) {
 
             navigationIconPlaceable.placeRelative(x = 0, y = navIconYPosition)
 
-            titlePlaceable.placeRelative(
-                x = if (scrollBehavior.centeredTitleWhenCollapsed) placeTitleInCenter else placeTitleAtStart,
-                y = titleYPosition
-            )
+            titlePlaceable.placeRelative(x = titleXPosition, y = titleYPosition)
 
             mainActionIconPlaceable.placeRelative(x = mainActionX, y = mainActionYPosition)
 
-            actionIconsPlaceable.placeRelative(
-                x = constraints.maxWidth - actionIconsPlaceable.width,
-                y = actionsYPosition
-            )
+            actionIconsPlaceable.placeRelative(x = actionsXPosition, y = actionsYPosition)
         }
     }
 }
