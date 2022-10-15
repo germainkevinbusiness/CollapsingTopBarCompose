@@ -60,16 +60,7 @@ class MainActivity : ComponentActivity() {
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
                         navigationIcon = { NavigationIcon() },
-                        mainAction = {
-                            IconButton(
-                                onClick = {}) {
-                                Icon(
-                                    Icons.Outlined.Add,
-                                    contentDescription = Icons.Outlined.Add.name,
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        },
+                        mainAction = MainAction,
                         actions = { MoreMenuIcons(scrollBehavior) },
                     )
 

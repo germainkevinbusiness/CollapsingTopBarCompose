@@ -37,14 +37,11 @@ internal fun Dp.toIntDp() = this.value.toInt().dp
 internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
     colors: CollapsingTopBarColors
 ): State<Color> = animateColorAsState(
-    targetValue =
-    if (currentTopBarHeight.toIntDp() == collapsedTopBarHeight ||
+    targetValue = if (currentTopBarHeight.toIntDp() == collapsedTopBarHeight ||
         currentTopBarHeight.toIntDp() == expandedTopBarMaxHeight
     ) {
-        colors.onBackgroundColorChange(colors.backgroundColor)
         colors.backgroundColor
     } else {
-        colors.onBackgroundColorChange(colors.backgroundColorWhenCollapsingOrExpanding)
         colors.backgroundColorWhenCollapsingOrExpanding
     }
 )
@@ -105,8 +102,8 @@ fun CollapsingTopBarScrollBehavior.collapse(
             for (currentHeight in descendingDistance) {
                 val valueDecreasedTo = currentTopBarHeight - steps
                 if (valueDecreasedTo <= collapsedTopBarHeight) {
-                    topBarOffset = -offsetLimit
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.dp
+                    heightOffset = -heightOffsetLimit
+                    currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.dp
                     ignorePreScrollDetection = false
                     // Making sure the [CollapsingTopBar] can smoothly change height size
                     // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
@@ -156,8 +153,8 @@ fun CollapsingTopBarScrollBehavior.expand(
             for (currentHeight in ascendingDistance) {
                 val valueIncreasedTo = currentTopBarHeight + steps
                 if (valueIncreasedTo >= expandedTopBarMaxHeight) {
-                    topBarOffset = expandedTopBarMaxHeight.value
-                    currentTopBarHeight = topBarOffset.dp
+                    heightOffset = expandedTopBarMaxHeight.value
+                    currentTopBarHeight = heightOffset.dp
                     ignorePreScrollDetection = false
                     trackOffSetIsZero = 3
                     defineCurrentState()

@@ -91,7 +91,7 @@ val NavigationIcon: @Composable () -> Unit = {
         Icon(
             imageVector = Icons.Filled.Menu,
             contentDescription = stringResource(id = R.string.hamburger_menu),
-            tint = MaterialTheme.colorScheme.onPrimary
+            tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }
@@ -115,7 +115,18 @@ val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior) -> Unit = { scro
         Icon(
             imageVector = currentStateIcon,
             contentDescription = currentStateIcon.name,
-            tint = MaterialTheme.colorScheme.onPrimary
+            tint = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+val MainAction : @Composable () -> Unit = {
+    IconButton(
+        onClick = {}) {
+        Icon(
+            Icons.Outlined.Add,
+            contentDescription = Icons.Outlined.Add.name,
+            tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }

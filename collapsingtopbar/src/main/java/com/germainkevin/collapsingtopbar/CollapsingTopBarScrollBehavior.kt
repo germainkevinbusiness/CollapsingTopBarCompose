@@ -7,7 +7,9 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -62,7 +64,7 @@ interface CollapsingTopBarScrollBehavior {
      * It's a value that is added to the height of the [CollapsingTopBar] when there is a
      * [nestedScroll] event and [isAlwaysCollapsed] is false.
      * */
-    var topBarOffset: Float
+    var heightOffset: Float
 
     /**
      * When true, Sets the [CollapsingTopBar] to an expanded state when first displayed on the UI
@@ -86,7 +88,7 @@ interface CollapsingTopBarScrollBehavior {
      *
      *
      * Is incremented inside this [nestedScrollConnection]'s [NestedScrollConnection.onPreScroll]
-     * event listener, everytime the [topBarOffset] is equal to 0f.
+     * event listener, everytime the [heightOffset] is equal to 0f.
      *
      *
      * When the [currentTopBarHeight] is equal to [collapsedTopBarHeight] the first time it's drawn
@@ -94,11 +96,11 @@ interface CollapsingTopBarScrollBehavior {
      * being [collapsedTopBarHeight] to now being equal to [expandedTopBarMaxHeight],
      *
      * instead
-     * we give the [topBarOffset] the time to resolve the exact number of dp we should add to
+     * we give the [heightOffset] the time to resolve the exact number of dp we should add to
      * the [currentTopBarHeight] so that we add the right amount of dp to expand from its
      * size of [collapsedTopBarHeight] to whatever necessary size <= [expandedTopBarMaxHeight].
      *
-     * In order for the [topBarOffset] to have time to do that, we wait until the 3rd time the
+     * In order for the [heightOffset] to have time to do that, we wait until the 3rd time the
      * user tries to scroll down from the absolute top of the layout where the scroll is detected,
      * then we make the [CollapsingTopBar] expandable, meaning we now start adding dp values to
      * [currentTopBarHeight] meanwhile it's equal to [collapsedTopBarHeight]
@@ -108,13 +110,13 @@ interface CollapsingTopBarScrollBehavior {
 
     /**
      * When offsetting the [currentTopBarHeight], it subtracts its [expandedTopBarMaxHeight]
-     * to the [topBarOffset] so it can decrease the height of the [CollapsingTopBar], but
+     * to the [heightOffset] so it can decrease the height of the [CollapsingTopBar], but
      * to avoid the [currentTopBarHeight] decreasing below the height of [collapsedTopBarHeight]
      * we create this offset limit that will make sure that the [currentTopBarHeight] only
      * decreases down to the height of [collapsedTopBarHeight], meaning the [CollapsingTopBar]'s
      * height cannot go below [collapsedTopBarHeight]
      * */
-    var offsetLimit: Float
+    var heightOffsetLimit: Float
 
     /**
      * A [NestedScrollConnection] that should be attached to a
@@ -126,7 +128,7 @@ interface CollapsingTopBarScrollBehavior {
     /**
      * The visibility alpha value of the Column which holds as children the Title and Subtitle
      * */
-    val expandedColumnAlphaValue: @Composable () -> State<Float>
+    val expandedColumnAlpha: @Composable () -> State<Float>
 
     /**
      * The visibility alpha value of the Title displayed and visible when the [CollapsingTopBar] is
@@ -157,7 +159,7 @@ class DefaultBehaviorOnScroll(
         }
     }
 
-    override var topBarOffset: Float by mutableStateOf(0f)
+    override var heightOffset: Float by mutableStateOf(0f)
 
     override var trackOffSetIsZero: Int by mutableStateOf(0)
 
@@ -189,7 +191,7 @@ class DefaultBehaviorOnScroll(
         currentState == CollapsingTopBarState.EXPANDED
     )
 
-    override var offsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value
+    override var heightOffsetLimit: Float = (expandedTopBarMaxHeight - collapsedTopBarHeight).value
 
     override var ignorePreScrollDetection: Boolean by mutableStateOf(false)
 
@@ -197,14 +199,16 @@ class DefaultBehaviorOnScroll(
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
+            Timber.d("Calculus: source: $source")
+
             if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
                 incrementTopBarOffset()
                 plateauTopBarOffset()
                 trackPreScrollData(available)
                 if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                    currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
                 } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + topBarOffset.roundToInt().dp
+                    currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
                 }
 
                 defineCurrentState()
@@ -216,13 +220,13 @@ class DefaultBehaviorOnScroll(
 
     private fun trackPreScrollData(available: Offset) {
         val availableY = available.y.toInt()
-        val newOffset = (topBarOffset + availableY)
-        val coerced = newOffset.coerceIn(minimumValue = -offsetLimit, maximumValue = 0f)
-        topBarOffset = coerced
+        val newOffset = (heightOffset + availableY)
+        val coerced = newOffset.coerceIn(minimumValue = -heightOffsetLimit, maximumValue = 0f)
+        heightOffset = coerced
     }
 
     private fun incrementTopBarOffset() {
-        if (topBarOffset == 0f) {
+        if (heightOffset == 0f) {
             trackOffSetIsZero += 1
         }
     }
@@ -234,7 +238,7 @@ class DefaultBehaviorOnScroll(
         }
     }
 
-    override val expandedColumnAlphaValue: @Composable () -> State<Float> = {
+    override val expandedColumnAlpha: @Composable () -> State<Float> = {
         getExpandedColumnAlpha()
     }
 
