@@ -10,7 +10,7 @@ extension methods.
   <tr>
     <td>Collapse/Expand due to user scroll while displaying centered expanded title & subtitle</td>
     <td>Collapse/Expand due to user scroll while displaying only the title on the left side</td>
-    <td>Collapse/Expand due to onClick event</td>
+    <td>Collapse/Expand while the mainAction slot gets animated</td>
   </tr>
   <tr>
     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170046931-3f9cf06e-9476-4ea1-a932-34d3197a47df.gif" alt="Demonstration 1" width="100%" height="auto"/></td>
