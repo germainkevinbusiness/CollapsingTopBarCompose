@@ -240,12 +240,12 @@ private inline fun SimpleColumnWithTitleSubtitle(
     ) {
         SimpleColumn(
             modifier = Modifier
-                .wrapContentSize()
-                .padding(bottom = 16.dp),
+                .wrapContentSize(),
             horizontalAlignment = horizontalAlignment,
         ) {
             expandedTitle()
             subtitle()
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
