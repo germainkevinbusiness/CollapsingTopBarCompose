@@ -3,24 +3,15 @@ package com.germainkevin.collapsingtopbarcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.germainkevin.collapsingtopbar.CollapsingTopBar
@@ -43,14 +34,14 @@ class MainActivity : ComponentActivity() {
                 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                     isAlwaysCollapsed = false,
                     isExpandedWhenFirstDisplayed = true,
-                    centeredTitleWhenCollapsed = true,
+                    centeredTitleWhenCollapsed = false,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 200.dp,
                 )
-                val mainActionState = remember { mutableStateOf(false) }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) {
                     CollapsingTopBar(
@@ -64,19 +55,12 @@ class MainActivity : ComponentActivity() {
                         actions = { MoreMenuIcons(scrollBehavior) },
                     )
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.background)
-                            .fillMaxSize()
-                    ) {
+                    LazyColumn {
                         items(contacts) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        mainActionState.value = !mainActionState.value
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
+                                    .clickable { },
                             ) {
                                 Text(
                                     modifier = Modifier.padding(16.dp),

@@ -1,18 +1,13 @@
 package com.germainkevin.collapsingtopbarcompose.ui
 
 import android.view.Window
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.toArgb
@@ -69,8 +64,9 @@ val ExpandedTitleText: @Composable () -> Unit = {
  * [CollapsingTopBar][com.germainkevin.collapsingtopbar.CollapsingTopBar]
  * */
 val SubtitleText: @Composable (List<String>) -> Unit = { contactNames ->
+    val subtitleText = stringResource(id = R.string.contactNamesCount, contactNames.size.toString())
     Text(
-        text = stringResource(id = R.string.contactNamesCount, contactNames.size.toString()),
+        text = subtitleText,
         style = LocalTextStyle.current.copy(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
@@ -100,30 +96,30 @@ val NavigationIcon: @Composable () -> Unit = {
  * */
 val MoreMenuIcons: @Composable (CollapsingTopBarScrollBehavior) -> Unit = { scrollBehavior ->
     IconButton(onClick = {
-//        if (scrollBehavior.isExpanded) {
-//            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
-//        } else if (scrollBehavior.isCollapsed) {
-//            scrollBehavior.expand(delay = 10L, steps = 5.dp)
-//        }
+        if (scrollBehavior.isExpanded) {
+            scrollBehavior.collapse(delay = 10L, steps = 5.dp)
+        } else if (scrollBehavior.isCollapsed) {
+            scrollBehavior.expand(delay = 10L, steps = 5.dp)
+        }
     }) {
         val currentStateIcon =
             if (scrollBehavior.isCollapsed) Icons.Default.KeyboardArrowDown
             else if (scrollBehavior.isExpanded) Icons.Default.KeyboardArrowUp
             else Icons.Default.MoreHoriz
         Icon(
-            imageVector = Icons.Default.MoreVert,
+            imageVector = currentStateIcon,
             contentDescription = currentStateIcon.name,
             tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }
 
-val MainAction : @Composable () -> Unit = {
+val MainAction: @Composable () -> Unit = {
     IconButton(
         onClick = {}) {
         Icon(
-            Icons.Outlined.FavoriteBorder,
-            contentDescription = Icons.Outlined.FavoriteBorder.name,
+            Icons.Outlined.Add,
+            contentDescription = Icons.Outlined.Add.name,
             tint = MaterialTheme.colorScheme.onPrimary,
         )
     }

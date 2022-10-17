@@ -106,9 +106,9 @@ fun CollapsingTopBarScrollBehavior.collapse(
                     currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.dp
                     ignorePreScrollDetection = false
                     // Making sure the [CollapsingTopBar] can smoothly change height size
-                    // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection] implementation
-                    // for better understanding
-                    trackOffSetIsZero = 0
+                    // Check the [CollapsingTopBarScrollBehavior.nestedScrollConnection]
+                    // implementation for better understanding
+                    countWhenHeightOffSetIsZero = 0
                     defineCurrentState()
                     onFinishedCollapsing()
                 }
@@ -156,7 +156,7 @@ fun CollapsingTopBarScrollBehavior.expand(
                     heightOffset = expandedTopBarMaxHeight.value
                     currentTopBarHeight = heightOffset.dp
                     ignorePreScrollDetection = false
-                    trackOffSetIsZero = 3
+                    countWhenHeightOffSetIsZero = 3
                     defineCurrentState()
                     onFinishedExpanding()
                 }

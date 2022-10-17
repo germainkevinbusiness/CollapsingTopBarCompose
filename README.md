@@ -2,8 +2,9 @@
 
 # CollapsingTopBarCompose
 
-A Jetpack Compose TopBar that collapses or expands based on the scrolling of a content or by calling:
-```CollapsingTopBarScrollBehavior.collapse()``` or ```CollapsingTopBarScrollBehavior.expand()``` extension methods.
+A Jetpack Compose TopBar that collapses or expands based on detected scroll events or by calling:
+```CollapsingTopBarScrollBehavior.collapse()``` or ```CollapsingTopBarScrollBehavior.expand()```
+extension methods.
 
 <table>
   <tr>
@@ -36,25 +37,8 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.0-beta08"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.0"
 }
-```
-
-## Experimental (The new mainAction slot inside the CollapsingTopBar)
-
-```kotlin
-CollapsingTopBar(
-    scrollBehavior = scrollBehavior,
-    title = { Text(text = "Contacts") },
-    subtitle = { Text(text = "17 contacts") },
-    // (Experimental)  New Slot that animates as the CollapsingTopBar collapses or expands
-    mainAction = {
-        Icon(
-            Icons.Outlined.Add,
-            contentDescription = Icons.Outlined.Add.name,
-        )
-    },
-)
 ```
 
 # How to use this library
@@ -90,6 +74,14 @@ Scaffold(
             scrollBehavior = scrollBehavior,
             title = { Text(text = "Contacts") },
             subtitle = { Text(text = "17 contacts") },
+            mainAction = {
+                IconButton(onClick = {}) {
+                    Icon(
+                        Icons.Outlined.Add,
+                        contentDescription = "Main Action Icon",
+                    )
+                }
+            },
         )
     },
 ) {}
@@ -125,6 +117,14 @@ Column(
         expandedTitle = ExpandedTitleText,
         subtitle = { SubtitleText(contacts) },
         navigationIcon = { NavigationIcon() },
+        mainAction = {
+            IconButton(onClick = {}) {
+                Icon(
+                    Icons.Outlined.Add,
+                    contentDescription = "Main Action Icon",
+                )
+            }
+        },
         actions = { MoreMenuIcons(isCollapsed, isExpanded) },
         colors = CollapsingTopBarDefaults.colors(
             backgroundColorWhenCollapsingOrExpanding =

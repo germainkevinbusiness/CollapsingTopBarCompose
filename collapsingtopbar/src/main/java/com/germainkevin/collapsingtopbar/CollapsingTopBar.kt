@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
 import kotlin.math.max
 
 /**
@@ -23,41 +22,41 @@ import kotlin.math.max
  * This [CollapsingTopBar] has slots to display a navigation icon, a title, a subtitle,
  * a mainAction and actions.
  *
- * @param modifier A modifier that is passed down to the main layer which is a [Surface]
+ * @param modifier A modifier that is passed down to the main layer which is a [Surface].
  * @param navigationIcon The navigation icon displayed at the start of the [CollapsingTopBar].
  * @param title The title to be displayed inside the [CollapsingTopBar]
  * @param expandedTitle Optional, In case you want the [title] to look different when the
  * [CollapsingTopBar] is expanded
  * @param subtitle The subtitle to be displayed inside the [CollapsingTopBar]
- * This should typically be an [IconButton] or [IconToggleButton].
  * @param mainAction A composable that is added before [actions] that animates as you collapse or
- * expand the [CollapsingTopBar]
+ * expand the [CollapsingTopBar]. This should typically be an [IconButton] or [IconToggleButton].
  * @param actions The actions displayed at the end of the [CollapsingTopBar]. This should typically
- * be [IconButton]s. The default layout here is a [Row], so icons inside will be placed horizontally.
+ * be [IconButton]s or [IconToggleButton]s. It will be laid out as a [Row], so icons inside will be
+ * placed horizontally.
  * @param colors [CollapsingTopBarColors] that will be used to resolve the colors used for this
  * [CollapsingTopBar]. See [CollapsingTopBarDefaults.colors].
- * @param elevation The size of the shadow below the [Surface]
+ * @param elevation The size of the shadow below the main layer which is a [Surface].
  * @param scrollBehavior determines the behavior of the [CollapsingTopBar]. If you want the
  * [CollapsingTopBar] to stay collapsed, you set it there, if you want the [CollapsingTopBar] to
- * have a different [collapsed height][CollapsingTopBarcollapsedTopBarHeight] or
- * a different [expanded height][CollapsingTopBarexpandedTopBarMaxHeight], you set it
+ * have a different [collapsed height][CollapsingTopBarScrollBehavior.collapsedTopBarHeight] or
+ * a different [expanded height][CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight], you set it
  * there, if you want the [CollapsingTopBar] to detect when a scroll event has occurred in your UI
  * and you want the [CollapsingTopBar] to collapse or expand, you simply pass
- * [nestedScrollConnection][CollapsingTopBarnestedScrollConnection] to
+ * [nestedScrollConnection][CollapsingTopBarScrollBehavior.nestedScrollConnection] to
  * your Layout's [Modifier.nestedScroll][androidx.compose.ui.input.nestedscroll.nestedScroll].
  * @author Germain Kevin
  * */
 @Composable
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
+    scrollBehavior: CollapsingTopBarScrollBehavior,
+    navigationIcon: @Composable () -> Unit = { },
     title: @Composable () -> Unit,
     expandedTitle: @Composable () -> Unit = title,
     subtitle: @Composable () -> Unit = {},
-    navigationIcon: @Composable (() -> Unit)? = null,
     mainAction: @Composable () -> Unit = { },
     actions: @Composable RowScope.() -> Unit = {},
     colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
-    scrollBehavior: CollapsingTopBarScrollBehavior,
     elevation: Dp = DefaultCollapsingTopBarElevation,
 ) {
     CollapsingTopBarLayout(
@@ -80,7 +79,7 @@ private fun CollapsingTopBarLayout(
     title: @Composable () -> Unit,
     expandedTitle: @Composable () -> Unit,
     subtitle: @Composable () -> Unit,
-    navigationIcon: @Composable (() -> Unit)?,
+    navigationIcon: @Composable () -> Unit,
     mainAction: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit,
     scrollBehavior: CollapsingTopBarScrollBehavior,
@@ -115,7 +114,7 @@ private fun CollapsingTopBarLayout(
                     .align(Alignment.TopStart)
                     .padding(
                         PaddingValues(
-                            start = if (navigationIcon != null) 56.dp - TopBarHorizontalPadding
+                            start = if (navigationIcon != {}) 56.dp - TopBarHorizontalPadding
                             else TopBarTitleInset,
                             end = TopBarHorizontalPadding,
                         )
@@ -158,7 +157,7 @@ private fun CollapsingTopBarLayout(
                 ) {
                     CompositionLocalProvider(
                         LocalContentColor provides colors.contentColor,
-                        content = navigationIcon ?: {}
+                        content = navigationIcon
                     )
                 }
                 Box(
@@ -225,7 +224,7 @@ private inline fun SimpleColumn(
 }
 
 /**
- * The layout that holds the Expanded Title and Subtitle slots
+ * The layout that holds and displays the [expandedTitle] and [subtitle] slots
  * @author Germain Kevin
  * */
 @Composable
@@ -240,18 +239,19 @@ private inline fun SimpleColumnWithTitleSubtitle(
         horizontalAlignment = horizontalAlignment,
     ) {
         SimpleColumn(
-            modifier = Modifier.wrapContentSize(),
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(bottom = 16.dp),
             horizontalAlignment = horizontalAlignment,
         ) {
             expandedTitle()
             subtitle()
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 /**
- * A [Layout] that draws horizontally a [navigationIcon], a [title], a [mainAction] and [actions]
+ * A [Layout] that draws horizontally a navigationIcon, a title, a mainAction and actions
  * @author Germain Kevin
  * */
 @Composable
@@ -277,6 +277,11 @@ private fun collapsedTopBarMeasurePolicy(
     scrollBehavior: CollapsingTopBarScrollBehavior,
 ): MeasurePolicy {
     return MeasurePolicy { measurables, constraints ->
+
+        val currentHeight = scrollBehavior.currentTopBarHeight.roundToPx()
+        val currentExpandedHeight = scrollBehavior.expandedTopBarMaxHeight.roundToPx()
+        val horizontalPaddingPx = TopBarHorizontalPadding.toPx()
+
         val navigationIconPlaceable =
             measurables.first { it.layoutId == "navigationIcon" }.measure(constraints)
         val mainActionIconPlaceable =
@@ -301,8 +306,6 @@ private fun collapsedTopBarMeasurePolicy(
         val mainActionYPosition = (collapsedTopBarHeight - mainActionIconPlaceable.height) / 2
         val actionsYPosition = (collapsedTopBarHeight - actionIconsPlaceable.height) / 2
 
-        val horizontalPaddingPx = TopBarHorizontalPadding.toPx()
-
         val placeTitleAtStart = max(TopBarTitleInset.roundToPx(), navigationIconPlaceable.width)
         val placeTitleInCenter = if (mainActionIconPlaceable.width > horizontalPaddingPx
             && actionIconsPlaceable.width > horizontalPaddingPx
@@ -317,9 +320,6 @@ private fun collapsedTopBarMeasurePolicy(
 
         val mainActionFixedXPosition =
             constraints.maxWidth - actionIconsPlaceable.width - mainActionIconPlaceable.width
-
-        val currentHeight = scrollBehavior.currentTopBarHeight.roundToPx()
-        val currentExpandedHeight = scrollBehavior.expandedTopBarMaxHeight.roundToPx()
 
         val mainActionInCenter = (constraints.maxWidth - actionIconsPlaceable.width) / 2
 

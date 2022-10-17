@@ -7,9 +7,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -106,7 +104,7 @@ interface CollapsingTopBarScrollBehavior {
      * [currentTopBarHeight] meanwhile it's equal to [collapsedTopBarHeight]
      *
      * */
-    var trackOffSetIsZero: Int
+    var countWhenHeightOffSetIsZero: Int
 
     /**
      * When offsetting the [currentTopBarHeight], it subtracts its [expandedTopBarMaxHeight]
@@ -161,7 +159,7 @@ class DefaultBehaviorOnScroll(
 
     override var heightOffset: Float by mutableStateOf(0f)
 
-    override var trackOffSetIsZero: Int by mutableStateOf(0)
+    override var countWhenHeightOffSetIsZero: Int by mutableStateOf(0)
 
     override var currentTopBarHeight: Dp by mutableStateOf(
         if (isAlwaysCollapsed) collapsedTopBarHeight else {
@@ -203,7 +201,7 @@ class DefaultBehaviorOnScroll(
                 incrementTopBarOffset()
                 plateauTopBarOffset()
                 trackPreScrollData(available)
-                if (!isExpandedWhenFirstDisplayed && trackOffSetIsZero >= 3) {
+                if (!isExpandedWhenFirstDisplayed && countWhenHeightOffSetIsZero >= 3) {
                     currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
                 } else if (isExpandedWhenFirstDisplayed) {
                     currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
@@ -225,14 +223,14 @@ class DefaultBehaviorOnScroll(
 
     private fun incrementTopBarOffset() {
         if (heightOffset == 0f) {
-            trackOffSetIsZero += 1
+            countWhenHeightOffSetIsZero += 1
         }
     }
 
-    // Just keeping trackOffSetIsZero from storing high numbers that are above 3
+    // Just keeping countWhenHeightOffSetIsZero from storing high numbers that are above 3
     private fun plateauTopBarOffset() {
-        if (trackOffSetIsZero > 6) {
-            trackOffSetIsZero = 3
+        if (countWhenHeightOffSetIsZero > 6) {
+            countWhenHeightOffSetIsZero = 3
         }
     }
 
