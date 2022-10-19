@@ -77,7 +77,11 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                 },
             )
         },
-    ) {}
+    ) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {}
+        
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {}
+    }
 ```
 
 So a complete example could look like:
@@ -95,6 +99,48 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
         actions = { MoreMenuIcons },
     )
     LazyColumn {
+        items(contactsList) {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable { },
+            ) {
+                Text( modifier = Modifier.padding(16.dp), text = it )
+            }
+        }
+    }
+}
+```
+
+The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. But what if 
+for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn? 
+For that, you need to pass a ```LazyListState``` inside your  ```CollapsingTopBarScrollBehavior```:
+
+```kotlin
+val lazyListState = rememberLazyListState()
+val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+    isAlwaysCollapsed = false,
+    isExpandedWhenFirstDisplayed = true,
+    centeredTitleWhenCollapsed = false,
+    centeredTitleAndSubtitle = true,
+    collapsedTopBarHeight = 56.dp,
+    expandedTopBarMaxHeight = 156.dp,
+    userLazyListState = lazyListState
+)
+```
+
+Then you pass that same ```LazyListState``` to your LazyColumn, like so:
+```kotlin
+
+Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+    CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        title = { TitleText },
+        expandedTitle = { ExpandedTitleText },
+        subtitle = { SubtitleText },
+        navigationIcon = { NavigationIcon },
+        mainAction = { MainActionIconButton },
+        actions = { MoreMenuIcons },
+    )
+    LazyColumn(state = lazyListState) {
         items(contactsList) {
             Row(
                 modifier = Modifier.fillMaxWidth().clickable { },
