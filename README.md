@@ -90,10 +90,18 @@ expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's
 So a complete example could look like:
 
 ```kotlin
+
 val isCollapsed = scrollBehavior.isCollapsed
 val isExpanded = scrollBehavior.isExpanded
 val isMoving = scrollBehavior.isMoving
-val window = this@Activity.window
+
+val collapsingTopBarColors = CollapsingTopBarDefaults.colors(
+        backgroundColorWhenCollapsingOrExpanding = 
+        MaterialTheme.colorScheme.onPrimaryContainer,
+        onBackgroundColorChange = {
+            this@Activity.window.statusBarColor = it.toArgb()
+        },
+    )
 
 Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
     CollapsingTopBar(
@@ -104,19 +112,12 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
         navigationIcon = { NavigationIcon },
         mainAction = { MainActionIconButton },
         actions = { MoreMenuIcons(isCollapsed, isExpanded, isMoving) },
-        colors = CollapsingTopBarDefaults.colors(
-            backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
-            onBackgroundColorChange = {
-                window.statusBarColor = it.toArgb()
-            },
-        ),
+        colors = collapsingTopBarColors,
     )
-    LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+    LazyColumn {
         items(contactsList) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { },
+                modifier = Modifier.fillMaxWidth().clickable { },
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
