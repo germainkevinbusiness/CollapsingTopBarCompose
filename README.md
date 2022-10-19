@@ -37,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.1"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.2-rc01"
 }
 ```
 
@@ -58,12 +58,13 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
+    userLazyListState = null
 )
 ```
 
-To know when scrolling occurs inside your Layout so the ```CollapsingTopBar``` can collapse or
-expand, add the ```scrollBehavior.nestedScrollConnection``` inside your
-Layout's  ```Modifier.nestedScroll``` :
+To know when scrolling occurs inside your Layout, so the ```CollapsingTopBar``` can collapse or
+expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's
+```Modifier.nestedScroll``` :
 
 ```kotlin
 Scaffold(
@@ -101,6 +102,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
+    userLazyListState = null
 )
 //val isMoving = scrollBehavior.isMoving
 val isCollapsed = scrollBehavior.isCollapsed
@@ -135,22 +137,18 @@ Column(
         ),
     )
     LazyColumn(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
         items(contacts) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { },
-                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = it,
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
         }

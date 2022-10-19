@@ -9,7 +9,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
-import timber.log.Timber
 
 /**
  * Defines how a [CollapsingTopBar] should behave, mainly during a
@@ -141,10 +140,17 @@ interface CollapsingTopBarScrollBehavior {
      * */
     var ignorePreScrollDetection: Boolean
 
+    /**
+     * This is the [ScrollState] that is registering the vertical scroll state of the
+     * [CollapsingTopBar]
+     * */
     var topBarVerticalScrollState: @Composable () -> ScrollState
 
-    var isTopBarVerticalScrollInProgress: Boolean
-
+    /**
+     * Assign a [LazyListState] to this variable that you will pass inside a LazyColumn, so
+     * that the [CollapsingTopBar] can only expand when this LazyColumn's
+     * firstVisibleItemScrollOffset is == 0.
+     * */
     var userLazyListState: LazyListState?
 }
 
@@ -205,21 +211,16 @@ class DefaultBehaviorOnScroll(
 
     override var ignorePreScrollDetection: Boolean by mutableStateOf(false)
 
-
-    override var isTopBarVerticalScrollInProgress: Boolean by mutableStateOf(false)
-
     override var topBarVerticalScrollState: @Composable () -> ScrollState = {
-        val scrollState = rememberScrollState()
-        isTopBarVerticalScrollInProgress = scrollState.isScrollInProgress
-        scrollState
+        rememberScrollState()
     }
 
     override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            userLazyListState?.let {
-                onPreScrollLazyColumnUnderTopBarBehavior(available, it)
-            } ?: onPreScrollDefaultBehavior(available)
+            userLazyListState?.let { onPreScrollWithLazyListState(available, it) }
+                ?: onPreScrollDefaultBehavior(available)
+            defineCurrentState()
 
             return Offset.Zero
         }

@@ -106,8 +106,8 @@ class CollapsingTopBarColors(
  * default value is [defaultMinimumTopBarHeight]
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
  * default value is [defaultMaximumTopBarHeight]
- * @param userLazyListState When not null, and passed to a LazyColumn, it will make the
- * CollapsingTopBar expand only when you reach the top of the LazyColumn
+ * @param userLazyListState When not null, and its value is passed to a LazyColumn, it will make the
+ * [CollapsingTopBar] expand only when you reach the top of the LazyColumn
  * */
 @Composable
 fun rememberCollapsingTopBarScrollBehavior(

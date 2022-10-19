@@ -26,9 +26,12 @@ class MainActivity : ComponentActivity() {
         "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
         "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
         "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
         "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
+        "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
         "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
-        "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-//                        colors = collapsingTopBarColors(window),
+                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
