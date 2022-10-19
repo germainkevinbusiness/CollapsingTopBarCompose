@@ -67,79 +67,52 @@ expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's
 ```Modifier.nestedScroll``` :
 
 ```kotlin
-Scaffold(
-    modifier = Modifier
-        .nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = {
-        CollapsingTopBar(
-            scrollBehavior = scrollBehavior,
-            title = { Text(text = "Contacts") },
-            subtitle = { Text(text = "17 contacts") },
-            mainAction = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        contentDescription = "Main Action Icon",
-                    )
-                }
-            },
-        )
-    },
-) {}
+ Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CollapsingTopBar(
+                scrollBehavior = scrollBehavior,
+                title = { Text(text = "Contacts") },
+                subtitle = { Text(text = "17 contacts") },
+                mainAction = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            contentDescription = "Main Action Icon",
+                        )
+                    }
+                },
+            )
+        },
+    ) {}
 ```
 
 So a complete example could look like:
 
 ```kotlin
-private val contacts = listOf(
-    "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
-    "Federico Valverde", "Granit Xhaka", "Harry Kane", "Lionel Andres Messi",
-)
-val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
-    isAlwaysCollapsed = false,
-    isExpandedWhenFirstDisplayed = true,
-    centeredTitleWhenCollapsed = false,
-    centeredTitleAndSubtitle = true,
-    collapsedTopBarHeight = 56.dp,
-    expandedTopBarMaxHeight = 156.dp,
-    userLazyListState = null
-)
-//val isMoving = scrollBehavior.isMoving
 val isCollapsed = scrollBehavior.isCollapsed
 val isExpanded = scrollBehavior.isExpanded
+val isMoving = scrollBehavior.isMoving
 val window = this@Activity.window
-Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .nestedScroll(scrollBehavior.nestedScrollConnection),
-) {
+
+Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
     CollapsingTopBar(
         scrollBehavior = scrollBehavior,
-        title = TitleText,
-        expandedTitle = ExpandedTitleText,
-        subtitle = { SubtitleText(contacts) },
-        navigationIcon = { NavigationIcon() },
-        mainAction = {
-            IconButton(onClick = {}) {
-                Icon(
-                    Icons.Outlined.Add,
-                    contentDescription = "Main Action Icon",
-                )
-            }
-        },
-        actions = { MoreMenuIcons(isCollapsed, isExpanded) },
+        title = { TitleText },
+        expandedTitle = { ExpandedTitleText },
+        subtitle = { SubtitleText },
+        navigationIcon = { NavigationIcon },
+        mainAction = { MainActionIconButton },
+        actions = { MoreMenuIcons(isCollapsed, isExpanded, isMoving) },
         colors = CollapsingTopBarDefaults.colors(
-            backgroundColorWhenCollapsingOrExpanding =
-            MaterialTheme.colorScheme.onPrimaryContainer,
+            backgroundColorWhenCollapsingOrExpanding = MaterialTheme.colorScheme.onPrimaryContainer,
             onBackgroundColorChange = {
                 window.statusBarColor = it.toArgb()
             },
         ),
     )
-    LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    ) {
-        items(contacts) {
+    LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+        items(contactsList) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
