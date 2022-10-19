@@ -43,11 +43,6 @@ dependencies {
 
 # How to use this library
 
-The below example is a basic example, for a more elaborate example check out
-the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
-.
-
-
 1 - In order to use a ```CollapsingTopBar```, you first need to create a ```CollapsingTopBarScrollBehavior```.
 
 ```kotlin
@@ -89,18 +84,6 @@ So a complete example could look like:
 
 ```kotlin
 
-val isCollapsed = scrollBehavior.isCollapsed
-val isExpanded = scrollBehavior.isExpanded
-val isMoving = scrollBehavior.isMoving
-
-val collapsingTopBarColors = CollapsingTopBarDefaults.colors(
-        backgroundColorWhenCollapsingOrExpanding = 
-        MaterialTheme.colorScheme.onPrimaryContainer,
-        onBackgroundColorChange = {
-            this@Activity.window.statusBarColor = it.toArgb()
-        },
-    )
-
 Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
     CollapsingTopBar(
         scrollBehavior = scrollBehavior,
@@ -109,26 +92,24 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
         subtitle = { SubtitleText },
         navigationIcon = { NavigationIcon },
         mainAction = { MainActionIconButton },
-        actions = { MoreMenuIcons(isCollapsed, isExpanded, isMoving) },
-        colors = collapsingTopBarColors,
+        actions = { MoreMenuIcons },
     )
     LazyColumn {
         items(contactsList) {
             Row(
                 modifier = Modifier.fillMaxWidth().clickable { },
             ) {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = it,
-                    fontSize = 16.sp,
-                )
+                Text( modifier = Modifier.padding(16.dp), text = it )
             }
         }
     }
 }
 ```
 
-**That's it!**
+The above example is a basic example, to know and learn more about the CollapsingTopBar, check out
+the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
+.
+
 
 ## License
 
