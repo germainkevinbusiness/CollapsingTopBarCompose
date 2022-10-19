@@ -86,7 +86,7 @@ private fun CollapsingTopBarLayout(
     colors: CollapsingTopBarColors,
     elevation: Dp,
 ) = with(scrollBehavior) {
-    val scrollState = rememberScrollState()
+
     val surfaceColor by scrollBehavior.currentBackgroundColor(colors)
     colors.onBackgroundColorChange(surfaceColor)
 
@@ -94,7 +94,7 @@ private fun CollapsingTopBarLayout(
         modifier = modifier
             .fillMaxWidth()
             .height(currentTopBarHeight)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollBehavior.topBarVerticalScrollState.invoke()),
         color = surfaceColor,
         contentColor = colors.contentColor,
         elevation = elevation,

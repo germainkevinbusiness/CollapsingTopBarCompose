@@ -1,14 +1,15 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
+import timber.log.Timber
 
 /**
  * Defines how a [CollapsingTopBar] should behave, mainly during a
@@ -139,8 +140,17 @@ interface CollapsingTopBarScrollBehavior {
      * [collapse] or [expand] are active
      * */
     var ignorePreScrollDetection: Boolean
+
+    var topBarVerticalScrollState: @Composable () -> ScrollState
+
+    var isTopBarVerticalScrollInProgress: Boolean
+
+    var userLazyListState: LazyListState?
 }
 
+/**
+ * Behavior affected by the PreScroll events from the [NestedScrollConnection]
+ * */
 class DefaultBehaviorOnScroll(
     override var isAlwaysCollapsed: Boolean,
     override var isExpandedWhenFirstDisplayed: Boolean,
@@ -148,7 +158,9 @@ class DefaultBehaviorOnScroll(
     override var centeredTitleAndSubtitle: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,
-) : CollapsingTopBarScrollBehavior {
+    override var userLazyListState: LazyListState?
+) :
+    CollapsingTopBarScrollBehavior {
 
     init {
         require(expandedTopBarMaxHeight > collapsedTopBarHeight) {
@@ -193,44 +205,23 @@ class DefaultBehaviorOnScroll(
 
     override var ignorePreScrollDetection: Boolean by mutableStateOf(false)
 
+
+    override var isTopBarVerticalScrollInProgress: Boolean by mutableStateOf(false)
+
+    override var topBarVerticalScrollState: @Composable () -> ScrollState = {
+        val scrollState = rememberScrollState()
+        isTopBarVerticalScrollInProgress = scrollState.isScrollInProgress
+        scrollState
+    }
+
     override val nestedScrollConnection = object : NestedScrollConnection {
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-
-            if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
-                incrementTopBarOffset()
-                plateauTopBarOffset()
-                trackPreScrollData(available)
-                if (!isExpandedWhenFirstDisplayed && countWhenHeightOffSetIsZero >= 3) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
-                } else if (isExpandedWhenFirstDisplayed) {
-                    currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
-                }
-
-                defineCurrentState()
-            }
+            userLazyListState?.let {
+                onPreScrollLazyColumnUnderTopBarBehavior(available, it)
+            } ?: onPreScrollDefaultBehavior(available)
 
             return Offset.Zero
-        }
-    }
-
-    private fun trackPreScrollData(available: Offset) {
-        val availableY = available.y.toInt()
-        val newOffset = (heightOffset + availableY)
-        val coerced = newOffset.coerceIn(minimumValue = -heightOffsetLimit, maximumValue = 0f)
-        heightOffset = coerced
-    }
-
-    private fun incrementTopBarOffset() {
-        if (heightOffset == 0f) {
-            countWhenHeightOffSetIsZero += 1
-        }
-    }
-
-    // Just keeping countWhenHeightOffSetIsZero from storing high numbers that are above 3
-    private fun plateauTopBarOffset() {
-        if (countWhenHeightOffSetIsZero > 6) {
-            countWhenHeightOffSetIsZero = 3
         }
     }
 
@@ -240,58 +231,5 @@ class DefaultBehaviorOnScroll(
 
     override val collapsedTitleAlpha: @Composable () -> State<Float> = {
         getCollapsedTitleAlpha()
-    }
-
-    /**
-     * In order to know the alpha value between 0F and 1F of the "expandedTitle subtitle column",
-     * we will use the height of the [CollapsingTopBar] which is the [currentTopBarHeight].
-     *
-     *
-     * We want that whenever the
-     * [currentTopBarHeight] is exactly equal to the value of [collapsedTopBarHeight] + [margin]
-     * that the "expandedTitle subtitle Column" become fully invisible or alpha = 0F
-     *
-     *
-     * But, when the [currentTopBarHeight] is exactly equal to the value of
-     * [expandedTopBarMaxHeight] that the "expandedTitle subtitle Column"
-     * become fully visible or alpha = 1F.
-     *
-     *
-     * So in this sense, the 0F and 1F alpha value of the "expandedTitle subtitle Column" are:
-     *
-     *
-     * val fullyInvisibleValue: Dp = [collapsedTopBarHeight] + [margin]
-     *
-     *
-     * val fullyVisibleValue: Dp = [expandedTopBarMaxHeight] - (fullyInvisibleValue)
-     *
-     *
-     * @param margin When [collapsedTopBarHeight] + [margin] is the current value of
-     * [currentTopBarHeight], it will trigger the "expandedTitle subtitle Column"'s alpha value
-     * to be equal to 0F.
-     */
-    @Composable
-    private fun getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
-        return animateFloatAsState(
-            (currentTopBarHeight - (collapsedTopBarHeight + margin)) /
-                    (expandedTopBarMaxHeight - (collapsedTopBarHeight + margin))
-        )
-    }
-
-    /**
-     * Sets the alpha value of the collapsed title section
-     * @param visibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
-     * Collapsed Title should become visible.
-     * Collapsed Title section should become invisible
-     * */
-    @Composable
-    private fun getCollapsedTitleAlpha(
-        visibleValue: Dp = collapsedTopBarHeight.toIntDp(),
-        invisibleValue: Dp = (collapsedTopBarHeight + 15.dp).toIntDp()
-    ): State<Float> {
-        return animateFloatAsState(
-            if (currentTopBarHeight.toIntDp() == visibleValue) 1f
-            else (visibleValue - currentTopBarHeight.toIntDp()) / (invisibleValue - visibleValue)
-        )
     }
 }

@@ -1,5 +1,6 @@
 package com.germainkevin.collapsingtopbar
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -34,13 +35,16 @@ object CollapsingTopBarDefaults {
         isExpandedWhenFirstDisplayed: Boolean,
         centeredTitleWhenCollapsed: Boolean,
         centeredTitleAndSubtitle: Boolean,
+        userLazyListState: LazyListState?
+
     ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
         centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         collapsedTopBarHeight = collapsedTopBarHeight,
-        expandedTopBarMaxHeight = expandedTopBarMaxHeight
+        expandedTopBarMaxHeight = expandedTopBarMaxHeight,
+        userLazyListState = userLazyListState
     )
 
     /**
@@ -102,6 +106,8 @@ class CollapsingTopBarColors(
  * default value is [defaultMinimumTopBarHeight]
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
  * default value is [defaultMaximumTopBarHeight]
+ * @param userLazyListState When not null, and passed to a LazyColumn, it will make the
+ * CollapsingTopBar expand only when you reach the top of the LazyColumn
  * */
 @Composable
 fun rememberCollapsingTopBarScrollBehavior(
@@ -111,6 +117,7 @@ fun rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
+    userLazyListState: LazyListState? = null
 ): CollapsingTopBarScrollBehavior {
     return remember(
         isAlwaysCollapsed,
@@ -119,7 +126,8 @@ fun rememberCollapsingTopBarScrollBehavior(
         centeredTitleAndSubtitle,
         collapsedTopBarHeight,
         collapsedTopBarHeight,
-        expandedTopBarMaxHeight
+        expandedTopBarMaxHeight,
+        userLazyListState
     ) {
         CollapsingTopBarDefaults.scrollBehavior(
             isAlwaysCollapsed = isAlwaysCollapsed,
@@ -127,7 +135,8 @@ fun rememberCollapsingTopBarScrollBehavior(
             centeredTitleWhenCollapsed = centeredTitleWhenCollapsed,
             centeredTitleAndSubtitle = centeredTitleAndSubtitle,
             collapsedTopBarHeight = collapsedTopBarHeight,
-            expandedTopBarMaxHeight = expandedTopBarMaxHeight
+            expandedTopBarMaxHeight = expandedTopBarMaxHeight,
+            userLazyListState = userLazyListState
         )
     }
 }

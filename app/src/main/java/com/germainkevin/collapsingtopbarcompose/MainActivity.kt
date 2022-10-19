@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
@@ -25,19 +26,25 @@ class MainActivity : ComponentActivity() {
         "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
         "Ernesto Valverde", "Federico Valverde", "Granit Xhaka", "Harry Kane",
         "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
+        "Ilaix Moriba", "Jonathan Davis", "Kaka", "Lionel Andres Messi", "Mascherano",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CollapsingTopBarComposeTheme {
+                val lazyListState = rememberLazyListState()
                 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
                     isAlwaysCollapsed = false,
                     isExpandedWhenFirstDisplayed = true,
                     centeredTitleWhenCollapsed = false,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 200.dp,
+                    userLazyListState = lazyListState
                 )
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -46,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CollapsingTopBar(
                         scrollBehavior = scrollBehavior,
-                        colors = collapsingTopBarColors(window),
+//                        colors = collapsingTopBarColors(window),
                         title = TitleText,
                         expandedTitle = ExpandedTitleText,
                         subtitle = { SubtitleText(contacts) },
@@ -55,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         actions = { MoreMenuIcons(scrollBehavior) },
                     )
 
-                    LazyColumn {
+                    LazyColumn(state = lazyListState) {
                         items(contacts) {
                             Row(
                                 modifier = Modifier
