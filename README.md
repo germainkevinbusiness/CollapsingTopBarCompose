@@ -47,8 +47,8 @@ The below example is a basic example, for a more elaborate example check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
 .
 
-In order to use a ```CollapsingTopBar```, you first need to create
-a ```CollapsingTopBarScrollBehavior```.
+
+1 - In order to use a ```CollapsingTopBar```, you first need to create a ```CollapsingTopBarScrollBehavior```.
 
 ```kotlin
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
@@ -62,9 +62,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
 )
 ```
 
-To know when scrolling occurs inside your Layout, so the ```CollapsingTopBar``` can collapse or
-expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's
-```Modifier.nestedScroll``` :
+2-  In order for the ```CollapsingTopBar``` to collapse or expand when vertical scrolling is occuring inside your Layout, you need to add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's ```Modifier.nestedScroll``` :
 
 ```kotlin
  Scaffold(
