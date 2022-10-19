@@ -9,7 +9,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 /**
@@ -36,31 +35,34 @@ internal fun Dp.toIntDp() = this.value.toInt().dp
 
 /**
  * In order to know the alpha value between 0F and 1F of the "expandedTitle subtitle column",
- * we will use the height of the [CollapsingTopBar] which is the [currentTopBarHeight].
+ * we will use the height of the [CollapsingTopBar] which is the
+ * [CollapsingTopBarScrollBehavior.currentTopBarHeight].
  *
  *
  * We want that whenever the
- * [currentTopBarHeight] is exactly equal to the value of [collapsedTopBarHeight] + [margin]
+ * [CollapsingTopBarScrollBehavior.currentTopBarHeight] is exactly equal to the value of
+ * [CollapsingTopBarScrollBehavior.collapsedTopBarHeight] + [margin]
  * that the "expandedTitle subtitle Column" become fully invisible or alpha = 0F
  *
  *
- * But, when the [currentTopBarHeight] is exactly equal to the value of
- * [expandedTopBarMaxHeight] that the "expandedTitle subtitle Column"
- * become fully visible or alpha = 1F.
+ * But, when the [CollapsingTopBarScrollBehavior.currentTopBarHeight] is exactly equal to the value
+ * of [CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight] that the
+ * "expandedTitle subtitle Column" become fully visible or alpha = 1F.
  *
  *
  * So in this sense, the 0F and 1F alpha value of the "expandedTitle subtitle Column" are:
  *
  *
- * val fullyInvisibleValue: Dp = [collapsedTopBarHeight] + [margin]
+ * val fullyInvisibleValue: Dp = [CollapsingTopBarScrollBehavior.collapsedTopBarHeight] + [margin]
  *
  *
- * val fullyVisibleValue: Dp = [expandedTopBarMaxHeight] - (fullyInvisibleValue)
+ * val fullyVisibleValue: Dp =
+ * [CollapsingTopBarScrollBehavior.expandedTopBarMaxHeight] - (fullyInvisibleValue)
  *
  *
- * @param margin When [collapsedTopBarHeight] + [margin] is the current value of
- * [currentTopBarHeight], it will trigger the "expandedTitle subtitle Column"'s alpha value
- * to be equal to 0F.
+ * @param margin When [CollapsingTopBarScrollBehavior.collapsedTopBarHeight] + [margin] is the
+ * current value of [CollapsingTopBarScrollBehavior.currentTopBarHeight], it will trigger the
+ * "expandedTitle subtitle Column"'s alpha value to be equal to 0F.
  */
 @Composable
 internal fun CollapsingTopBarScrollBehavior.getExpandedColumnAlpha(margin: Dp = 20.dp): State<Float> {
@@ -72,9 +74,10 @@ internal fun CollapsingTopBarScrollBehavior.getExpandedColumnAlpha(margin: Dp = 
 
 /**
  * Sets the alpha value of the collapsed title section
- * @param visibleValue A value in [Dp] that if [currentTopBarHeight] reaches it, the
- * Collapsed Title should become visible.
- * Collapsed Title section should become invisible
+ * @param visibleValue A value in [Dp] that if [CollapsingTopBarScrollBehavior.currentTopBarHeight]
+ * reaches it, the Collapsed Title should become visible.
+ * @param invisibleValue The value at which the collapsed Title section should become invisible
+ * when its [CollapsingTopBarScrollBehavior.currentTopBarHeight] reaches it
  * */
 @Composable
 internal fun CollapsingTopBarScrollBehavior.getCollapsedTitleAlpha(
