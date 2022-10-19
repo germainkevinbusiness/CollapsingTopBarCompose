@@ -152,7 +152,7 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
 }
 ```
 
-The above example is a basic example, to know and learn more about the CollapsingTopBar, check out
+The above examples are basic examples, to know & learn more about the ```CollapsingTopBar```, check out
 the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
 .
 
