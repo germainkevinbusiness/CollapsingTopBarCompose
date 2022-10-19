@@ -57,7 +57,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
 )
 ```
 
-2-  In order for the ```CollapsingTopBar``` to collapse or expand when vertical scrolling is occuring inside your Layout, you need to add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's ```Modifier.nestedScroll``` :
+2-  In order for the ```CollapsingTopBar``` to collapse or expand when a vertical scrolling is occuring inside your Layout, you need to add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's ```Modifier.nestedScroll``` :
 
 ```kotlin
  Scaffold(
