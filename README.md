@@ -43,12 +43,7 @@ dependencies {
 
 # How to use this library
 
-The below example is a basic example, for a more elaborate example check out
-the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
-.
-
-In order to use a ```CollapsingTopBar```, you first need to create
-a ```CollapsingTopBarScrollBehavior```.
+1 - In order to use a ```CollapsingTopBar```, you first need to create a ```CollapsingTopBarScrollBehavior```.
 
 ```kotlin
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
@@ -62,101 +57,105 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
 )
 ```
 
-To know when scrolling occurs inside your Layout, so the ```CollapsingTopBar``` can collapse or
-expand, add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's
-```Modifier.nestedScroll``` :
+2-  In order for the ```CollapsingTopBar``` to collapse or expand when a vertical scrolling is occuring inside your Layout, you need to add the ```scrollBehavior.nestedScrollConnection``` inside your Layout's ```Modifier.nestedScroll``` :
 
 ```kotlin
-Scaffold(
-    modifier = Modifier
-        .nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = {
-        CollapsingTopBar(
-            scrollBehavior = scrollBehavior,
-            title = { Text(text = "Contacts") },
-            subtitle = { Text(text = "17 contacts") },
-            mainAction = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        contentDescription = "Main Action Icon",
-                    )
-                }
-            },
-        )
-    },
-) {}
+ Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CollapsingTopBar(
+                scrollBehavior = scrollBehavior,
+                title = { Text(text = "Contacts") },
+                subtitle = { Text(text = "17 contacts") },
+                mainAction = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            contentDescription = "Main Action Icon",
+                        )
+                    }
+                },
+            )
+        },
+    ) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {}
+        
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {}
+    }
 ```
 
 So a complete example could look like:
 
 ```kotlin
-private val contacts = listOf(
-    "Alejandro Balde", "Barella Nicolo", "Cristiano Ronaldo", "David Beckham",
-    "Federico Valverde", "Granit Xhaka", "Harry Kane", "Lionel Andres Messi",
-)
-val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
-    isAlwaysCollapsed = false,
-    isExpandedWhenFirstDisplayed = true,
-    centeredTitleWhenCollapsed = false,
-    centeredTitleAndSubtitle = true,
-    collapsedTopBarHeight = 56.dp,
-    expandedTopBarMaxHeight = 156.dp,
-    userLazyListState = null
-)
-//val isMoving = scrollBehavior.isMoving
-val isCollapsed = scrollBehavior.isCollapsed
-val isExpanded = scrollBehavior.isExpanded
-val window = this@Activity.window
-Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .nestedScroll(scrollBehavior.nestedScrollConnection),
-) {
+
+Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
     CollapsingTopBar(
         scrollBehavior = scrollBehavior,
-        title = TitleText,
-        expandedTitle = ExpandedTitleText,
-        subtitle = { SubtitleText(contacts) },
-        navigationIcon = { NavigationIcon() },
-        mainAction = {
-            IconButton(onClick = {}) {
-                Icon(
-                    Icons.Outlined.Add,
-                    contentDescription = "Main Action Icon",
-                )
-            }
-        },
-        actions = { MoreMenuIcons(isCollapsed, isExpanded) },
-        colors = CollapsingTopBarDefaults.colors(
-            backgroundColorWhenCollapsingOrExpanding =
-            MaterialTheme.colorScheme.onPrimaryContainer,
-            onBackgroundColorChange = {
-                window.statusBarColor = it.toArgb()
-            },
-        ),
+        title = { TitleText },
+        expandedTitle = { ExpandedTitleText },
+        subtitle = { SubtitleText },
+        navigationIcon = { NavigationIcon },
+        mainAction = { MainActionIconButton },
+        actions = { MoreMenuIcons },
     )
-    LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    ) {
-        items(contacts) {
+    LazyColumn {
+        items(contactsList) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { },
+                modifier = Modifier.fillMaxWidth().clickable { },
             ) {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = it,
-                    fontSize = 16.sp,
-                )
+                Text( modifier = Modifier.padding(16.dp), text = it )
             }
         }
     }
 }
 ```
 
-**That's it!**
+The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. But what if 
+for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn? 
+For that, you need to pass a ```LazyListState``` inside your  ```CollapsingTopBarScrollBehavior```:
+
+```kotlin
+val lazyListState = rememberLazyListState()
+val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
+    isAlwaysCollapsed = false,
+    isExpandedWhenFirstDisplayed = true,
+    centeredTitleWhenCollapsed = false,
+    centeredTitleAndSubtitle = true,
+    collapsedTopBarHeight = 56.dp,
+    expandedTopBarMaxHeight = 156.dp,
+    userLazyListState = lazyListState
+)
+```
+
+Then you pass that same ```LazyListState``` to your LazyColumn, like so:
+```kotlin
+
+Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+    CollapsingTopBar(
+        scrollBehavior = scrollBehavior,
+        title = { TitleText },
+        expandedTitle = { ExpandedTitleText },
+        subtitle = { SubtitleText },
+        navigationIcon = { NavigationIcon },
+        mainAction = { MainActionIconButton },
+        actions = { MoreMenuIcons },
+    )
+    LazyColumn(state = lazyListState) {
+        items(contactsList) {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable { },
+            ) {
+                Text( modifier = Modifier.padding(16.dp), text = it )
+            }
+        }
+    }
+}
+```
+
+The above examples are basic examples, to know & learn more about the ```CollapsingTopBar```, check out
+the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose/blob/master/app/src/main/java/com/germainkevin/collapsingtopbarcompose/MainActivity.kt)
+.
+
 
 ## License
 
