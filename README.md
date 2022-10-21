@@ -8,16 +8,16 @@ extension methods.
 
 <table>
   <tr>
-    <td>Collapse/Expand due to user scroll while displaying centered expanded title & subtitle</td>
+    <td>Collapse/Expand due to user scroll and by calling the methods: collapse() & expand()</td>
     <td>Collapse/Expand due to user scroll while displaying only the title on the left side</td>
-    <td>Collapse/Expand while the mainAction icon animates</td>
+    <td>Expand only when a user has reached the top of a LazyColumn</td>
   </tr>
   <tr>
-    <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170046931-3f9cf06e-9476-4ea1-a932-34d3197a47df.gif" alt="Demonstration 1" width="100%" height="auto"/></td>
+    <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/196091667-c8a48a32-aa66-4e71-afc7-7bbd247d5ee3.gif" alt="Demonstration 1" width="100%" height="auto"/></td>
     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170043487-5e78724b-bd66-4617-b703-624281d49c2a.gif" alt="Demonstration 2" width="100%" height="auto"/></td>
-    <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/196091667-c8a48a32-aa66-4e71-afc7-7bbd247d5ee3.gif" alt="Demonstration 3" width="100%" height="auto"/></td>
+     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/196796410-ba5ccac7-1e25-4222-aad5-7aa149014a85.gif" alt="Demonstration 3" width="100%" height="auto"/></td>
   </tr>
- </table> 
+ </table>
 
 # How to get this library in your android app
 
