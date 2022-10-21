@@ -37,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.2"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.3"
 }
 ```
 
@@ -53,7 +53,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
-    userLazyListState = null
+    scrollableState = null
 )
 ```
 
@@ -123,7 +123,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
-    userLazyListState = lazyListState
+    scrollableState = lazyListState
 )
 ```
 

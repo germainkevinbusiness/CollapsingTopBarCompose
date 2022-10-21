@@ -3,12 +3,14 @@ package com.germainkevin.collapsingtopbar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -94,14 +96,14 @@ internal fun CollapsingTopBarScrollBehavior.getCollapsedTitleAlpha(
  * Will change the value of [CollapsingTopBarScrollBehavior.heightOffset]
  * depending on the vertical scroll events it detects from [available]
  * */
-private fun CollapsingTopBarScrollBehavior.trackPreScrollData(available: Offset) {
+internal fun CollapsingTopBarScrollBehavior.trackPreScrollData(available: Offset) {
     val availableY = available.y.toInt()
     val newOffset = (heightOffset + availableY)
     val coerced = newOffset.coerceIn(minimumValue = -heightOffsetLimit, maximumValue = 0f)
     heightOffset = coerced
 }
 
-private fun CollapsingTopBarScrollBehavior.countWhenHeightOffsetIsZero() {
+internal fun CollapsingTopBarScrollBehavior.countWhenHeightOffsetIsZero() {
     if (heightOffset == 0f) {
         countWhenHeightOffSetIsZero += 1
     }
@@ -114,7 +116,7 @@ private fun CollapsingTopBarScrollBehavior.countWhenHeightOffsetIsZero() {
  * is below, equal or above 3, in that sense, once it surpasses 3, no need to track over that
  * number, so we reinitialize it to 3 once its value is 6
  * */
-private fun CollapsingTopBarScrollBehavior.limitCountBelow6() {
+internal fun CollapsingTopBarScrollBehavior.limitCountBelow6() {
     if (countWhenHeightOffSetIsZero > 6) {
         countWhenHeightOffSetIsZero = 3
     }
@@ -142,35 +144,78 @@ internal fun CollapsingTopBarScrollBehavior.onPreScrollDefaultBehavior(available
 }
 
 /**
- * @param mUserLazyListState The user's assigned [LazyListState] that will be passed inside any
+ * @param lazyListState The user's assigned [LazyListState] that will be passed inside any
  * one LazyColumn chosen by the user
  * @param available The scroll activity that we get from
  * [CollapsingTopBarScrollBehavior.nestedScrollConnection]'s onPreScroll
  * */
 internal fun CollapsingTopBarScrollBehavior.onPreScrollWithLazyListState(
     available: Offset,
-    mUserLazyListState: LazyListState
+    lazyListState: LazyListState
 ) {
     if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
         countWhenHeightOffsetIsZero()
         limitCountBelow6()
         if (!isExpandedWhenFirstDisplayed && countWhenHeightOffSetIsZero >= 3) {
-            updateHeightBasedOnLazyListState(available, mUserLazyListState)
+            updateHeightBasedOnLazyListState(available, lazyListState)
         } else if (isExpandedWhenFirstDisplayed) {
-            updateHeightBasedOnLazyListState(available, mUserLazyListState)
+            updateHeightBasedOnLazyListState(available, lazyListState)
         }
     }
 }
 
 /**
- * The logic for changing the height of the [CollapsingTopBar] when a [mUserLazyListState] is
+ * The logic for changing the height of the [CollapsingTopBar] when a [lazyListState] is
  * passed
  * */
-private fun CollapsingTopBarScrollBehavior.updateHeightBasedOnLazyListState(
+internal fun CollapsingTopBarScrollBehavior.updateHeightBasedOnLazyListState(
     available: Offset,
-    mUserLazyListState: LazyListState
+    lazyListState: LazyListState
 ) {
-    if (mUserLazyListState.firstVisibleItemScrollOffset == 0 && isCollapsed) {
+    if (lazyListState.firstVisibleItemScrollOffset == 0 && isCollapsed) {
+        val newHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
+        if (newHeight == collapsedTopBarHeight) {
+            trackPreScrollData(available)
+            currentTopBarHeight = newHeight
+        } else {
+            expand()
+        }
+    } else if (!isCollapsed) {
+        trackPreScrollData(available)
+        currentTopBarHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
+    }
+}
+
+/**
+ * @param lazyGridState The user's assigned [LazyListState] that will be passed inside any
+ * one LazyColumn chosen by the user
+ * @param available The scroll activity that we get from
+ * [CollapsingTopBarScrollBehavior.nestedScrollConnection]'s onPreScroll
+ * */
+internal fun CollapsingTopBarScrollBehavior.onPreScrollWithLazyGridState(
+    available: Offset,
+    lazyGridState: LazyGridState
+) {
+    if (!isAlwaysCollapsed && !ignorePreScrollDetection) {
+        countWhenHeightOffsetIsZero()
+        limitCountBelow6()
+        if (!isExpandedWhenFirstDisplayed && countWhenHeightOffSetIsZero >= 3) {
+            updateHeightBasedOnLazyGridState(available, lazyGridState)
+        } else if (isExpandedWhenFirstDisplayed) {
+            updateHeightBasedOnLazyGridState(available, lazyGridState)
+        }
+    }
+}
+
+/**
+ * The logic for changing the height of the [CollapsingTopBar] when a [lazyGridState] is
+ * passed
+ * */
+private fun CollapsingTopBarScrollBehavior.updateHeightBasedOnLazyGridState(
+    available: Offset,
+    lazyGridState: LazyGridState
+) {
+    if (lazyGridState.firstVisibleItemScrollOffset == 0 && isCollapsed) {
         val newHeight = expandedTopBarMaxHeight + heightOffset.roundToInt().dp
         if (newHeight == collapsedTopBarHeight) {
             trackPreScrollData(available)

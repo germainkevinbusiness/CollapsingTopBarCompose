@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                     centeredTitleWhenCollapsed = false,
                     centeredTitleAndSubtitle = true,
                     expandedTopBarMaxHeight = 200.dp,
-                    userLazyListState = lazyListState
+                    scrollableState = lazyListState
                 )
 
                 Column(

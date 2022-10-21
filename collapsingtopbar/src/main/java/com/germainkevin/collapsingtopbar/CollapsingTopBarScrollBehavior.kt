@@ -1,7 +1,9 @@
 package com.germainkevin.collapsingtopbar
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
@@ -147,11 +149,17 @@ interface CollapsingTopBarScrollBehavior {
     var topBarVerticalScrollState: @Composable () -> ScrollState
 
     /**
-     * Assign a [LazyListState] to this variable that you will pass inside a LazyColumn, so
+     * Assign a [ScrollableState] to this variable that you will pass inside a LazyColumn, so
      * that the [CollapsingTopBar] can only expand when this LazyColumn's
      * firstVisibleItemScrollOffset is == 0.
      * */
-    var userLazyListState: LazyListState?
+    val scrollableState: ScrollableState?
+
+    /**
+     * The instructions that will run on the call of [NestedScrollConnection.onPreScroll].
+     * */
+    val onPreScrollExecutable: (Offset) -> Unit
+
 }
 
 /**
@@ -164,7 +172,7 @@ class DefaultBehaviorOnScroll(
     override var centeredTitleAndSubtitle: Boolean,
     override var collapsedTopBarHeight: Dp,
     override var expandedTopBarMaxHeight: Dp,
-    override var userLazyListState: LazyListState?
+    override val scrollableState: ScrollableState?,
 ) :
     CollapsingTopBarScrollBehavior {
 
@@ -215,13 +223,26 @@ class DefaultBehaviorOnScroll(
         rememberScrollState()
     }
 
-    override val nestedScrollConnection = object : NestedScrollConnection {
-
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            userLazyListState?.let { onPreScrollWithLazyListState(available, it) }
+    override val onPreScrollExecutable: (Offset) -> Unit
+        get() = { available ->
+            scrollableState?.let {
+                when (it) {
+                    is LazyListState -> {
+                        onPreScrollWithLazyListState(available, it)
+                    }
+                    is LazyGridState -> {
+                        onPreScrollWithLazyGridState(available, it)
+                    }
+                    else -> onPreScrollDefaultBehavior(available)
+                }
+            }
                 ?: onPreScrollDefaultBehavior(available)
-            defineCurrentState()
+        }
 
+    override val nestedScrollConnection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            onPreScrollExecutable.invoke(available)
+            defineCurrentState()
             return Offset.Zero
         }
     }

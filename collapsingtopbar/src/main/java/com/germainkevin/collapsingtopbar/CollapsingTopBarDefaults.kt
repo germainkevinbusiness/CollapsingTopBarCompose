@@ -1,6 +1,6 @@
 package com.germainkevin.collapsingtopbar
 
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -27,6 +27,11 @@ object CollapsingTopBarDefaults {
      * default value is [defaultMinimumTopBarHeight]
      * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended,
      * the default value is [defaultMaximumTopBarHeight]
+     * @param scrollableState The [ScrollableState] that you will pass
+     * inside a LazyColumn, so that the [CollapsingTopBar] can only expand when this LazyColumn's
+     * firstVisibleItemScrollOffset is == 0. Can be a
+     * [LazyListState][androidx.compose.foundation.lazy.LazyListState] or a
+     * [LazyGridState][androidx.compose.foundation.lazy.grid.LazyGridState] for example.
      * */
     fun scrollBehavior(
         collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
@@ -35,8 +40,7 @@ object CollapsingTopBarDefaults {
         isExpandedWhenFirstDisplayed: Boolean,
         centeredTitleWhenCollapsed: Boolean,
         centeredTitleAndSubtitle: Boolean,
-        userLazyListState: LazyListState?
-
+        scrollableState: ScrollableState?
     ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
@@ -44,7 +48,7 @@ object CollapsingTopBarDefaults {
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         collapsedTopBarHeight = collapsedTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-        userLazyListState = userLazyListState
+        scrollableState = scrollableState
     )
 
     /**
@@ -106,8 +110,11 @@ class CollapsingTopBarColors(
  * default value is [defaultMinimumTopBarHeight]
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
  * default value is [defaultMaximumTopBarHeight]
- * @param userLazyListState When not null, and its value is passed to a LazyColumn, it will make the
- * [CollapsingTopBar] expand only when you reach the top of the LazyColumn
+ * @param scrollableState The [ScrollableState] that you will pass
+ * inside a LazyColumn, so that the [CollapsingTopBar] can only expand when this LazyColumn's
+ * firstVisibleItemScrollOffset is == 0. Can be a
+ * [LazyListState][androidx.compose.foundation.lazy.LazyListState] or a
+ * [LazyGridState][androidx.compose.foundation.lazy.grid.LazyGridState] for example.
  * */
 @Composable
 fun rememberCollapsingTopBarScrollBehavior(
@@ -117,7 +124,7 @@ fun rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-    userLazyListState: LazyListState? = null
+    scrollableState: ScrollableState? = null
 ): CollapsingTopBarScrollBehavior {
     return remember(
         isAlwaysCollapsed,
@@ -127,7 +134,7 @@ fun rememberCollapsingTopBarScrollBehavior(
         collapsedTopBarHeight,
         collapsedTopBarHeight,
         expandedTopBarMaxHeight,
-        userLazyListState
+        scrollableState
     ) {
         CollapsingTopBarDefaults.scrollBehavior(
             isAlwaysCollapsed = isAlwaysCollapsed,
@@ -136,7 +143,7 @@ fun rememberCollapsingTopBarScrollBehavior(
             centeredTitleAndSubtitle = centeredTitleAndSubtitle,
             collapsedTopBarHeight = collapsedTopBarHeight,
             expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-            userLazyListState = userLazyListState
+            scrollableState = scrollableState
         )
     }
 }
