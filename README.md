@@ -53,7 +53,7 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
-    scrollableState = null
+    userLazyListState = null
 )
 ```
 
@@ -110,12 +110,12 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
 }
 ```
 
-The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. <br> But what if 
-for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn or LazyVerticalGrid? 
-For that, you need to pass a ```ScrollableState``` such as a  ```LazyListState``` for a LazyColumn  or a ```LazyGridState``` for a LazyVerticalGrid, inside your  ```CollapsingTopBarScrollBehavior```:
+The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. <br> 
+But what if for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn? <br>
+For that, you need to pass a  ```LazyListState``` inside your  ```CollapsingTopBarScrollBehavior```:
 
 ```kotlin
-val scrollableState = rememberLazyListState()
+val userLazyListState = rememberLazyListState()
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
@@ -123,11 +123,11 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
-    scrollableState = scrollableState
+    userLazyListState = userLazyListState
 )
 ```
 
-Then you pass that same ```ScrollableState``` to your LazyColumn, like so:
+Then you pass that same ```LazyListState``` to your LazyColumn, like so:
 ```kotlin
 
 Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
