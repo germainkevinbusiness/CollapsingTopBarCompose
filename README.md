@@ -37,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.3"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.2"
 }
 ```
 
@@ -110,12 +110,12 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
 }
 ```
 
-The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. But what if 
-for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn? 
-For that, you need to pass a ```LazyListState``` inside your  ```CollapsingTopBarScrollBehavior```:
+The above example is when you want the ```CollapsingTopBar``` to collapse or expand on any detected vertical scroll. <br> But what if 
+for example, you want your ```CollapsingTopBar``` to only expand when a user is at the top of your LazyColumn or LazyVerticalGrid? 
+For that, you need to pass a ```ScrollableState``` such as a  ```LazyListState``` for a LazyColumn  or a ```LazyGridState``` for a LazyVerticalGrid, inside your  ```CollapsingTopBarScrollBehavior```:
 
 ```kotlin
-val lazyListState = rememberLazyListState()
+val scrollableState = rememberLazyListState()
 val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     isAlwaysCollapsed = false,
     isExpandedWhenFirstDisplayed = true,
@@ -123,11 +123,11 @@ val scrollBehavior = rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle = true,
     collapsedTopBarHeight = 56.dp,
     expandedTopBarMaxHeight = 156.dp,
-    scrollableState = lazyListState
+    scrollableState = scrollableState
 )
 ```
 
-Then you pass that same ```LazyListState``` to your LazyColumn, like so:
+Then you pass that same ```ScrollableState``` to your LazyColumn, like so:
 ```kotlin
 
 Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
@@ -140,7 +140,7 @@ Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) 
         mainAction = { MainActionIconButton },
         actions = { MoreMenuIcons },
     )
-    LazyColumn(state = lazyListState) {
+    LazyColumn(state = scrollableState) {
         items(contactsList) {
             Row(
                 modifier = Modifier.fillMaxWidth().clickable { },
