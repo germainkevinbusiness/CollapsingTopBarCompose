@@ -88,10 +88,10 @@ object CollapsingTopBarDefaults {
  * background color of the [CollapsingTopBar] whenever it changes
  * */
 class CollapsingTopBarColors(
-    var backgroundColor: Color,
-    var contentColor: Color,
-    var backgroundColorWhenCollapsingOrExpanding: Color,
-    var onBackgroundColorChange: @Composable (Color) -> Unit,
+    val backgroundColor: Color,
+    val contentColor: Color,
+    val backgroundColorWhenCollapsingOrExpanding: Color,
+    val onBackgroundColorChange: @Composable (Color) -> Unit,
 )
 
 /**
@@ -110,9 +110,9 @@ class CollapsingTopBarColors(
  * default value is [defaultMinimumTopBarHeight]
  * @param expandedTopBarMaxHeight The height of the [CollapsingTopBar] when it's expended, the
  * default value is [defaultMaximumTopBarHeight]
- * @param scrollableState The [ScrollableState] that you will pass
- * inside a LazyColumn, so that the [CollapsingTopBar] can only expand when this LazyColumn's
- * firstVisibleItemScrollOffset is == 0. Can be a
+ * @param scrollableState The [ScrollableState] that you will pass inside a LazyColumn or a
+ * LazyVerticalGrid, so that the [CollapsingTopBar] can only expand when this LazyColumn's or the
+ * LazyVerticalGrid's firstVisibleItemScrollOffset is == 0. Can be a
  * [LazyListState][androidx.compose.foundation.lazy.LazyListState] or a
  * [LazyGridState][androidx.compose.foundation.lazy.grid.LazyGridState] for example.
  * */

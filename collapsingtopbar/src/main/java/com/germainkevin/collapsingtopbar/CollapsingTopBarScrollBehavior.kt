@@ -146,11 +146,11 @@ interface CollapsingTopBarScrollBehavior {
      * This is the [ScrollState] that is registering the vertical scroll state of the
      * [CollapsingTopBar]
      * */
-    var topBarVerticalScrollState: @Composable () -> ScrollState
+    val topBarVerticalScrollState: @Composable () -> ScrollState
 
     /**
-     * Assign a [ScrollableState] to this variable that you will pass inside a LazyColumn, so
-     * that the [CollapsingTopBar] can only expand when this LazyColumn's
+     * The [ScrollableState] that you will pass inside a LazyColumn or a LazyVerticalGrid, so that
+     * the [CollapsingTopBar] can only expand when this LazyColumn's or the LazyVerticalGrid's
      * firstVisibleItemScrollOffset is == 0.
      * */
     val scrollableState: ScrollableState?
@@ -219,7 +219,7 @@ class DefaultBehaviorOnScroll(
 
     override var ignorePreScrollDetection: Boolean by mutableStateOf(false)
 
-    override var topBarVerticalScrollState: @Composable () -> ScrollState = {
+    override val topBarVerticalScrollState: @Composable () -> ScrollState = {
         rememberScrollState()
     }
 
@@ -228,15 +228,18 @@ class DefaultBehaviorOnScroll(
             scrollableState?.let {
                 when (it) {
                     is LazyListState -> {
-                        onPreScrollWithLazyListState(available, it)
+                        onPreScrollAppBarScrollingViewBehavior(
+                            available, it.firstVisibleItemScrollOffset
+                        )
                     }
                     is LazyGridState -> {
-                        onPreScrollWithLazyGridState(available, it)
+                        onPreScrollAppBarScrollingViewBehavior(
+                            available, it.firstVisibleItemScrollOffset
+                        )
                     }
                     else -> onPreScrollDefaultBehavior(available)
                 }
-            }
-                ?: onPreScrollDefaultBehavior(available)
+            } ?: onPreScrollDefaultBehavior(available)
         }
 
     override val nestedScrollConnection = object : NestedScrollConnection {

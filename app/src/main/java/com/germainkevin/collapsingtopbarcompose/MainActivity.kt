@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     LazyColumn(state = lazyListState) {
-                        items(contacts) {
+                        items(items = contacts) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
