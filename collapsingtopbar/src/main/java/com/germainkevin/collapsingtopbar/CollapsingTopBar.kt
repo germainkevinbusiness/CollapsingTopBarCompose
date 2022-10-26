@@ -49,11 +49,11 @@ import kotlin.math.max
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
     scrollBehavior: CollapsingTopBarScrollBehavior,
-    navigationIcon: @Composable () -> Unit = { },
+    navigationIcon: @Composable () -> Unit = {},
     title: @Composable () -> Unit,
     expandedTitle: @Composable () -> Unit = title,
     subtitle: @Composable () -> Unit = {},
-    mainAction: @Composable () -> Unit = { },
+    mainAction: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     colors: CollapsingTopBarColors = CollapsingTopBarDefaults.colors(),
     elevation: Dp = DefaultCollapsingTopBarElevation,
