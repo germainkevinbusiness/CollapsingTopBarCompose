@@ -1,4 +1,3 @@
-CollapsingTopBar Library README.md 1.1.4
 [![](https://jitpack.io/v/germainkevinbusiness/CollapsingTopBarCompose.svg)](https://jitpack.io/#germainkevinbusiness/CollapsingTopBarCompose)
 
 # CollapsingTopBarCompose
@@ -38,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.4"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.5"
 }
 ```
 
