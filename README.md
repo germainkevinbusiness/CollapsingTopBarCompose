@@ -162,7 +162,7 @@ the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose
 Licenced under the MIT Licence
 
 ```
-Copyright (c) 2022 Kevin Germain
+Copyright (c) 2023 Kevin Germain
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
