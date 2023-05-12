@@ -40,7 +40,8 @@ object CollapsingTopBarDefaults {
         isExpandedWhenFirstDisplayed: Boolean,
         centeredTitleWhenCollapsed: Boolean,
         centeredTitleAndSubtitle: Boolean,
-        scrollableState: ScrollableState?
+        scrollableState: ScrollableState?,
+
     ): CollapsingTopBarScrollBehavior = DefaultBehaviorOnScroll(
         isAlwaysCollapsed = isAlwaysCollapsed,
         isExpandedWhenFirstDisplayed = isExpandedWhenFirstDisplayed,
@@ -48,7 +49,7 @@ object CollapsingTopBarDefaults {
         centeredTitleAndSubtitle = centeredTitleAndSubtitle,
         collapsedTopBarHeight = collapsedTopBarHeight,
         expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-        scrollableState = scrollableState
+        scrollableState = scrollableState,
     )
 
     /**
@@ -124,7 +125,7 @@ fun rememberCollapsingTopBarScrollBehavior(
     centeredTitleAndSubtitle: Boolean = true,
     collapsedTopBarHeight: Dp = defaultMinimumTopBarHeight,
     expandedTopBarMaxHeight: Dp = defaultMaximumTopBarHeight,
-    scrollableState: ScrollableState? = null
+    scrollableState: ScrollableState? = null,
 ): CollapsingTopBarScrollBehavior {
     return remember(
         isAlwaysCollapsed,
@@ -134,7 +135,7 @@ fun rememberCollapsingTopBarScrollBehavior(
         collapsedTopBarHeight,
         collapsedTopBarHeight,
         expandedTopBarMaxHeight,
-        scrollableState
+        scrollableState,
     ) {
         CollapsingTopBarDefaults.scrollBehavior(
             isAlwaysCollapsed = isAlwaysCollapsed,
@@ -143,7 +144,7 @@ fun rememberCollapsingTopBarScrollBehavior(
             centeredTitleAndSubtitle = centeredTitleAndSubtitle,
             collapsedTopBarHeight = collapsedTopBarHeight,
             expandedTopBarMaxHeight = expandedTopBarMaxHeight,
-            scrollableState = scrollableState
+            scrollableState = scrollableState,
         )
     }
 }
