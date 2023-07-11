@@ -209,9 +209,11 @@ internal fun CollapsingTopBarScrollBehavior.defineCurrentState() {
         collapsedTopBarHeight -> {
             CollapsingTopBarState.COLLAPSED
         }
+
         expandedTopBarMaxHeight -> {
             CollapsingTopBarState.EXPANDED
         }
+
         else -> {
             CollapsingTopBarState.MOVING
         }

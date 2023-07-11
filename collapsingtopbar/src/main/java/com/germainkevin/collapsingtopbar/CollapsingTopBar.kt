@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 import kotlin.math.max
 
 /**
@@ -49,7 +50,7 @@ import kotlin.math.max
 fun CollapsingTopBar(
     modifier: Modifier = Modifier,
     scrollBehavior: CollapsingTopBarScrollBehavior,
-    navigationIcon: @Composable () -> Unit = {},
+    navigationIcon: @Composable (() -> Unit)? = null,
     title: @Composable () -> Unit,
     expandedTitle: @Composable () -> Unit = title,
     subtitle: @Composable () -> Unit = {},
@@ -78,7 +79,7 @@ private fun CollapsingTopBarLayout(
     title: @Composable () -> Unit,
     expandedTitle: @Composable () -> Unit,
     subtitle: @Composable () -> Unit,
-    navigationIcon: @Composable () -> Unit,
+    navigationIcon: @Composable (() -> Unit)?,
     mainAction: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit,
     scrollBehavior: CollapsingTopBarScrollBehavior,
@@ -113,8 +114,8 @@ private fun CollapsingTopBarLayout(
                     .align(Alignment.TopStart)
                     .padding(
                         PaddingValues(
-                            start = if (navigationIcon != {}) 56.dp - TopBarHorizontalPadding
-                            else TopBarTitleInset,
+                            start = if (navigationIcon == null) TopBarTitleInset
+                            else 56.dp - TopBarHorizontalPadding,
                             end = TopBarHorizontalPadding,
                         )
                     )
@@ -156,7 +157,7 @@ private fun CollapsingTopBarLayout(
                 ) {
                     CompositionLocalProvider(
                         LocalContentColor provides colors.contentColor,
-                        content = navigationIcon
+                        content = navigationIcon ?: {}
                     )
                 }
                 Box(
@@ -378,6 +379,7 @@ private fun simpleColumnMeasurePolicy(
                         Arrangement.Center -> {
                             (constraints.maxHeight - layoutMaxLength) / 2
                         }
+
                         else -> yPosition
                     }
                 )
