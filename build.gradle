@@ -1,7 +1,7 @@
 buildscript {
     ext {
         coreKtx = '1.10.1'
-        libraryVersion ='1.2.0'
+        libraryVersion ='1.2.1'
         timberVersion ='5.0.1'
     }
     repositories {

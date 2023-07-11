@@ -25,7 +25,7 @@ internal val TopBarHorizontalPadding = 4.dp
 internal val DefaultCollapsingTopBarElevation = 0.dp
 
 // Used to add spacing when the title is next to the navigation icon.
-internal val TopBarTitleInset = 16.dp - TopBarHorizontalPadding
+internal val TopBarTitleInset = 16.dp
 
 /**
  * A way to  remove any floating number from the [Dp] value, and just get the [Int] side of the [Dp]
