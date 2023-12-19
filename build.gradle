@@ -1,7 +1,7 @@
 buildscript {
     ext {
         coreKtx = '1.12.0'
-        libraryVersion ='1.2.2'
+        libraryVersion ='1.2.3'
         timberVersion ='5.0.1'
     }
     repositories {
@@ -13,8 +13,4 @@ plugins {
     id 'com.android.application' version '8.2.0' apply false
     id 'com.android.library' version '8.2.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
-}
-
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
 }
