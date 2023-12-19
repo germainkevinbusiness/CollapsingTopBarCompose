@@ -8,7 +8,7 @@ extension methods.
 
 <table>
   <tr>
-    <td>Collapse/Expand due to user scroll and by calling the methods: collapse() & expand()</td>
+    <td>Collapse/Expand due to user scroll and/or by calling the methods: collapse() & expand()</td>
     <td>Collapse/Expand due to user scroll while displaying only the title on the left side</td>
     <td>Expand only when a user has reached the top of a LazyColumn</td>
   </tr>
