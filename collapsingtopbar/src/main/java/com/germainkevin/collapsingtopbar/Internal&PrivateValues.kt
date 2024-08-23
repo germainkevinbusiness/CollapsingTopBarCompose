@@ -85,7 +85,8 @@ internal fun CollapsingTopBarScrollBehavior.getCollapsedTitleAlpha(
 ): State<Float> {
     return animateFloatAsState(
         if (currentTopBarHeight.toIntDp() == visibleValue) 1f
-        else (visibleValue - currentTopBarHeight.toIntDp()) / (invisibleValue - visibleValue)
+        else (visibleValue - currentTopBarHeight.toIntDp()) / (invisibleValue - visibleValue),
+        label = "The alpha value of the Collapsed Topbar's title composable"
     )
 }
 
@@ -198,7 +199,7 @@ internal fun CollapsingTopBarScrollBehavior.currentBackgroundColor(
         colors.backgroundColor
     } else {
         colors.backgroundColorWhenCollapsingOrExpanding
-    }
+    }, label = "current background color of CTB"
 )
 
 /**

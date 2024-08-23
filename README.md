@@ -13,9 +13,9 @@ extension methods.
     <td>Expand only when a user has reached the top of a LazyColumn</td>
   </tr>
   <tr>
-    <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/196091667-c8a48a32-aa66-4e71-afc7-7bbd247d5ee3.gif" alt="Demonstration 1" width="100%" height="auto"/></td>
-    <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/170043487-5e78724b-bd66-4617-b703-624281d49c2a.gif" alt="Demonstration 2" width="100%" height="auto"/></td>
-     <td valign="top"><img src="https://user-images.githubusercontent.com/83923717/196796410-ba5ccac7-1e25-4222-aad5-7aa149014a85.gif" alt="Demonstration 3" width="100%" height="auto"/></td>
+    <td vertical-align="top"><img src="https://user-images.githubusercontent.com/83923717/196091667-c8a48a32-aa66-4e71-afc7-7bbd247d5ee3.gif" alt="Demonstration 1" width="100%" height="auto"/></td>
+    <td vertical-align="top"><img src="https://user-images.githubusercontent.com/83923717/170043487-5e78724b-bd66-4617-b703-624281d49c2a.gif" alt="Demonstration 2" width="100%" height="auto"/></td>
+     <td vertical-align="top"><img src="https://user-images.githubusercontent.com/83923717/196796410-ba5ccac7-1e25-4222-aad5-7aa149014a85.gif" alt="Demonstration 3" width="100%" height="auto"/></td>
   </tr>
  </table>
 
@@ -37,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.3"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.4"
 }
 ```
 
@@ -162,7 +162,7 @@ the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose
 Licenced under the MIT Licence
 
 ```
-Copyright (c) 2023 Kevin Germain
+Copyright (c) 2024 Kevin Germain
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
