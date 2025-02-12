@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.germainkevin.collapsingtopbarcompose"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName libraryVersion
 
@@ -52,10 +52,10 @@ dependencies {
     implementation project(path: ':collapsingtopbar')
 
     implementation "androidx.core:core-ktx:$coreKtx"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
-    implementation 'androidx.activity:activity-compose:1.9.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation 'androidx.activity:activity-compose:1.10.0'
 
-    def composeBom = platform("androidx.compose:compose-bom:2024.06.00")
+    def composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation composeBom
     androidTestImplementation composeBom
 

@@ -37,7 +37,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.4"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.5"
 }
 ```
 
@@ -162,7 +162,7 @@ the [sample app](https://github.com/germainkevinbusiness/CollapsingTopBarCompose
 Licenced under the MIT Licence
 
 ```
-Copyright (c) 2024 Kevin Germain
+Copyright (c) 2025 Kevin Germain
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

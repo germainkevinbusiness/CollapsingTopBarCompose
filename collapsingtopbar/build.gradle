@@ -36,11 +36,11 @@ repositories {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -77,7 +77,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    def composeBom = platform("androidx.compose:compose-bom:2024.06.00")
+    def composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation composeBom
     androidTestImplementation composeBom
 
