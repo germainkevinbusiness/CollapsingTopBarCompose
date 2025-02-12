@@ -19,7 +19,7 @@ extension methods.
   </tr>
  </table>
 
-# How to add this library to your android app with a 'libs.versions.toml' file
+# How to add this library to your android app with a 'libs.versions.toml' file in 3 steps
 **Step 1.** Add the jitpack repository to the ``repositories { }``  function, inside 
 your ``settings.gradle.kts`` like so:
 ```kotlin
@@ -49,7 +49,7 @@ dependencies {
 }
 ```
 
-# How to add this library to your android app (with gradle files in Groovy language & without a 'libs.versions.toml' file)
+# How to add this library to your android app (with gradle files in Groovy language & without a 'libs.versions.toml' file) in 2 steps
 **Step 1.** Add the jitpack repository to the ``repositories { }``  function, inside
 your ``project build.gradle`` or inside your ``settings.gradle`` like so:
 
