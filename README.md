@@ -19,8 +19,37 @@ extension methods.
   </tr>
  </table>
 
-# How to get this library in your android app
+# How to add this library to your android app with a 'libs.versions.toml' file
+**Step 1.** Add the jitpack repository to the ``repositories { }``  function, inside 
+your ``settings.gradle.kts`` like so:
+```kotlin
+    repositories { 
+        google()
+        mavenCentral()
+        // Place the jitpack repository inside this, like so:
+        maven(url = "https://jitpack.io")
+    }
+```
 
+**Step 2.** Go to your ``` libs.versions.toml ``` file, and add:
+```toml
+# In here add this
+[versions]
+collapsingTopBarCompose = "1.2.5"
+
+# In here add this
+[libraries]
+collapsing-top-bar-compose = { group = "com.github.germainkevinbusiness", name = "CollapsingTopBarCompose", version.ref = "collapsingTopBarCompose" }
+```
+
+**Step 3.** Add the dependency in your ``` module build.gradle.kts ``` file, like so:
+```kotlin
+dependencies {
+    implementation(libs.collapsing.top.bar.compose)
+}
+```
+
+# How to add this library to your android app (with gradle files in Groovy language & without a 'libs.versions.toml' file)
 **Step 1.** Add the jitpack repository to the ``repositories { }``  function, inside
 your ``project build.gradle`` or inside your ``settings.gradle`` like so:
 
