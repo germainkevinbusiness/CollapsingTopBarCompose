@@ -39,7 +39,7 @@ collapsingTopBarCompose = "1.2.5"
 
 # In here add this
 [libraries]
-collapsing-top-bar-compose = { group = "com.github.germainkevinbusiness", name = "CollapsingTopBarCompose", version.ref = "collapsingTopBarCompose" }
+collapsing-top-bar-compose = { module = "com.github.germainkevinbusiness:CollapsingTopBarCompose", version.ref = "collapsingTopBarCompose" }
 ```
 
 **Step 3.** Add the dependency in your ``` module build.gradle.kts ``` file, like so:
