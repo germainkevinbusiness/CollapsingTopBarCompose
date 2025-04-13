@@ -53,9 +53,9 @@ dependencies {
 
     implementation "androidx.core:core-ktx:$coreKtx"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
-    implementation 'androidx.activity:activity-compose:1.10.0'
+    implementation 'androidx.activity:activity-compose:1.10.1'
 
-    def composeBom = platform("androidx.compose:compose-bom:2025.01.01")
+    def composeBom = platform("androidx.compose:compose-bom:2025.04.00")
     implementation composeBom
     androidTestImplementation composeBom
 

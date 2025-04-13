@@ -35,7 +35,7 @@ your ``settings.gradle.kts`` like so:
 ```toml
 # In here add this
 [versions]
-collapsingTopBarCompose = "1.2.5"
+collapsingTopBarCompose = "1.2.6"
 
 # In here add this
 [libraries]
@@ -66,7 +66,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.5"
+    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.2.6"
 }
 ```
 
